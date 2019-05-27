@@ -67,13 +67,11 @@ public class LoadStop {
 	private LocalDateTime arriveTime;
 	
 	//-----------------------------------------------------------------------------------//
-	@Column(name = "ShipingOrder", nullable = false)
+	@Column(name = "shipingOrder", nullable = false)
 	private String shipingOrder;
 	
-
-	
-	@Column(name = "WaybillNumber", nullable = false)
-	private Double waybillNumber;
+	@Column(name = "waybillNumber", nullable = false)
+	private String waybillNumber;
 	//---------------------------------------------------------------------------------//
 	
 	@Column(name = "completedFlag", nullable = false)

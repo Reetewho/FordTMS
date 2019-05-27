@@ -59,8 +59,8 @@
 					<th >Truck Number</th>
 					<th >Arrive Time</th>
 					<th >Departure Time</th>
-					<th >SO</th>
-					<th >WY</th>
+					<th >ShipingOrder</th>
+					<th >WaybillNumber</th>
 					<th >Status</th>
 					<th></th>
 					<th></th>                  
@@ -75,8 +75,6 @@
 						<td>${loadStop.stopShippingLocationName}</td>
 						<td>${loadStop.truckNumber}</td>
 						
-						<td>${loadStop.shipingOrder}</td>
-						<td>${loadStop.waybillNumber}</td>
 						
 						<td>
 						<fmt:parseDate value="${loadStop.arriveTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedArriveTime" type="both" />
@@ -86,6 +84,10 @@
 						<fmt:parseDate value="${loadStop.departureTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDepartureTime" type="both" />
 						<fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${ parsedDepartureTime }" />
 						</td>
+						
+						<td>${loadStop.shipingOrder}</td>
+						<td>${loadStop.waybillNumber}</td>
+						
 						<td>${loadStop.status}</td>
 						<td><a href="<c:url value='/loadStatusUpdate/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Status Update</a></td>
 						<!-- td><a href="<c:url value='/setStopETA/${load.carrier.carrierCode}-${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Set Stop ETA</a></td-->

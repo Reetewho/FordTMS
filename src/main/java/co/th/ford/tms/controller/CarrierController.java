@@ -199,15 +199,21 @@ public class CarrierController {
 		setStopETA.setLoadStop(loadStop);
 		
 		
-		
 		//ProcessSetStopETA pSetStopETA=new ProcessSetStopETA();
 		//pSetStopETA.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), setStopETA);
 		setStopETA.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		setStopETA.setLastUpdateDate(LocalDateTime.now());
+		
+		setStopETA.setCity(lstcity);
+		
+		//การปิดเพื่อนให้ ProcessSetStopETA ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
+		setStopETA.setStatus("true");
+		//
+		
 		if(setStopETA.getId()>0)sseservice.updateSetStopETA(setStopETA);
 		else sseservice.saveSetStopETA(setStopETA);
 		
-		setStopETA.setStatus("true");
+		
 		if(setStopETA.getStatus().equals("true")) {
 			setStopETA.setErrorMessage("");
 			loadStop.setStatus("setStop");
@@ -261,7 +267,11 @@ public class CarrierController {
 		//ปิดเพื่อไม่ให้อัพเดท
 		//ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
 		//pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
+		
+		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
 		loadStop.setStatus("true");
+				//
+		
 		if(loadStop.getStatus().equals("true")) {
 			loadStop.setErrorMessage("");
 			loadStop.setStatus("update");

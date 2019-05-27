@@ -136,16 +136,16 @@
                 </div>		
                 
                 <div class="form-group">
-                  <label  class="col-sm-4 control-label">SO :</label>
+                  <label  class="col-sm-4 control-label">ShipingOrder :</label>
                   <div class="col-sm-8">
-                    <form:input path="ShipingOrder" id="ShipingOrder" class="form-control"  required="required" />                   
+                    <form:input path="shipingOrder" id="shipingOrder" class="form-control"  required="required" />                   
                   </div>
                 </div>	
                 
                 <div class="form-group">
-                  <label  class="col-sm-4 control-label">WY :</label>
+                  <label  class="col-sm-4 control-label">WaybillNumber :</label>
                   <div class="col-sm-8">
-                    <form:input path="WaybillNumber" id="WaybillNumber" class="form-control"  required="required" />                   
+                    <form:input path="waybillNumber" id="waybillNumber" class="form-control"  required="required" />                   
                   </div>
                 </div>	
                           

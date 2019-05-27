@@ -38,7 +38,8 @@ public class SetStopETAServiceImpl implements SetStopETAService {
 			entity.setMovementDateTime(sse.getEstimatedDateTime());
 			entity.setEstimatedDateTime(sse.getEstimatedDateTime());
 			entity.setLatitude(sse.getLatitude());
-			entity.setLongitude(sse.getLongitude());			
+			entity.setLongitude(sse.getLongitude());
+			entity.setCity(sse.getCity());
 			entity.setStatus(sse.getStatus());
 			entity.setErrorMessage(sse.getErrorMessage());
 			entity.setLastUpdateDate(sse.getLastUpdateDate());

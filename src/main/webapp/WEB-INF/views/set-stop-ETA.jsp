@@ -142,7 +142,7 @@
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">City :</label>
 		          <div class="col-sm-8">  
-		         <select id="lstcity" class="form-control">
+		         <select id="lstcity" name="lstcity" class="form-control">
 		          <c:if test = "${not empty ListCitys}">
 		          <c:forEach items="${ListCitys}" var="ListCity">
 		           <option value="${ListCity.cityID}" >
