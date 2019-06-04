@@ -45,6 +45,13 @@
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Summary Report</span>            
           </a>
         </li>
+        <li>
+          <a href="<c:url value='/userList' />">
+            <i class="fa fa-user"></i> &nbsp;&nbsp;<span>User</span>            
+          </a>
+        </li>
+        
+        
         <!-- 
          <li>
           <a href="<c:url value='/showtest' />">
