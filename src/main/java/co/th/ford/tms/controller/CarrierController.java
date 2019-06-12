@@ -130,17 +130,19 @@ public class CarrierController {
 		Load load =lservice.findLoadByID(loadID);
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
 		load.setCarrier(carrier);		
+		System.out.println("Test 123456789");
 		if(load.getStatus().equalsIgnoreCase("N/A")) {			
 			ProcessLoadRetrieve loadRetrieve=new ProcessLoadRetrieve(); 
 			List<LoadStop> loadStopList=loadRetrieve.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), load).getLoadStopList();
-			
 			if(load.getStatus().equalsIgnoreCase("true")) {
 				for(LoadStop loadStop : loadStopList){
 					loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 					loadStop.setLastUpdateDate(LocalDateTime.now());
 					lsservice.saveLoadStop(loadStop);
 				}
-				load.setStatus("Load");
+				load.setStatus("Load");				
+				load.setGatein("gatein");
+				load.setGateout("gateout");				
 				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 //				load.setStatusFlag(2);
 				load.setLastUpdateDate(LocalDateTime.now());

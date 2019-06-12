@@ -37,6 +37,8 @@ public class LoadServiceImpl implements LoadService {
 			entity.setAlertTypeCode(l.getAlertTypeCode());
 			entity.setLoadDescription(l.getLoadDescription());
 			entity.setLoadStartDateTime(l.getLoadStartDateTime());
+			entity.setGatein(l.getGatein());
+			entity.setGateout(l.getGateout());
 			entity.setLoadEndDateTime(l.getLoadEndDateTime());
 			entity.setStatus(l.getStatus());
 			entity.setErrorMessage(l.getErrorMessage());
