@@ -87,6 +87,18 @@
                   <div class="col-sm-7" style="padding-top:8px">
                     ${load.loadEndDateTime}
                   </div>
+                </div>            
+              <div class="form-group"  >
+                  <label  class="col-sm-5 control-label">Gate In : </label>
+                  <div class="col-sm-7" style="padding-top:8px">
+                    ${load.gatein}
+                  </div>
+                </div>
+              <div class="form-group"  >
+                  <label  class="col-sm-5 control-label">Gate Out : </label>
+                  <div class="col-sm-7" style="padding-top:8px">
+                    ${load.gateout}
+                  </div>
                 </div>
               </div>
               <!-- /.box-body -->  

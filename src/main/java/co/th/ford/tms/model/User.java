@@ -54,8 +54,15 @@ public class User {
 	private String department;
 	
 	
+	@NotNull
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "lastLogin", nullable = false)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate logoutDate;
+	
 	@Column(name = "status", nullable = false)
 	private int status;
+	
 	
 	
 	@Override
@@ -63,6 +70,7 @@ public class User {
 		return username.hashCode();
 	}	
 	 
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -83,6 +91,8 @@ public class User {
 		return "User [username=" + username + ", name=" + name + ", joiningDate="
 				+ joiningDate + ", role=" + role + ", department=" + department
 				+", status=" + status  + "]";
-	}		
+	}
+
+		
 	
 }

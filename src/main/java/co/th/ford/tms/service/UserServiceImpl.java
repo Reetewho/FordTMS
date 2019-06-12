@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 			entity.setDepartment(u.getDepartment());
 			entity.setPassword(u.getPassword());
 			entity.setRole(u.getRole());
+			entity.setLogoutDate(entity.getLogoutDate());
 			entity.setStatus(u.getStatus());
 		}
 	}

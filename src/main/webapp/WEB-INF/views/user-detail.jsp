@@ -37,7 +37,7 @@
     <!-- Main content -->
     <section class="content">
     
-      <div class="row">
+     <div class="row">
       	<div class="col-md-12">
       		<c:if test="${Error!=null || Success!=null }">
               <div class='alert ${Error!=null?"alert-danger":"alert-success"}  alert-dismissible'>
@@ -122,7 +122,7 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-                <a href="<c:url value='/user-list/' />"><button type="button" class="btn btn-default">Cancel</button></a>
+                <a href="<c:url value='/userList/' />"><button type="button" class="btn btn-default">Cancel</button></a>
                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
               </div>
               <!-- /.box-footer -->

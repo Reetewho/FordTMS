@@ -54,7 +54,6 @@ public class LoadStop {
 	@Column(name = "truckNumber", nullable = false)
 	private String truckNumber;
 	
-	
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
 	@Column(name = "departureTime", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")

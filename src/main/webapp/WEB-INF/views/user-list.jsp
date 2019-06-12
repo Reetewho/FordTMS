@@ -25,7 +25,6 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="#">${User.systemname}</a></li> 
         <li><a href="#">User list</a></li>         
       </ol>
     </section>
@@ -36,37 +35,41 @@
       <!-- /.col -->
         <div class="col-md-12">
           <div class="box box-primary">
-          	<div class="box-header">
-	            <c:if test="${Error!=null} }">
-	              <div class="alert alert-danger alert-dismissible">
-	                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	                <h4><i class="icon fa fa-ban"></i> Error!</h4>
-	                <c:out value="${Error} }"></c:out>
-	              </div>
-	            </c:if>
-            </div>
+          	<div class="row">
+      	<div class="col-md-12">
+      		<c:if test="${Error!=null || Success!=null }">
+              <div class='alert ${Error!=null?"alert-danger":"alert-success"}  alert-dismissible'>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa  ${Error!=null?'fa-ban':'fa-check'}"></i>${Error!=null?'Error!':'Success'} </h4>
+                <c:out value="${Error!=null?Error:Success} "></c:out>
+              </div>
+            </c:if>           
+      	</div>
+      </div>
             <!-- /.box-header -->
             <div class="box-body ">
-              <table id="UserTable" class="table table-bordered table-striped">
+              <table id="UserTable"  class="table table-bordered table-striped">
                 <thead>
                 <tr>
 					<th >Name</th>
 					<th >Role</th>
 					<th >Department</th>
 					<th >Joining date</th>
+					<th >Last login</th>
 					<th >Status</th>
 					<th></th>
 					<th></th>         
 					         
                 </tr>
                 </thead>
-                <tbody>
+               <tbody>
 	                <c:forEach items="${users}" var="user">
 						<tr >
 						<td>${user.name}</td>
 						<td>${user.role}</td>
 						<td>${user.department}</td>
 						<td>${user.joiningDate}</td>
+						<td>${user.logoutDate}</td>
 						<c:choose>
 							<c:when test="${user.status=='1'}">
 								<td>Active</td>
@@ -77,13 +80,19 @@
 						</c:choose>	
 					<td><a href="<c:url value='/userDetail/${user.username}' />"><img  src="<c:url value='/assets/dist/img/edit.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a></td>																									
 					<td>
-					<a href="<c:url value='/User/${user.password}-${user.username}-${user.name}' />"><img  src="<c:url value='/assets/dist/img/True.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>																				
-					<a href="<c:url value='/User/${user.password}-${user.username}-${user.name}' />"><img src="<c:url value='/assets/dist/img/false.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px"></a>
+					<c:choose>
+							<c:when test="${user.status=='0'}">
+					<a href="<c:url value='/UserStatus/${user.status}-${user.username}-${user.name}' />"><img  src="<c:url value='/assets/dist/img/True.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>																				
+					</c:when>
+							<c:otherwise>
+					<a href="<c:url value='/UserStatus/${user.status}-${user.username}-${user.name}' />"><img src="<c:url value='/assets/dist/img/false.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px"></a>
+					</c:otherwise>
+						</c:choose>
 					</td>
 						</tr>
 					</c:forEach>
                               
-                </tbody>                
+                </tbody>             
               </table>
               
             </div>

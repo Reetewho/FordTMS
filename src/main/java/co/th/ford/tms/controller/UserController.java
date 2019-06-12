@@ -36,6 +36,14 @@ public class UserController {
 	@Autowired
 	MessageSource messageSource;
 	
+	public boolean checkAuthorization(HttpSession session) {
+		if(session.getAttribute("S_FordUser") == null){			
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
 	private List<String> ROLE = Arrays.asList("ADMIN", "USER");
 
 	
@@ -44,7 +52,8 @@ public class UserController {
 	 * This method will list all existing User.
 	 */
 	@RequestMapping(value = {"/userList" }, method = RequestMethod.GET)
-	public String listUser(ModelMap model) {
+	public String listUser(HttpSession session,ModelMap model) {
+		if(!checkAuthorization(session))return "redirect:/login";
 		List<User> users = uservice.findAllUsers();
 		model.addAttribute("users", users);
 		return "user-list";
@@ -97,7 +106,9 @@ public class UserController {
 //	}
 	
 	@RequestMapping(value = { "/userDetail/{editUsername}" }, method = RequestMethod.GET)
-	public String editEmployee(@PathVariable String editUsername, ModelMap model) {
+	public String editEmployee(HttpSession session,@PathVariable String editUsername, ModelMap model) {
+		if(!checkAuthorization(session))return "redirect:/login";
+
 		/*Employee employee = service.findEmployeeBySsn(ssn);
 		model.addAttribute("employee", employee);*/
 		User user =uservice.findUserByusername(editUsername);
@@ -124,6 +135,7 @@ public class UserController {
 		List<User> users = uservice.findAllUsers();
 		model.addAttribute("users", users);
 		//model.addAttribute("saveSuccess",  messageSource.getMessage("update.success", new String[]{user.getUsername()}, Locale.getDefault()));
+
 		return "user-list";
 	}
 
@@ -140,6 +152,24 @@ public class UserController {
 		model.addAttribute("saveSuccess",  messageSource.getMessage("update.success", new String[]{username}, Locale.getDefault()));
 		
 		return "user-list";
+	}
+	
+	@RequestMapping(value = { "/UserStatus/{status}-{username}-{name}" }, method = RequestMethod.GET)
+	public String updatestatus(@PathVariable String username, ModelMap model) {
+		User statususer = uservice.findUserByusername(username);
+		
+		if(statususer.getStatus()==1) {
+			statususer.setStatus(0);
+			uservice.updateUser(statususer);
+		}else {			
+			statususer.setStatus(1);
+			uservice.updateUser(statususer);
+		}
+		
+		
+		model.addAttribute("user", statususer);
+		model.addAttribute("edit", true);
+		return "redirect:/userList";
 	}
 
 }

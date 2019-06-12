@@ -54,6 +54,12 @@ public class Load {
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime loadEndDateTime;
 	
+	@Column(name = "gatein", nullable = false)
+	private String gatein;
+	
+	@Column(name = "gateout", nullable = false)
+	private String gateout;
+	
 	@Column(name = "completedFlag", nullable = false)
 	private String status;	
 		

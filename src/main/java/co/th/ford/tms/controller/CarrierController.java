@@ -198,9 +198,8 @@ public class CarrierController {
 		loadStop.setLoad(load);
 		setStopETA.setLoadStop(loadStop);
 		
-		
-		//ProcessSetStopETA pSetStopETA=new ProcessSetStopETA();
-		//pSetStopETA.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), setStopETA);
+	/*test*/	//ProcessSetStopETA pSetStopETA=new ProcessSetStopETA();
+	/*test*/	//pSetStopETA.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), setStopETA);
 		setStopETA.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		setStopETA.setLastUpdateDate(LocalDateTime.now());
 		
@@ -265,12 +264,12 @@ public class CarrierController {
 		loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		loadStop.setLastUpdateDate(LocalDateTime.now());
 		//ปิดเพื่อไม่ให้อัพเดท
-		//ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
-		//pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
+		/*test*/	//ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
+		/*test*/	//pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
 		
 		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
 		loadStop.setStatus("true");
-				//
+				
 		
 		if(loadStop.getStatus().equals("true")) {
 			loadStop.setErrorMessage("");

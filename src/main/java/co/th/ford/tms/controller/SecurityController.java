@@ -6,10 +6,12 @@ import java.util.Locale;
 import javax.servlet.http.HttpSession;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,14 +56,23 @@ public class SecurityController {
 			
 		    model.addAttribute("EmptyPassword",  messageSource.getMessage("NotEmpty.user.password", new String[]{password}, Locale.getDefault()));
 		}else {
-			User user =uservice.findUserByusername(username);
+			User user =uservice.findUserByusername(username);			
 			//System.out.println(user.getJoiningDate());
 			if(user !=null && user.getPassword().equals(password)) {
-				session.setAttribute("S_FordUser", user);
-				LocalDate todaydate = LocalDate.now();	
-				String endDate=todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
-				String startDate=todaydate.withDayOfMonth(1).toString();
-				nextPage="redirect:/calendar/"+startDate+"/"+endDate;
+				
+				if(user.getStatus()==0) {
+					
+					model.addAttribute("InActive",  messageSource.getMessage("InActive.user.username", new String[]{username}, Locale.getDefault()));
+					
+			}else {
+					
+					session.setAttribute("S_FordUser", user);				
+					LocalDate todaydate = LocalDate.now();	
+					String endDate=todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
+					String startDate=todaydate.withDayOfMonth(1).toString();
+					nextPage="redirect:/calendar/"+startDate+"/"+endDate;
+					
+				}
 			}else {
 				model.addAttribute("loginFail",  messageSource.getMessage("Invalid.user.username", new String[]{username}, Locale.getDefault()));
 			}
@@ -70,8 +81,19 @@ public class SecurityController {
 		return nextPage;
 	}
 	
-	@RequestMapping(value = { "/logout" }, method = RequestMethod.GET)
-	public String logout(HttpSession session ) {
+	@RequestMapping(value = { "/logout/" }, method = RequestMethod.GET)		
+		public String logout(HttpSession session ) {
+			
+			User dataUser = (User)session.getAttribute("S_FordUser");
+			
+			LocalDate datesession = LocalDate.now();
+			
+				dataUser.setLogoutDate(datesession);
+
+				uservice.updateUser(dataUser);
+				
+
+							
 	    session.invalidate();
 	    return "redirect:/login";
 	}

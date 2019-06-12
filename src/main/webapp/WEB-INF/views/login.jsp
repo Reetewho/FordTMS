@@ -36,10 +36,16 @@
     <c:if test = "${not empty loginFail}">
     <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <i class="icon fa fa-ban"></i> Invalid Username or Password.!
-               
+                <i class="icon fa fa-ban"></i> Invalid Username or Password.!        
     </div>
     </c:if>
+    
+<c:if test = "${not empty InActive}">
+    <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon fa fa-ban"></i> Username or Password InActive.!        
+    </div>
+</c:if>
 	<form method="POST" action="<c:url value='/login' />" data-toggle="validator" role="form">   
       <div class="form-group has-feedback">
         <input type="text" name="username" id="username" class="form-control" placeholder="Username" data-minlength="8" data-error="Minimum of 8 characters" required="required"/>

@@ -32,7 +32,7 @@ public class City {
 	
 	
 	@Column(name = "status", nullable = true)	
-	private int status;
+	private String status;
 		
 	
 	 
