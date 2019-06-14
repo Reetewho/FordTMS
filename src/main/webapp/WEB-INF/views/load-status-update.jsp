@@ -160,6 +160,13 @@
                     <form:input path="waybillNumber" id="waybillNumber" class="form-control"  required="required" />                   
                   </div>
                 </div>	
+                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">ManiFest :</label>
+                  <div class="col-sm-8">
+                    <form:input path="manifest" id="manifest" class="form-control"  required="required" />                   
+                  </div>
+                </div>	
                           
             </div>
             <!-- /.box-body -->

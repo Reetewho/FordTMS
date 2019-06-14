@@ -71,6 +71,9 @@ public class LoadStop {
 	
 	@Column(name = "waybillNumber", nullable = false)
 	private String waybillNumber;
+	
+	@Column(name = "maniFest", nullable = false)
+	private String manifest;
 	//---------------------------------------------------------------------------------//
 	
 	@Column(name = "completedFlag", nullable = false)

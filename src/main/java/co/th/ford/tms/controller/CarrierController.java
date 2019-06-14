@@ -130,19 +130,43 @@ public class CarrierController {
 		Load load =lservice.findLoadByID(loadID);
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
 		load.setCarrier(carrier);		
-		System.out.println("Test 123456789");
 		if(load.getStatus().equalsIgnoreCase("N/A")) {			
 			ProcessLoadRetrieve loadRetrieve=new ProcessLoadRetrieve(); 
 			List<LoadStop> loadStopList=loadRetrieve.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), load).getLoadStopList();
 			if(load.getStatus().equalsIgnoreCase("true")) {
+				int numLoadStop = loadStopList.size();
+				int roundLoadStop = 1;
+				
 				for(LoadStop loadStop : loadStopList){
+
+					if(loadStop.getStopSequence()==1) {	
+						if(loadStop.getArriveTime().equals("")) {
+							load.setGatein("-");
+							lservice.updateLoad(load);
+						}else {
+						String numSequence = String.valueOf(loadStop.getArriveTime());
+						load.setGatein(numSequence);
+						lservice.updateLoad(load);
+						}
+						
+					}
 					loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 					loadStop.setLastUpdateDate(LocalDateTime.now());
 					lsservice.saveLoadStop(loadStop);
+					
+					if(roundLoadStop==numLoadStop) {						
+						if(loadStop.getDepartureTime().equals("")) {
+							load.setGateout("-");
+							lservice.updateLoad(load);
+						}else {
+						String numSequences = String.valueOf(loadStop.getDepartureTime());
+						load.setGateout(numSequences);	
+						lservice.updateLoad(load);
+						}
+					}
+					roundLoadStop=roundLoadStop+1;
 				}
-				load.setStatus("Load");				
-				load.setGatein("gatein");
-				load.setGateout("gateout");				
+				load.setStatus("Load");								
 				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 //				load.setStatusFlag(2);
 				load.setLastUpdateDate(LocalDateTime.now());
@@ -262,6 +286,7 @@ public class CarrierController {
 		//----------------------------------------------------------
 		loadStop.setShipingOrder(loadStop1.getShipingOrder());
 		loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
+		loadStop.setManifest(loadStop1.getManifest());
 		//----------------------------------------------------------
 		loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		loadStop.setLastUpdateDate(LocalDateTime.now());
