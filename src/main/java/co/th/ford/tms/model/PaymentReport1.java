@@ -10,4 +10,6 @@ public class PaymentReport1 {
 	private String loadStartDateTime;	
 	private String loadEndDateTime;
 	private String completedFlag;
+	private String gatein;
+	private String gateout;
 }

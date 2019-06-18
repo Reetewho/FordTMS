@@ -130,7 +130,9 @@
 						<th >Route No.</th>
 						<th >Truck Number</th>
 						<th >Load Start Date Time</th>
-						<th >Load End Date Time</th>       
+						<th >Load End Date Time</th>  
+						<th >Gate In</th> 
+						<th >Gate Out</th>   
 						<th >Status</th>          
 	                </tr>
 	                </thead>
@@ -147,6 +149,8 @@
 								<td>${paymentreport.truckNumber}</td>
 								<td>${paymentreport.loadStartDateTime}</td>				
 								<td>${paymentreport.loadEndDateTime}</td>
+								<td>${paymentreport.gatein}</td>
+								<td>${paymentreport.gateout}</td>
 								<td>${paymentreport.completedFlag}</td>
 								<c:if test = "${paymentreport.completedFlag=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
 								<c:if test = "${paymentreport.completedFlag=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>

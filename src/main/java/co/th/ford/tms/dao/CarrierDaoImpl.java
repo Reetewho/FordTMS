@@ -152,6 +152,8 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 		Query query = getSession().createSQLQuery(
 				  " select l.systemLoadID, l.loadDescription, ls.truckNumber, "
 				+ " l.loadStartDateTime, l.loadEndDateTime, "
+				+ " l.gatein ,"
+				+ " l.gateout ,"
 				+ " l.completedFlag "
 				+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 				+ " left join tb_loadstop ls on l.loadID=ls.loadID "
@@ -175,7 +177,9 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 				subreport1.setTruckNumber(obj[2]==null?"":obj[2].toString());				
 				subreport1.setLoadStartDateTime(obj[3]==null?"":obj[3].toString());
 				subreport1.setLoadEndDateTime(obj[4]==null?"":obj[4].toString());
-				subreport1.setCompletedFlag(obj[5]==null?"":obj[5].toString());
+				subreport1.setGatein(obj[5]==null?"":obj[5].toString());
+				subreport1.setGateout(obj[6]==null?"":obj[6].toString());
+				subreport1.setCompletedFlag(obj[7]==null?"":obj[7].toString());
 				allList.add(subreport1);
 			}
 		
@@ -187,6 +191,8 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 		Query query = getSession().createSQLQuery(
 				  " select l.loadID, l.systemLoadID, c.loadDate, l.loadDescription, ls.truckNumber, "
 				+ " l.loadStartDateTime, l.loadEndDateTime, "
+				+ " l.gatein, "
+				+ " l.gateout, "
 				+ " l.completedFlag, l.carrierID "	
 				+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 				+ " left join tb_loadstop ls on l.loadID=ls.loadID "
@@ -219,8 +225,10 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 				loadlistreport1.setTruckNumber(obj[4]==null?"":obj[4].toString());				
 				loadlistreport1.setLoadStartDateTime(obj[5]==null?"":obj[5].toString());
 				loadlistreport1.setLoadEndDateTime(obj[6]==null?"":obj[6].toString());
-				loadlistreport1.setCompletedFlag(obj[7]==null?"":obj[7].toString());
-				loadlistreport1.setCarrierID(obj[8]==null?"":obj[8].toString());
+				loadlistreport1.setGatein(obj[7]==null?"":obj[7].toString());
+				loadlistreport1.setGateout(obj[8]==null?"":obj[8].toString());
+				loadlistreport1.setCompletedFlag(obj[9]==null?"":obj[9].toString());
+				loadlistreport1.setCarrierID(obj[10]==null?"":obj[10].toString());
 				
 				
 				if(allList!=null && allList.size()>0) {

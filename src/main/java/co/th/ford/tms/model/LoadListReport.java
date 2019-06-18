@@ -12,5 +12,7 @@ public class LoadListReport {
 	private String loadStartDateTime;	
 	private String loadEndDateTime;
 	private String completedFlag;
+	private String gatein;
+	private String gateout;
 	private String carrierID;
 }
