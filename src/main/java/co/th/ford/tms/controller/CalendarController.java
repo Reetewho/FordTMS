@@ -4,6 +4,12 @@ package co.th.ford.tms.controller;
 
 
 
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,6 +22,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,6 +48,7 @@ public class CalendarController {
 	@Autowired
 	Environment environment;
 	
+	
 	/*
 	 * This method will list all existing Carrier.
 	 */
@@ -54,12 +62,63 @@ public class CalendarController {
 		 String endDate=end.toString("yyyy-MM-dd");
 		 model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		 model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
-		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
+		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());	 
 		 //List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
 		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
 		 model.addAttribute("carriers", c);
+		 
+		  List<String> monthList = getMonthList();
+		  List<Integer> yearList = getYearList();
+		  model.addAttribute("monthLst", monthList);
+		  model.addAttribute("yearLst", yearList);
+		  String[] strStartDate = startDate.split("-");
+		  model.addAttribute("chooseYear", strStartDate[0]);
+		  Integer monthIndexStartDate = Integer.valueOf(strStartDate[1]) - 1;
+		  model.addAttribute("chooseMonth", monthList.get(monthIndexStartDate));
+		 		 
 		return "calendar";
 	}
+	
+	
+	
+	private List<String> getMonthList() {
+
+		  List<String> monthList = new ArrayList<String>();
+		  monthList.add("January");
+		  monthList.add("February");
+		  monthList.add("March");
+		  monthList.add("April");
+		  monthList.add("May");
+		  monthList.add("June");
+		  monthList.add("July");
+		  monthList.add("August");
+		  monthList.add("September");
+		  monthList.add("October");
+		  monthList.add("November");
+		  monthList.add("December");
+		  return monthList;
+
+		 }
+		 
+		 private List<Integer> getYearList() {
+		  Date getDate;
+		  Calendar calendar = Calendar.getInstance();  
+		     getDate = calendar.getTime(); 
+		     DateFormat sdf_Year_Calendar = new SimpleDateFormat("yyyy");
+		     Integer intCurrentYear= Integer.valueOf(sdf_Year_Calendar.format(getDate));
+		     
+		  List<Integer> yearList = new ArrayList<Integer>();
+		  
+		  yearList.add(intCurrentYear);
+		  for (int i = 0; i < 4; i++) {
+		   intCurrentYear = intCurrentYear - 1;
+		   yearList.add(intCurrentYear);
+		  }
+
+		  
+		  return yearList;
+
+		 }
 	
 	
 	@RequestMapping(value = {"/calendar/{loadDate}" }, method = RequestMethod.GET)
@@ -91,9 +150,17 @@ public class CalendarController {
 		List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(LocalDate.parse(startDate, dtf)), getThaiDate(LocalDate.parse(endDate, dtf)));
 		model.addAttribute("carriers", c);
 		
+		  List<String> monthList = getMonthList();
+		  List<Integer> yearList = getYearList();
+		  model.addAttribute("monthLst", monthList);
+		  model.addAttribute("yearLst", yearList);
+		  String[] strStartDate = startDate.split("-");
+		  model.addAttribute("chooseYear", strStartDate[0]);
+		  Integer monthIndexStartDate = Integer.valueOf(strStartDate[1]) - 1;
+		  model.addAttribute("chooseMonth", monthList.get(monthIndexStartDate));
+		
 		return "calendar";
 	}
-	
 	
 	/*
 	 * This method will check that user have already login .

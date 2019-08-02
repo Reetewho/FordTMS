@@ -12,7 +12,7 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
-
+<input type="hidden" value="${passwordn}" id="Passwordn" name="Passwordn">
 
 <div class="wrapper">
 
@@ -71,52 +71,78 @@
                  <div class="form-group">
                   <label  class="col-sm-4 control-label">Name :</label>
 	                  <div class="col-sm-8">
-	                   <form:input path="name" id="names" class="form-control" placeholder="Insert Your Name" required="required" />                    
+	                   <form:input path="name" id="Names" name="Names" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your Name" required="required" />                    
 	                  </div>
                 </div>
                 <div class="form-group">
-                  <label  class="col-sm-4 control-label">Old Password :</label>
+                  <label  class="col-sm-4 control-label">Last Name :</label>
+	                  <div class="col-sm-8">
+	                   <form:input path="lastname" id="Lastnames" name="Lastnames" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your Name" required="required" />                    
+	                  </div>
+                </div>
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">Confirm Password :</label>
 	                  <div class="col-sm-8" >
-	                    <input name="oldpassword" id="oldpassword" type="password" placeholder="Insert Old Password" class="form-control"  required="required"  />                  
+	                    <input name="Oldpasswords" id="Oldpasswords" type="password" placeholder="Insert  Password" class="form-control"  required="required"  />                  
 	                  </div>
 	             </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label  class="col-sm-4 control-label">New Password :</label>
 	                  <div class="col-sm-8" >
-	                    <input  placeholder="Insert New password" type="password" name="newpassword" id="newpassword" class="form-control" data-minlength="5" data-error="Minimum of 15 characters" required="required"  />                  
+	                    <input  placeholder="Insert New password" type="password" name="Newpasswords" id="Newpasswords" class="form-control"  maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
 	                  </div>
                 </div> 
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Confirm New Password :</label>
 	                  <div class="col-sm-8" >
-	                    <input placeholder="Confirm New password" type="password" name="conpassword" id="conpassword" class="form-control" data-minlength="5" data-error="Minimum of 15 characters" required="required"  />                  
+	                    <input placeholder="Confirm New password" type="password" name="Conpasswords" id="Conpasswords" class="form-control" maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
+	                  </div>
+                </div> -->
+                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">E-Mail :</label>
+	                  <div class="col-sm-8">
+	                   <form:input path="email" id="Emails" name="Emails" class="form-control" placeholder="xample@example.com" data-error="Bruh, that email address is invalid" required="required" />                    
 	                  </div>
                 </div>
                 
-               
-                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">Contact Number :</label>
+	                  <div class="col-sm-8">
+	                   <input  id="Contactnumbers" name="Contactnumbers" class="form-control" data-minlength="10" data-error="Minimum of 10 characters" maxlength="10" data-error="Maximum of 10 characters" placeholder="Insert Your Contact Number"   required="required" />                    
+	                  </div>
+                </div>
+                              
                <div class="form-group">
                   <label  class="col-sm-4 control-label">Role :</label>
-	                  <div class="col-sm-8" >
-				         <form:select path="role" id="role" class="form-control">
-				           <form:option value="ADMIN">ADMIN</form:option>
-				           <form:option value="USER">USER</form:option>
-				           <form:option value="CONTAINER">CONTAINER</form:option>
-				           <form:option value="DRIVER">DRIVER</form:option>
-				         </form:select>                   
-			        	</div>
-		       </div>	
+		          <div class="col-sm-8">  
+		         <select  id="ListRolests" name="ListRolests" class="form-control">
+		          <c:if test = "${not empty ListRolest}">
+		          <c:forEach items="${ListRolest}" var="ListRoles">
+		           <option value="${ListRoles.roleId}" >
+		            		 ${ListRoles.role_n}
+		           </option>
+		          </c:forEach>
+		          </c:if>  
+		         </select>               
+		        </div>
+                 </div>
+                
                 
                <div class="form-group">
                   <label  class="col-sm-4 control-label">Department :</label>
-	                  <div class="col-sm-8" >
-				         <form:select path="department" id="department" class="form-control">
-				           <form:option value="IT NETWORK">IT NETWORK</form:option>
-				           <form:option value="SOFTE WARE DEV">SOFTE WARE DEV</form:option>
-				           <form:option value="ACCOUNT">ACCOUNT</form:option>				           
-				         </form:select>                   
-			        	</div>
-		       </div>
+		          <div class="col-sm-8">  
+		         <select  id="ListDepartments" name="ListDepartments" class="form-control">
+		          <c:if test = "${not empty ListDepartments}">
+		          <c:forEach items="${ListDepartments}" var="ListDepartment">
+		           <option value="${ListDepartment.departmentId}" >
+		            		 ${ListDepartment.department_n}
+		           </option>
+		          </c:forEach>
+		          </c:if>  
+		         </select>               
+		        </div>
+                 </div>
                           
      
             </div>
@@ -151,32 +177,86 @@
 
 <script>
 
-    function myFunction() 
-    {
+var mailformat = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+var passwordformat =/^\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])/;
+var usernameformat= /^([a-zA-Z0-9])+$/i
+var Contactnumberformat= /^([0-9])+$/i
+var nameformat = /^([a-zA-Z])+$/i;
 
-        if (document.getElementById("password").value != document.getElementById("oldpassword").value) 
-        {
-            //document.getElementById("password");
-           // document.getElementById("oldpassword");
-            alert("Passwords Not Match!!!")
-            return false;
-        }
-        else if(document.getElementById("newpassword").value != document.getElementById("conpassword").value)
-        {
-        	//document.getElementById("newpassword");
-            //document.getElementById("conpassword");
-            
-            alert("New Passwords Not Match!!!")
+
+function myFunction() 
+{
+	if(document.getElementById("Names").value.match(nameformat))
+	{
+		if(document.getElementById("Lastnames").value.match(nameformat))
+		{
+			if(document.getElementById("Oldpasswords").value.match(passwordformat))
+			{
+				if(document.getElementById("Emails").value.match(mailformat))
+				{
+					if(document.getElementById("Contactnumbers").value.match(Contactnumberformat))
+					{
+							if (document.getElementById("Passwordn").value != document.getElementById("Oldpasswords").value) 
+						    {
+								alert("Passwords Not Match!!!")
+						        document.getElementById("Oldpasswords").focus();
+						        return false;
+						    }
+						   /*  else if(document.getElementById("Newpasswords").value != document.getElementById("Conpasswords").value)
+						    {
+						        alert("New Passwords Not Match!!!")
+								return false;
+						    } 
+						    else if(document.getElementById("Passwordn").value == document.getElementById("Conpasswords").value)
+						    {         
+						        alert("new password can't be old password!!!")
+						        document.getElementById("Newpasswords").focus();
+								return false;
+						    } */
+						    else
+						    {            
+						        document.getElementById("regForm").submit();
+						        return true;
+						    }
+					}else{
+						
+						alert("Please fallow Contactnumber policy");
+						document.getElementById("Contactnumbers").focus();
+						return false;
+						
+					}
+										    
+				}else{
+					
+					alert("Please fallow Email policy");
+					document.getElementById("Emails").focus();
+					return false;
+					
+				}
+										    
+			}else{
+				
+				alert("Please fallow Current passwords policy");
+				document.getElementById("Oldpasswords").focus();
+				return false;
+				
+			}
+										    
+		}else{
+			
+			alert("Please fallow lastname policy");
+			document.getElementById("Lastnames").focus();
 			return false;
-        }
-        else
-        {            
-        	document.getElementById("password").value = document.getElementById("newpassword").value;
-            document.getElementById("regForm").submit();
-            return true;
-        }
-    }
-    
+			
+		}
+										    
+	}else{
+		
+		alert("Please fallow name policy");
+		document.getElementById("Names").focus();
+		return false;
+	}
+}
 </script>
 </body>
 </html>

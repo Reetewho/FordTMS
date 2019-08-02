@@ -18,11 +18,25 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-         <li>
-          <a href="<c:url value='/calendar' />">
-            <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>Calendar</span>            
-          </a>
-        </li>
+        <c:forEach items="${P_FordUser}" var="permissionMenu">
+        <c:choose>
+		<c:when test="${permissionMenu.id_menu=='1'}">
+	         <li>
+		          <a href="<c:url value='/calendar' />">
+		            <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>Calendar</span>            
+		          </a>
+	        </li>
+        </c:when>
+        </c:choose>
+        <c:choose>
+	        <c:when test="${permissionMenu.id_menu=='6'}">
+	         <li>
+				  <a href="<c:url value='/load-list-drivers' />">
+				       <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>List Driver</span>            
+				  </a>
+			  </li>
+			</c:when>     
+			</c:choose> 
         <!-- 
         <li>
           <a href="<c:url value='/searchby-loadid-processloadRetrieve' />">
@@ -30,27 +44,43 @@
           </a>
         </li>
         -->
+        <c:choose>
+       <c:when test="${permissionMenu.id_menu=='2'}">
         <li>
           <a href="<c:url value='/searchby-loadid' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Search by Load ID</span>            
           </a>
         </li>
+        </c:when>
+        </c:choose>
+        <c:choose>
+        <c:when test="${permissionMenu.id_menu=='3'}">
         <li>
           <a href="<c:url value='/report' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Operation Report</span>            
           </a>
         </li>
+        </c:when>
+        </c:choose>
+        <c:choose>
+        <c:when test="${permissionMenu.id_menu=='4'}">
         <li>
           <a href="<c:url value='/paymentreport' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Summary Report</span>            
           </a>
         </li>
+        </c:when>
+        </c:choose>
+        <c:choose>
+        <c:when test="${permissionMenu.id_menu=='5'}">
         <li>
           <a href="<c:url value='/userList' />">
             <i class="fa fa-user"></i> &nbsp;&nbsp;<span>User</span>            
           </a>
         </li>
-        
+        </c:when>
+         </c:choose>	
+        </c:forEach>
         
         <!-- 
          <li>

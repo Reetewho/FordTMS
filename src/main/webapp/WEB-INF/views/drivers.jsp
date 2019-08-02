@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | User Management</title>
+  <title>AP Transport Center | Drivers Management</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -20,18 +20,15 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       User management
+       Drivers management
         <small></small>
-        
-<%-- 		<a href="<c:url value='/adduser' />"><img  src="<c:url value='/assets/dist/img/add.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>
- --%>        
- 			<a href="<c:url value='/adduser' />"><button type="button" class="btn btn-default">Add</button></a>
-        
       </h1>
 								
+		<a href="<c:url value='/adduser' />"><img  src="<c:url value='/assets/dist/img/add.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>
+
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="#">User list</a></li>         
+        <li><a href="#">Drivers list</a></li>         
       </ol>
     </section>
 
@@ -59,16 +56,14 @@
                 <tr>
 					<th >Name</th>
 					<th >Last Name</th>
-					<th >Role</th>
-					<th >Department</th>
+					<!-- <th >Role</th>
+					<th >Department</th> -->
 					<th >E-mail</th>
 					<th >Contact Number</th>
 					<th >Joining date</th>
 					<th >Last login</th>
 					<th >Status</th>
-					<th >Edit</th>
-					<th >Process Active</th>
-					<th ></th>
+					
 					        
 					         
                 </tr>
@@ -78,7 +73,7 @@
 						<tr >
 						<td>${user.name}</td>
 						<td>${user.lastname}</td>
-						<td>
+						<%-- <td>
 						 <c:forEach items="${ListRolest}" var="ListRoles">
 						 <c:if test="${user.role eq ListRoles.roleId}">
 						 	<c:set var="ShowRoleName" value="${ListRoles.role_n}" /> 
@@ -95,7 +90,7 @@
 						 </c:if>
 						 </c:forEach>
 							
-						</td> 
+						</td>  --%>
 						<td>${user.email}</td>
 						<td>${user.contactnumber}</td>
 						<td>${user.joiningDate}</td>
@@ -107,20 +102,7 @@
 							<c:otherwise>
 								<td>Not Active</td>
 							</c:otherwise>
-						</c:choose>	
-					<td align="center"><a href="<c:url value='/userDetail/${user.username}' />"><img  src="<c:url value='/assets/dist/img/edit.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a></td>					
-					<td align="center" >
-					<c:choose>
-							<c:when test="${user.status=='0'}">
-					<a href="<c:url value='/UserStatus/${user.status}-${user.username}-${user.name}' />"><img  src="<c:url value='/assets/dist/img/True.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>																				
-					</c:when>
-							<c:otherwise>
-					<a href="<c:url value='/UserStatus/${user.status}-${user.username}-${user.name}' />"><img src="<c:url value='/assets/dist/img/false.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px"></a>
-					</c:otherwise>
-						</c:choose>
-					</td>
-					<td align="center"><a href="<c:url value='/userReset/${user.username}' />"><button type="button" class="btn btn-default">Reset Password</button></a></td>																																																													
-					
+						</c:choose>						
 						</tr>
 					</c:forEach>
                               
@@ -151,7 +133,7 @@
 <!-- page script -->
 <script>
   $(function () {
-	  	$("#UserTable").DataTable({	        scrollX: true	            }); 
+	  	$("#UserTable").DataTable(); 
 	   
   });
 </script>

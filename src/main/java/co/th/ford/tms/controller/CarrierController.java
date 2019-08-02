@@ -136,14 +136,15 @@ public class CarrierController {
 			if(load.getStatus().equalsIgnoreCase("true")) {
 				int numLoadStop = loadStopList.size();
 				int roundLoadStop = 1;
-				
 				for(LoadStop loadStop : loadStopList){
-
+	
 					if(loadStop.getStopSequence()==1) {	
-						if(loadStop.getArriveTime().equals("")) {
+						if(loadStop.getArriveTime()==null) {
+							
 							load.setGatein("-");
 							lservice.updateLoad(load);
 						}else {
+							System.out.println(loadStop.getDepartureTime()+"Test value DepartureTime");
 						String numSequence = String.valueOf(loadStop.getArriveTime());
 						load.setGatein(numSequence);
 						lservice.updateLoad(load);
@@ -155,7 +156,7 @@ public class CarrierController {
 					lsservice.saveLoadStop(loadStop);
 					
 					if(roundLoadStop==numLoadStop) {						
-						if(loadStop.getDepartureTime().equals("")) {
+						if(loadStop.getDepartureTime()==null) {
 							load.setGateout("-");
 							lservice.updateLoad(load);
 						}else {
@@ -294,7 +295,7 @@ public class CarrierController {
 		/*test*/	//ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
 		/*test*/	//pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
 		
-		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
+		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
 		loadStop.setStatus("true");
 				
 		

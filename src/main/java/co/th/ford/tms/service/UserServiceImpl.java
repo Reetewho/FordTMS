@@ -11,6 +11,12 @@ import co.th.ford.tms.controller.UserController;
 import co.th.ford.tms.dao.UserDao;
 import co.th.ford.tms.model.User;
 
+import co.th.ford.tms.model.User;
+
+import co.th.ford.tms.aesencrypt.AESCrypt;
+
+/*import co.th.ford.tms.aesencrypt.EncryptDecryptPass;*/
+
 @Service("userService")
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -36,6 +42,7 @@ public class UserServiceImpl implements UserService {
 			entity.setJoiningDate(u.getJoiningDate());
 			entity.setDepartment(u.getDepartment());
 			entity.setPassword(u.getPassword());
+			entity.setContactnumber(u.getContactnumber());
 			entity.setRole(u.getRole());
 			entity.setLogoutDate(entity.getLogoutDate());
 			entity.setStatus(u.getStatus());
@@ -59,4 +66,31 @@ public class UserServiceImpl implements UserService {
 		return ( user == null);
 	}
 	
+	public String encryptUserPassword(String password) {
+		
+		String enPass = "enCryptFail";
+		try {
+			enPass = AESCrypt.encrypt(password);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return enPass;
+		
+	}
+	
+public String decryptUserPassword(String password) {
+		
+		String dePass = "enCryptFail";
+		try {
+			dePass = AESCrypt.decrypt(password);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dePass;
+		
+	}
 }

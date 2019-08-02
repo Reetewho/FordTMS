@@ -39,6 +39,9 @@ public class User {
 		
 	@Column(name = "name", nullable = false)
 	private String name;
+	
+	@Column(name = "lastname", nullable = false)
+	private String lastname;
 
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
@@ -46,12 +49,18 @@ public class User {
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate joiningDate;
 
-	@Size(min=4, max=10)
+	
 	@Column(name = "role", nullable = false)
-	private String role;	
+	private int role;	
 	
 	@Column(name = "department", nullable = false)
-	private String department;
+	private int department;
+	
+	@Column(name = "email", nullable = false)
+	private String email;
+	
+	@Column(name = "contactnumber", nullable = false)
+	private String contactnumber;
 	
 	
 	@NotNull

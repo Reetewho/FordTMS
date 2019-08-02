@@ -63,6 +63,12 @@ public class Load {
 	@Column(name = "completedFlag", nullable = false)
 	private String status;	
 		
+	@Column(name = "assign", nullable = false)
+	private String assign;
+	
+	@Column(name = "driverId", nullable = false)
+	private int driverid;
+	
 	@Column(name = "errorMessage", nullable = true)
 	private String errorMessage;
 	

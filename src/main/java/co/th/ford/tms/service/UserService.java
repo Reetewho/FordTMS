@@ -18,5 +18,8 @@ public interface UserService {
 	User findUserByusername(String username);
 
 	boolean isUsernameUnique(String username);
+
+	String encryptUserPassword(String password);
 	
+	String decryptUserPassword(String password);
 }

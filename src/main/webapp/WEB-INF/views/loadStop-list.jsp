@@ -131,7 +131,7 @@
 <!-- page script -->
 <script>
   $(function () {
-	  	$("#loadStopTable").DataTable( ); 
+	  	$("#loadStopTable").DataTable({	        scrollX: true	            } ); 
 	   
   });
 </script>
