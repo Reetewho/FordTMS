@@ -2,8 +2,10 @@ package co.th.ford.tms.controller;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -25,8 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import co.th.ford.tms.model.Carrier;
 import co.th.ford.tms.model.City;
+import co.th.ford.tms.model.Department;
 import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
+import co.th.ford.tms.model.PermissionMenu;
+import co.th.ford.tms.model.Roles;
 import co.th.ford.tms.model.SetStopETA;
 import co.th.ford.tms.model.User;
 import co.th.ford.tms.service.CarrierService;
@@ -34,17 +39,27 @@ import co.th.ford.tms.service.CityService;
 import co.th.ford.tms.service.LoadService;
 import co.th.ford.tms.service.LoadStopService;
 import co.th.ford.tms.service.SetStopETAService;
+import co.th.ford.tms.service.UserService;
 import co.th.ford.tms.webservice.FindEntities;
 import co.th.ford.tms.webservice.ProcessLoadRetrieve;
 import co.th.ford.tms.webservice.ProcessLoadStatusUpdate;
 import co.th.ford.tms.webservice.ProcessSetStopETA;
+import co.th.ford.tms.service.RolesService;
+import co.th.ford.tms.service.DepartmentService;
 
 
 @Controller
 @RequestMapping("/")
 public class CarrierController {
-
 	
+	@Autowired
+	DepartmentService departmentService;
+	
+	@Autowired
+	RolesService rolesService;
+
+	@Autowired
+	UserService uservice;
 	
 	@Autowired
 	CarrierService cservice;
@@ -121,6 +136,12 @@ public class CarrierController {
 		List<Load> loads= lservice.findLoadByCarrierID(carrier.getCarrierID());
 		model.addAttribute("loadDate", carrier.getLoadDate().toString( DateTimeFormat.forPattern("yyyy-MM-dd") ));
 		model.addAttribute("loads", loads);
+		
+		
+		List<String> listTest = new ArrayList<String>();
+		listTest.add("List A");
+		model.addAttribute("loadListTest", listTest);
+		
 		return "load-list";
 	}
 	
@@ -336,4 +357,41 @@ public class CarrierController {
 		if(environment.getRequiredProperty("local.datetime").equals("th"))plus543=543;
 		return (date.getYear()+plus543)+"-"+date.getMonthOfYear()+"-"+date.getDayOfMonth();
 	}
+	
+/*---------------------------------------------------------------------------------------------------------------------------*/
+	
+	@RequestMapping(value = {"/drivers"}, method = RequestMethod.POST) 
+    public String showResultSelectMultipleCheck(@RequestParam("console-select-rows") String getSelectItemData,HttpSession session,
+    		ModelMap model, HttpServletRequest request) {
+		System.out.println("---------> Start Request[POST] <--------- " +
+				"get Result SelectMultipleCheck : " + getSelectItemData +
+				"---------> End Request[POST] <---------");
+			
+		
+		String[] arrOfSelectItem = getSelectItemData.split(",");
+		int nItem = 1;
+        for (String arrItem : arrOfSelectItem) {
+        	
+            System.out.println("Result " + nItem + " | Item : " + arrItem); 
+            nItem++;
+        }
+        
+		//session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>)permissionMenu);			 
+    
+		
+        model.addAttribute("lists", arrOfSelectItem);
+        
+        List<User> dataAccount = uservice.findAllUsers();     
+		model.addAttribute("users", dataAccount);
+		
+		List<Roles> ListRoles = rolesService.findAllRoles();
+		model.addAttribute("ListRolest", ListRoles);
+
+		List<Department> ListDepartment = departmentService.findAllDepartment();
+		model.addAttribute("ListDepartments", ListDepartment);
+	
+	   return "drivers";
+	}
+	
+	
 }

@@ -30,7 +30,7 @@
        <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
         <li><a href="<c:url value='/userList'/>">User</a></li>
-        <li><a href="#">User Detail</a></li>         
+        <li><a href="#">Reset Password</a></li>         
       </ol>
     </section>
 
@@ -53,7 +53,7 @@
       <!-- /.col -->     
         <div class="col-md-7">
         
-         <form:form method="POST" id="regForms"   onsubmit="return myFunction()" data-toggle="validator" role="form" >
+         <form:form method="POST" id="regForms"   onsubmit="return myFunctions()" data-toggle="validator" role="form" >
  
           <div class="box box-primary">
           	 <div class="box-header with-border">
@@ -71,13 +71,13 @@
                  <div class="form-group">
                   <label  class="col-sm-4 control-label">New Password :</label>
 	                  <div class="col-sm-8" >
-	                    <input  placeholder="Insert New password" type="password" name="Newpasswordsc" id="Newpasswords" class="form-control" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
+	                    <input  placeholder="Insert New password" type="password" name="Newpasswordsc" id="Newpasswordsc" class="form-control" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
 	                  </div>
                 </div> 
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Confirm New Password :</label>
 	                  <div class="col-sm-8" >
-	                    <input placeholder="Confirm New password" type="password" name="Conpasswordsc" id="Conpasswords" class="form-control" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
+	                    <input placeholder="Confirm New password" type="password" name="Conpasswordsc" id="Conpasswordsc" class="form-control" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required"  />                  
 	                  </div>
                 </div> 
                 
@@ -115,11 +115,11 @@
 
 var passwordformat =/^\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])/;
 
-function myFunction() 
+function myFunctions() 
 
 {
-			if(document.getElementById("Newpasswordsc").value.match(passwordformat))
-			{
+			 if(document.getElementById("Newpasswordsc").value.match(passwordformat))
+			{ 
 									
 							if (document.getElementById("Passwordn").value != document.getElementById("Currentpasswords").value) 
 						    {
@@ -144,11 +144,11 @@ function myFunction()
 						        return true;
 						    }
 							
-			}else{
+			 }else{
 				alert("Please fallow New password policy");
 				document.getElementById("Newpasswordsc").focus();
 				return false;
-			}
+			} 
 	
 }
 </script>

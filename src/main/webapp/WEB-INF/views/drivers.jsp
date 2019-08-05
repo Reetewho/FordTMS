@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | Drivers Management</title>
+  <title>AP Transport Center | User Management</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -20,15 +20,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       Drivers management
+       User management
         <small></small>
-      </h1>
-								
-		<a href="<c:url value='/adduser' />"><img  src="<c:url value='/assets/dist/img/add.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>
-
+ 	  </h1>								
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="#">Drivers list</a></li>         
+        <li><a href="#">load list</a></li> 
+        <li><a href="#">Driver list</a></li>         
       </ol>
     </section>
 
@@ -56,8 +54,8 @@
                 <tr>
 					<th >Name</th>
 					<th >Last Name</th>
-					<!-- <th >Role</th>
-					<th >Department</th> -->
+					<th >Role</th>
+					<th >Department</th>
 					<th >E-mail</th>
 					<th >Contact Number</th>
 					<th >Joining date</th>
@@ -73,7 +71,7 @@
 						<tr >
 						<td>${user.name}</td>
 						<td>${user.lastname}</td>
-						<%-- <td>
+						<td>
 						 <c:forEach items="${ListRolest}" var="ListRoles">
 						 <c:if test="${user.role eq ListRoles.roleId}">
 						 	<c:set var="ShowRoleName" value="${ListRoles.role_n}" /> 
@@ -88,9 +86,8 @@
 						 	<c:set var="ShowRoleName" value="${ListDepartment.department_n}" /> 
              			 	<c:out value="${ShowRoleName}" />
 						 </c:if>
-						 </c:forEach>
-							
-						</td>  --%>
+						 </c:forEach>							
+						</td> 
 						<td>${user.email}</td>
 						<td>${user.contactnumber}</td>
 						<td>${user.joiningDate}</td>
@@ -102,10 +99,9 @@
 							<c:otherwise>
 								<td>Not Active</td>
 							</c:otherwise>
-						</c:choose>						
+						</c:choose>										
 						</tr>
-					</c:forEach>
-                              
+					</c:forEach>                             
                 </tbody>             
               </table>
               
@@ -133,7 +129,7 @@
 <!-- page script -->
 <script>
   $(function () {
-	  	$("#UserTable").DataTable(); 
+	  	$("#UserTable").DataTable({	        scrollX: true	            }); 
 	   
   });
 </script>
