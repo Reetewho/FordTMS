@@ -55,4 +55,13 @@ public class LoadDaoImpl extends AbstractDao<Integer, Load> implements LoadDao {
 		return (Load) criteria.uniqueResult();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Load> findLoadByusername(String driverid) {
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("driverid", driverid));
+		return (List<Load>) criteria.list();
+	}
+	
+	
+	
 }

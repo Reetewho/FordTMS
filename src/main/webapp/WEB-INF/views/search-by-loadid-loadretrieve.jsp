@@ -83,7 +83,7 @@
 	            </div>
 	            <!-- /.box-header -->
 	            <div class="box-body ">
-	              <table id="loadStopTable" class="table table-bordered table-striped">
+	              <table id="loadStopTable" class="table table-bordered table-striped" style="width : 100% ">
 	                <thead>
 	                <tr>
 	                  	<th >Stop Sequence</th>

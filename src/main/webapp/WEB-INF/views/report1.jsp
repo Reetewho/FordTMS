@@ -62,7 +62,7 @@
         <div class="col-md-12">
           <div class="box box-primary">            	      	
             <div class="box-body ">
-              <table id="reportTable" class="table table-bordered table-striped">
+              <table id="reportTable" class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
                   	<th >Load ID</th>
@@ -140,7 +140,7 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 	  
 	  
 	  	$("#reportTable").DataTable({
-	        dom: "<'row'<'col-sm-7'l><'col-sm-2'B><'col-sm-3'f>>" +
+	  		dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
 	        "<'row'<'col-sm-12'tr>>" +
 	        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 	        buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'Report_'+d}],

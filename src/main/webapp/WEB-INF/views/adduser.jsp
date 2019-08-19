@@ -144,9 +144,7 @@
 		          </c:if>  
 		         </select>               
 		        </div>
-                 </div>
-                          
-     
+                 </div>    
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
@@ -220,7 +218,6 @@ function myFunction()
 				{		
 				if(passEmail.match(mailformat))
 					{
-						alert("Add User success");
 						return true;
 						
 					}else{

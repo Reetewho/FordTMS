@@ -16,6 +16,8 @@ public interface LoadService {
 	List<Load> findAllLoads(); 
 	
 	Load findLoadByID(int loadID);
+		
+	List<Load> findLoadByusername(String driverid);
 	
 	List<Load> findLoadByCarrierID(int carrierID);
 

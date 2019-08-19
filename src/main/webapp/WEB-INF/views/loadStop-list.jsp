@@ -25,8 +25,25 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="<c:url value='/calendar/${loadDate}' />">Calendar</a></li>
-        <li><a href="<c:url value='/load-list/${loadDate}'/>">${loadDate}</a></li>
+        <li>
+        <c:choose>
+        			<c:when test="${S_FordUser.role=='1'}">
+						<a href="<c:url value='/calendar/${loadDate}' />">Calendar</a>
+					</c:when>
+						<c:when test="${S_FordUser.role=='2'}">
+							<a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />">Load List</a>
+						</c:when>
+        	</c:choose>
+        	
+        </li>
+        <li>
+         	<c:choose>
+        			<c:when test="${S_FordUser.role=='1'}">
+        				<a href="<c:url value='/load-list/${loadDate}'/>">${loadDate}</a>
+        			</c:when>
+        				<c:when test="${S_FordUser.role=='2'}"></c:when>
+        	</c:choose>
+        </li>        
         <li><a href="#">${load.systemLoadID}</a></li> 
         <li><a href="#">Load Stop list</a></li>         
       </ol>
@@ -49,7 +66,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body ">
-              <table id="loadStopTable" class="table table-bordered table-striped">
+              <table id="loadStopTable" class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
                   	<th >Stop Sequence</th>

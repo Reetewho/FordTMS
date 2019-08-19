@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Type;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -45,9 +46,9 @@ public class User {
 
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "joining_date", nullable = false)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	private LocalDate joiningDate;
+	@Column(name = "joining_date", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime joiningDate;
 
 	
 	@Column(name = "role", nullable = false)
@@ -62,12 +63,11 @@ public class User {
 	@Column(name = "contactnumber", nullable = false)
 	private String contactnumber;
 	
-	
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "lastLogin", nullable = false)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	private LocalDate logoutDate;
+	@Column(name = "lastLogin", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime logoutDate;
 	
 	@Column(name = "status", nullable = false)
 	private int status;

@@ -74,4 +74,8 @@ public class CarrierServiceImpl implements CarrierService {
 	public List<LoadListReport> findbyLoadID(String strLoadID) {
 		return dao.getPaymentbyLoadIDReport(strLoadID);
 	} 
+	
+	public List<LoadListReport> findbySystemsLoadID(String strLoadID) {
+		return dao.getSystemLoadID(strLoadID);
+	}
 }

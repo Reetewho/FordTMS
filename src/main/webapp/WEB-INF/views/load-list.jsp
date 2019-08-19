@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,14 +8,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AP Transport Center | Load List</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
-<style>
-.disabled {
-  pointer-events: none;
-  cursor: default;
-  opacity: 0.6;    
-  color: red; 
-}
-</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -109,20 +101,12 @@
       <div class="row">
       <!-- /.col -->
         <div class="col-md-12">
-          <div class="box box-primary">
-          	<div class="box-header">
-            <c:if test="${Error!=null} }">
-              <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa fa-ban"></i> Error!</h4>
-                <c:out value="${Error} }"></c:out>
-              </div>
-            </c:if>
-            </div>
+           <div class="box box-primary">
+
             <!-- /.box-header -->
             <div class="box-body ">
              <form method="POST" id="frm-example"  action="<c:url value='/drivers' />"  >            
-              <table  id="example" class="table table-bordered table-striped">
+              <table  id="example" class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
                   <th></th>
@@ -131,7 +115,9 @@
                   <th>Alert Type Code</th>
                   <th>Route No.</th>
                   <th>Load Start Date Time</th>
-                  <th>Load End Date Time</th>                  
+                  <th>Load End Date Time</th>   
+                  <th>Accept Date Time</th> 
+                  <th>Assign To</th>                
                   <th>Status</th>                  
                 </tr>
                 </thead>
@@ -162,6 +148,8 @@
 						<td>${load.loadDescription}</td>
 						<td>${load.loadStartDateTime}</td>
 						<td>${load.loadEndDateTime}</td>
+						<td>${load.dateaccept}</td>
+						<td>${load.driverid}</td>
 						<td>${load.status}</td>
 						<c:if test = "${load.status=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
 						<c:if test = "${load.status=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
@@ -171,7 +159,8 @@
 				</c:forEach>               
                 </tbody> 
               </table>		
-                <button type="submit" class="btn btn-primary pull-right">Submit</button>                
+                <button type="submit" class="btn btn-primary pull-right">Assign</button>     
+                <input type="hidden" name="loaddates" id="loaddates" value="${loadDate}"/>           
               <input type="hidden" name="console-select-rows" id="console-select-rows" value=""/>               
              </form>                                      	                        
             </div>
@@ -195,9 +184,9 @@
 
 <%@ include file="/WEB-INF/include/jsInclude.jsp" %>
 
+	
 <!-- page script -->
 <script>
-
 var strDate='${loadDate}';
 var d = strDate.split("-");
 
@@ -221,146 +210,49 @@ var d = strDate.split("-");
 	});
   
 
-	 
-	 
-	 function updateDataTableSelectAllCtrl(table){
-		   var $table             = table.table().node();
-		   var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
-		   var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
-		   var chkbox_select_all  = $('thead input[name="select_all"]', $table).get(0);
 
-		   // If none of the checkboxes are checked
-		   if($chkbox_checked.length === 0){
-		      chkbox_select_all.checked = false;
-		      if('indeterminate' in chkbox_select_all){
-		         chkbox_select_all.indeterminate = false;
-		      }
+	 $(document).ready(function() {
+		   var table = $('#example').DataTable({ 
+			dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
+			        "<'row'<'col-sm-12'tr>>" +
+			        "<'row'<'col-sm-2'i><'col-sm-10'p>>",
+			        buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}],
+			        'autoWidth':true,
+					   'scrollX': true,
 
-		   // If all of the checkboxes are checked
-		   } else if ($chkbox_checked.length === $chkbox_all.length){
-		      chkbox_select_all.checked = true;
-		      if('indeterminate' in chkbox_select_all){
-		         chkbox_select_all.indeterminate = false;
-		      }
+			   'initComplete': function(settings){
+			         var api = this.api();
 
-		   // If some of the checkboxes are checked
-		   } else {
-		      chkbox_select_all.checked = true;
-		      if('indeterminate' in chkbox_select_all){
-		         chkbox_select_all.indeterminate = true;
-		      }
-		   }
-		}
-
-		$(document).ready(function (){
-			
-		   // Array holding selected row IDs
-		   var rows_selected = [];
-		   var table = $('#example').DataTable({
-			   dom: "<'row'<'col-sm-7'l><'col-sm-2'B><'col-sm-3'f>>" +
-		        "<'row'<'col-sm-12'tr>>" +
-		        "<'row'<'col-sm-2'i><'col-sm-5'p>>",
-		        buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}],
-		        "columns": [
-		        	{ "data": "" },
-		            { "data": "No" },
-		            { "data": "LoadID" },
-		            { "data": "AlertTypeCode" },
-		            { "data": "Route No" },
-		            { "data": "LoadStartDateTime" },
-		            { "data": "LoadEndDateTime" },
-		            { "data": "Status" }
-		            ],
-		      'columnDefs': [{
-		         'targets': 0,
-		         'searchable': false,
-		         'orderable': false,
-		         'width': '1%',
-		         'className': 'dt-body-center',
-		         'render': function (data, type, full, meta){
-		             //return '<input type="checkbox">';
-		        	 return full.Status == 'N/A' ? 
-		        	            '<input type="checkbox">' : '<input type="checkbox" disabled>'
+			         api.cells(
+			            api.rows(function(idx, data, node){
+			               return (data[9] !== 'N/A') ? true : false;
+			            }).indexes(),
+			            0
+			         ).checkboxes.disable();
+			      },
+		      'columnDefs': [
+		         {
+		            'targets': 0,
+		            'checkboxes': {
+		               'selectRow': true
+		            }
 		         }
-		      }],
-		      'order': [[0, 'asc']],
-		      'rowCallback': function(row, data, dataIndex){
-		         // Get row ID
-		         var rowId = data[0];
-
-		         // If row ID is in the list of selected row IDs
-		         if($.inArray(rowId, rows_selected) !== -1){
-		            $(row).find('input[type="checkbox"]').prop('checked', true);
-		            $(row).addClass('selected');
-		         }
-		      }
+		      ],
+		      'select': {
+		         'style': 'multi'
+		      },
+		      'order': [[0, 'asc']]
 		   });
-
-		   // Handle click on checkbox
-		   $('#example tbody').on('click', 'input[type="checkbox"]', function(e){
-		      var $row = $(this).closest('tr');
-
-		      // Get row data
-		      var data = table.row($row).data();
-
-		      // Get row ID
-		      var rowId = data[0];
-
-		      // Determine whether row ID is in the list of selected row IDs
-		      var index = $.inArray(rowId, rows_selected);
-
-		      // If checkbox is checked and row ID is not in list of selected row IDs
-		      if(this.checked && index === -1){
-		         rows_selected.push(rowId);
-
-		      // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-		      } else if (!this.checked && index !== -1){
-		         rows_selected.splice(index, 1);
-		      }
-
-		      if(this.checked){
-		         $row.addClass('selected');
-		      } else {
-		         $row.removeClass('selected');
-		      }
-
-		      // Update state of "Select all" control
-		      updateDataTableSelectAllCtrl(table);
-
-		      // Prevent click event from propagating to parent
-		      e.stopPropagation();
-		   });
-
-		   // Handle click on table cells with checkboxes
-		   $('#example').on('click', 'tbody td, thead th:first-child', function(e){
-		      $(this).parent().find('input[type="checkbox"]').trigger('click');
-		   });
-
-		   // Handle click on "Select all" control
-		   $('thead input[name="select_all"]', table.table().container()).on('click', function(e){
-		      if(this.checked){
-		         $('#example tbody input[type="checkbox"]:not(:checked)').trigger('click');
-		      } else {
-		         $('#example tbody input[type="checkbox"]:checked').trigger('click');
-		      }
-
-		      // Prevent click event from propagating to parent
-		      e.stopPropagation();
-		   });
-
-		   // Handle table draw event
-		   table.on('draw', function(){
-		      // Update state of "Select all" control
-		      updateDataTableSelectAllCtrl(table);
-		   });
-
-		   // Handle form submission event
+		   
+		   // Handle form submission event 
 		   $('#frm-example').on('submit', function(e){
 		      var form = this;
+		      
+		      var rows_selected = table.column(0).checkboxes.selected();
 
 		      // Iterate over all selected checkboxes
 		      $.each(rows_selected, function(index, rowId){
-		         // Create a hidden element
+		         // Create a hidden element 
 		         $(form).append(
 		             $('<input>')
 		                .attr('type', 'hidden')
@@ -368,32 +260,25 @@ var d = strDate.split("-");
 		                .val(rowId)
 		         );
 		      });
+
+		      // FOR DEMONSTRATION ONLY
+		      // The code below is not needed in production
 		      
-		      // FOR DEMONSTRATION ONLY     
-		       // Output form data to a console     
-	      		$('#example-console-rows2').text(rows_selected.join(","));
-	      		document.getElementById("console-select-rows").value = rows_selected.join(",");
-		      
+		      // Output form data to a console     
+		      $('#example-console-rows').text(rows_selected.join(","));
+		      document.getElementById("console-select-rows").value = rows_selected.join(",");
 		      
 		      // Output form data to a console     
 		      $('#example-console-form').text($(form).serialize());
-		      console.log("Form submission", $(form).serialize());
 		       
 		      // Remove added elements
 		      $('input[name="id\[\]"]', form).remove();
 		       
 		      // Prevent actual form submission
 		      //e.preventDefault();
-		      
-		    	//var action = "<c:url value='/something2' />";
-		  		//document.getElementById("frm-example").action = action;
-		  		//document.getElementById("frm-example").submit();
-		   });
-		   
-		   
-		   
-
+		   });   
 		});
+		
 	 
 	
 </script>

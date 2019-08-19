@@ -25,8 +25,22 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="<c:url value='/calendar/${loadDate}' />">Calendar</a></li>
-        <li><a href="<c:url value='/load-list/${loadDate}'/>">${loadDate}</a></li>
+        <c:choose>
+        			<c:when test="${S_FordUser.role=='1'}">
+        					<li><a href="<c:url value='/calendar/${loadDate}' />">Calendar</a></li>
+        			</c:when>
+						<c:when test="${S_FordUser.role=='2'}">
+						
+						</c:when>
+        </c:choose>
+         	<c:choose>
+	        			<c:when test="${S_FordUser.role=='1'}">
+	        				<li><a href="<c:url value='/load-list/${loadDate}'/>">${loadDate}</a></li>
+	        			</c:when>
+							<c:when test="${S_FordUser.role=='2'}">
+							
+							</c:when>
+			</c:choose>
         <li><a href="<c:url value='/loadStop-list/${loadDate}/${load.systemLoadID}-${load.loadID}'/>">${load.systemLoadID}</a></li> 
         <li><a href="#">Load Status Update</a></li>         
       </ol>

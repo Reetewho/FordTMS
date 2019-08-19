@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | User Management</title>
+  <title>AP Transport Center | Driver Management</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -50,9 +50,33 @@
       	</div>
       </div>
             <!-- /.box-header -->
-            <div class="box-body ">         
+            <div class="box-body ">
+            <table id="DriverTable"  class="table table-bordered table-striped" style="width : 100% ">
+            <thead>
+                <tr> 
+            	  <th>Name</th>
+                  <th>Lastname</th>
+                  <th>E-Mail</th>                 
+                  <th>Contact Number</th>
+                  <th>Joining date</th>                  
+                  <th>Last login</th>                  
+                </tr>
+                </thead>
+                <tbody>	                
+						<tr >
+						<td>${user_r.name}</td>
+						<td>${user_r.lastname}</td>
+						<td>${user_r.email}</td>
+						<td>${user_r.contactnumber}</td>
+						<td>${user_r.joiningDate}</td>
+						<td>${user_r.logoutDate}</td>
+						</tr>					
+             </table>
+             </div>
+             
+             <div class="box-body ">
                <form method="POST" id="frmDrivere" >                                    
-              <table id="DriverTable"  class="table table-bordered table-striped" style="width : 100% ">
+              <table id="DriverTable"  class="table table-bordered table-striped">
                <thead>
                 <tr>                  
                   <th>NO.</th>
@@ -60,8 +84,7 @@
                   <th>Alert Type Code</th>
                   <th>Route No.</th>
                   <th>Load Start Date Time</th>
-                  <th>Load End Date Time</th> 
-                  <th>Assign Date Time</th>                  
+                  <th>Load End Date Time</th>                  
                   <th>Status</th>                  
                 </tr>
                 </thead>
@@ -70,30 +93,30 @@
                 <c:set var="loadStatus" value="${0}"/>
                 <c:set var="inTransit" value="${0}"/>
                 <c:set var="completed" value="${0}"/>
-                <c:forEach items="${Loadlistd}" var="Loadlistds">		     
+                <c:forEach items="${allListLoads}" var="allListLoad">		     
 					<tr>	   				    		    										    
 						<td>${i=i+1}</td>
 						<td>
-							<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${Loadlistds.assign}/${Loadlistds.systemLoadID}-${Loadlistds.loadID}' />" >
-							${Loadlistds.systemLoadID}
+							<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${loaddates}/${allListLoad.systemLoadID}-${allListLoad.loadID}' />" >
+							${allListLoad.systemLoadID}
 							</a>
 		
 						</td>
-						<td>${Loadlistds.alertTypeCode}</td>
-						<td>${Loadlistds.loadDescription}</td>
-						<td>${Loadlistds.loadStartDateTime}</td>
-						<td>${Loadlistds.loadEndDateTime}</td>
-						<td>${Loadlistds.dateassign}</td>
-						<td>${Loadlistds.status}</td>
-						<c:if test = "${Loadlistds.status=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
-						<c:if test = "${Loadlistds.status=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
-						<c:if test = "${Loadlistds.status=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
-						<c:if test = "${Loadlistds.status=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
+						<td>${allListLoad.alertTypeCode}</td>
+						<td>${allListLoad.loadDescription}</td>
+						<td>${allListLoad.loadStartDateTime}</td>
+						<td>${allListLoad.loadEndDateTime}</td>
+						<td>${allListLoad.status}</td>
+						<c:if test = "${allListLoad.status=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
+						<c:if test = "${allListLoad.status=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
+						<c:if test = "${allListLoad.status=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
+						<c:if test = "${allListLoad.status=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
 					</tr>
 				</c:forEach>               
                 </tbody> 
               </table>	              
-                                   
+              <a href="<c:url value='/load-list/${loaddates}' />"><button type="button" class="btn btn-default">Back</button></a>
+              <a href="<c:url value='/driverconf/${user_r.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Submit</button></a>	                     
              </form>
             </div>
             <!-- /.box-body -->
@@ -118,45 +141,10 @@
 
 <!-- page script -->
 <script>
-
-var strDate='${loadDate}';
-var d = strDate.split("-");
-
   $(function () {
-	 
-	  	$("#DriverTable").DataTable({
-			dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
-	        "<'row'<'col-sm-12'tr>>" +
-	        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-	                buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}] ,
-	                scrollX: true
-	            }); 
-	    $("#totalNA").html(' <c:out value = "${naStatus}"/> ');
-	    $("#totalLoad").html(' <c:out value = "${loadStatus}"/> ');
-	    $("#totalIntransit").html(' <c:out value = "${inTransit}"/> ');
-	    $("#completed").html(' <c:out value = "${completed}"/> ');
+	  	$("#UserTable").DataTable({	        scrollX: true	            }); 
+	   
   });
- 	
-	/*
-	* This method will : after click link provide delete attribute href (Origin).
-	$(".ClickLoadRetrieve").on("click", function(){ 
-		$(this).attr("onClick", false); 
-	});
-	*/
-	
-	/*
-	* This method will : after click link provide delete attribute href.
-	*/
-	$(".ClickLoadListStop").on("click", function(){ 
-		var strLocation = $(this).attr("href");
-		  if(strLocation != null){
-			  window.location=strLocation;
-			  $(this).removeAttr( "href" );
-			  $(this).attr("onClick", false);
-		  }else{
-			  $(this).attr("onClick", false); 
-		  }   
-	});
 </script>
 </body>
 </html>

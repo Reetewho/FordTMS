@@ -15,4 +15,5 @@ public class LoadListReport {
 	private String gatein;
 	private String gateout;
 	private String carrierID;
+	private String driverid;
 }

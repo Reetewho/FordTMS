@@ -3,12 +3,32 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
   <header class="main-header">
     <!-- Logo -->
-    <a href="<c:url value='/calendar' />" class="logo">
+    <c:choose>
+    <c:when test="${S_FordUser.role=='1'}">
+    <a href="<c:url value='/calendar' />" class="logo">   
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>AP</b></span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>AP</b>  Transport Center</span>
     </a>
+     </c:when>
+     		 <c:when test="${S_FordUser.role=='2'}">
+				    <a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />" class="logo">   
+				      <!-- mini logo for sidebar mini 50x50 pixels -->
+				      <span class="logo-mini"><b>AP</b></span>
+				      <!-- logo for regular state and mobile devices -->
+				      <span class="logo-lg"><b>AP</b>  Transport Center</span>
+				    </a>
+			</c:when>
+				<c:when test="${S_FordUser.role=='3'}">
+				    <a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />" class="logo">   
+				      <!-- mini logo for sidebar mini 50x50 pixels -->
+				      <span class="logo-mini"><b>AP</b></span>
+				      <!-- logo for regular state and mobile devices -->
+				      <span class="logo-lg"><b>AP</b>  Transport Center</span>
+				    </a>
+			</c:when>
+     </c:choose>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->

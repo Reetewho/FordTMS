@@ -29,10 +29,10 @@
         </c:when>
         </c:choose>
         <c:choose>
-	        <c:when test="${permissionMenu.id_menu=='6'}">
+	        <c:when test="${permissionMenu.id_menu=='2'}">
 	         <li>
-				  <a href="<c:url value='/load-list-drivers' />">
-				       <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>List Driver</span>            
+				  <a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />">
+				       <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>Inbox Load List</span>            
 				  </a>
 			  </li>
 			</c:when>     
@@ -45,7 +45,7 @@
         </li>
         -->
         <c:choose>
-       <c:when test="${permissionMenu.id_menu=='2'}">
+       <c:when test="${permissionMenu.id_menu=='3'}">
         <li>
           <a href="<c:url value='/searchby-loadid' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Search by Load ID</span>            
@@ -54,7 +54,7 @@
         </c:when>
         </c:choose>
         <c:choose>
-        <c:when test="${permissionMenu.id_menu=='3'}">
+        <c:when test="${permissionMenu.id_menu=='4'}">
         <li>
           <a href="<c:url value='/report' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Operation Report</span>            
@@ -63,7 +63,7 @@
         </c:when>
         </c:choose>
         <c:choose>
-        <c:when test="${permissionMenu.id_menu=='4'}">
+        <c:when test="${permissionMenu.id_menu=='5'}">
         <li>
           <a href="<c:url value='/paymentreport' />">
             <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Summary Report</span>            
@@ -72,10 +72,10 @@
         </c:when>
         </c:choose>
         <c:choose>
-        <c:when test="${permissionMenu.id_menu=='5'}">
+        <c:when test="${permissionMenu.id_menu=='6'}">
         <li>
           <a href="<c:url value='/userList' />">
-            <i class="fa fa-user"></i> &nbsp;&nbsp;<span>User</span>            
+            <i class="fa fa-user"></i> &nbsp;<span>User Management</span>            
           </a>
         </li>
         </c:when>

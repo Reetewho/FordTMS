@@ -31,6 +31,7 @@ import co.th.ford.tms.model.Department;
 import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
 import co.th.ford.tms.model.PermissionMenu;
+import co.th.ford.tms.model.Report1;
 import co.th.ford.tms.model.Roles;
 import co.th.ford.tms.model.SetStopETA;
 import co.th.ford.tms.model.User;
@@ -187,10 +188,11 @@ public class CarrierController {
 						}
 					}
 					roundLoadStop=roundLoadStop+1;
-				}
+				}				
 				load.setStatus("Load");								
 				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 //				load.setStatusFlag(2);
+				load.setDateaccept(LocalDateTime.now());
 				load.setLastUpdateDate(LocalDateTime.now());
 				lservice.updateLoad(load);
 			}else {
@@ -361,8 +363,11 @@ public class CarrierController {
 /*---------------------------------------------------------------------------------------------------------------------------*/
 	
 	@RequestMapping(value = {"/drivers"}, method = RequestMethod.POST) 
-    public String showResultSelectMultipleCheck(@RequestParam("console-select-rows") String getSelectItemData,HttpSession session,
+    public String showResultSelectMultipleCheck(@RequestParam("console-select-rows") String getSelectItemData,@RequestParam("loaddates") String loaddates,HttpSession session,
     		ModelMap model, HttpServletRequest request) {
+		if (!checkAuthorization(session))return "redirect:/login";
+
+		
 		System.out.println("---------> Start Request[POST] <--------- " +
 				"get Result SelectMultipleCheck : " + getSelectItemData +
 				"---------> End Request[POST] <---------");
@@ -376,14 +381,25 @@ public class CarrierController {
             nItem++;
         }
         
-		//session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>)permissionMenu);			 
-    
-		
-        model.addAttribute("lists", arrOfSelectItem);
+        session.removeAttribute("sessionSelectItem");
+        session.setAttribute("sessionSelectItem", arrOfSelectItem);
         
-        List<User> dataAccount = uservice.findAllUsers();     
-		model.addAttribute("users", dataAccount);
-		
+        
+        String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
+        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        int nSessionItem = 1;
+        for (String arrSessionItem : getSessionSelectItem) {
+         
+            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            nSessionItem++;
+            
+        }			 
+    		
+        model.addAttribute("loaddates", loaddates);
+        
+        List<User> dataRole = uservice.findByRole(Integer.valueOf("3"));  
+      	model.addAttribute("users", dataRole);
+        	
 		List<Roles> ListRoles = rolesService.findAllRoles();
 		model.addAttribute("ListRolest", ListRoles);
 
@@ -393,5 +409,104 @@ public class CarrierController {
 	   return "drivers";
 	}
 	
+	
+	@RequestMapping(value = { "/show-driver-detail/{showusername}/{loaddates}" }, method = RequestMethod.GET)
+	public String showResultSelectMultipleCheck(HttpSession session,  ModelMap model,@PathVariable String showusername,@PathVariable String loaddates) {	 					
+		if (!checkAuthorization(session))return "redirect:/login";
+
+		String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
+        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        int nSessionItem = 1;
+        List<Load> allListLoad = new ArrayList<Load>();
+        for (String arrSessionItem : getSessionSelectItem) {
+         
+            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            nSessionItem++;
+            Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
+            allListLoad.add(loadDetail);
+            
+        }	
+        
+        	model.addAttribute("loaddates", loaddates);	
+        
+			User user_r = uservice.findUserByusername(showusername);
+	      	model.addAttribute("user_r", user_r);
+	      	         	      	
+	      	model.addAttribute("allListLoads", allListLoad);
+	      		        	
+			List<Roles> ListRoles = rolesService.findAllRoles();
+			model.addAttribute("ListRolest", ListRoles);
+
+			List<Department> ListDepartment = departmentService.findAllDepartment();
+			model.addAttribute("ListDepartments", ListDepartment);
+	
+		return "show-driver-detail";
+	}
+	
+	@RequestMapping(value = { "/driverconf/{showusernames}/{loaddates}" }, method = RequestMethod.GET)
+	public String showResultSelectMultipleChecks(HttpSession session,  ModelMap model,@PathVariable String showusernames,@PathVariable String loaddates) {	 					
+		if (!checkAuthorization(session))return "redirect:/login";
+		
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");	
+		model.addAttribute("loaddates", loaddates);	
+        LocalDateTime formatDateTime = LocalDateTime.parse(loaddates, dtf);
+        LocalDateTime datesession = LocalDateTime.now();
+        
+		String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
+        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        int nSessionItem = 1;
+        List<Load> allListLoad = new ArrayList<Load>();
+        for (String arrSessionItem : getSessionSelectItem) {
+         
+            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            nSessionItem++;
+            Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
+            allListLoad.add(loadDetail);
+                                        
+            
+            loadDetail.setDriverid(showusernames);
+            
+            loadDetail.setDateassign(datesession);
+            
+            loadDetail.setAssign(formatDateTime);                    
+            
+            lservice.updateLoad(loadDetail);
+            
+            System.out.println("Result " + datesession + " | Item : " + loadDetail); 
+            
+            model.addAttribute("Success", "Assign To Driver Success : " + showusernames + ".");
+            
+        }	             
+        model.addAttribute("loaddates", loaddates);	
+        
+		User user_r = uservice.findUserByusername(showusernames);
+      	model.addAttribute("user_r", user_r);
+      	         	      	
+      	model.addAttribute("allListLoads", allListLoad);
+      		        	
+		List<Roles> ListRoles = rolesService.findAllRoles();
+		model.addAttribute("ListRolest", ListRoles);
+
+		List<Department> ListDepartment = departmentService.findAllDepartment();
+		model.addAttribute("ListDepartments", ListDepartment);        		
+		
+        session.removeAttribute("sessionSelectItem");
+		
+        return "show-driver-detail";
+		}
+	
+	
+	@RequestMapping(value = { "/load-list-drivers/{username}"}, method = RequestMethod.GET)
+	public String showResultDrivers(HttpSession session,  ModelMap model,@PathVariable String username) {	 					
+		if (!checkAuthorization(session))return "redirect:/login";
+		
+		User user =uservice.findUserByusername(username);
+		session.setAttribute("S_FordUser", user);		
+		
+		List<Load> Loadlistd = lservice.findLoadByusername(username);
+		model.addAttribute("Loadlistd", Loadlistd);
+	
+		return "load-list-drivers";
+	}
 	
 }

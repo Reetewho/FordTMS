@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | User Management</title>
+  <title>AP Transport Center | Driver Management</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -14,13 +14,15 @@
 
   <%@ include file="/WEB-INF/include/header.jsp" %>
   <%@ include file="/WEB-INF/include/rightMenu.jsp" %>
-
+<!-- -------------------------------------------------------------------------------------------------------------------- -->
+<input type="hidden" name="Assignd" id="Assignd" value="sessionSelectItem">
+<!-- -------------------------------------------------------------------------------------------------------------------- -->
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       User management
+       Driver management
         <small></small>
  	  </h1>								
       <ol class="breadcrumb">
@@ -49,7 +51,7 @@
       </div>
             <!-- /.box-header -->
             <div class="box-body ">
-              <table id="UserTable"  class="table table-bordered table-striped">
+              <table id="UserTable"  class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
 					<th >Name</th>
@@ -61,7 +63,7 @@
 					<th >Joining date</th>
 					<th >Last login</th>
 					<th >Status</th>
-					
+					<th ></th>
 					        
 					         
                 </tr>
@@ -99,12 +101,18 @@
 							<c:otherwise>
 								<td>Not Active</td>
 							</c:otherwise>
-						</c:choose>										
-						</tr>
+						</c:choose>							 						
+ 						<c:forEach items="${sessionSelectItem}" var="sessionSelectItems"> 
+ 						
+ 						</c:forEach>	
+ 						 
+ 						<td align="center"><a href="<c:url value='/show-driver-detail/${user.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Assign Driver</button></a></td>	
+											 
+ 					</tr>
 					</c:forEach>                             
-                </tbody>             
+                </tbody>       
+                      
               </table>
-              
             </div>
             <!-- /.box-body -->
           </div>

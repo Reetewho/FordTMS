@@ -28,4 +28,6 @@ public interface CarrierDao {
 	List<PaymentReport1> getPaymentReport1(String startDate,String endDate);
 	
 	List<LoadListReport> getPaymentbyLoadIDReport(String strLoadID);
+	
+	List<LoadListReport> getSystemLoadID(String strLoadID);
 }

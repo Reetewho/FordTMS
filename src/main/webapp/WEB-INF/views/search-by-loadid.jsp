@@ -111,7 +111,7 @@
 	        <div class="col-md-12">
 	          <div class="box box-primary">            	      	
 	            <div class="box-body ">
-	              <table id="reportTable" class="table table-bordered table-striped">
+	              <table id="reportTable" class="table table-bordered table-striped" style="width : 100% ">
 	                <thead>
 	                <tr>
 	                  	<th >Load ID</th>
@@ -134,11 +134,20 @@
 							<c:forEach items="${dataloadlistreport}" var="dataloadlistreport">
 								<tr >
 								
-								<td>
-									<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${dataloadlistreport.loadDate}/${dataloadlistreport.systemLoadID}-${dataloadlistreport.loadID}' />">
-									${dataloadlistreport.systemLoadID}
-									</a>
-								</td>
+								<c:choose>
+									<c:when test="${dataloadlistreport.driverid == S_FordUser.username}">
+										<td>
+											<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${dataloadlistreport.loadDate}/${dataloadlistreport.systemLoadID}-${dataloadlistreport.loadID}' />">
+											${dataloadlistreport.systemLoadID}
+											</a>
+										</td>
+									</c:when>
+											<c:otherwise>
+												<td>
+													<a class="ClickLoadListStop">${dataloadlistreport.systemLoadID}</a>
+												</td>
+											</c:otherwise>
+								</c:choose>
 								<!--
 								<td>${dataloadlistreport.systemLoadID}</td>
 								-->
@@ -193,7 +202,7 @@
 		  
 		  
 		  	$("#reportTable").DataTable({
-		        dom: "<'row'<'col-sm-7'l><'col-sm-2'B><'col-sm-3'f>>" +
+		  		dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
 		        "<'row'<'col-sm-12'tr>>" +
 		        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 		        buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'Report_'+d}],

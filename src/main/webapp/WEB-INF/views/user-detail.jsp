@@ -63,13 +63,13 @@
             <div class="box-body form-horizontal">                    
                <form:input type="hidden" path="username" id="username"/>
 				<form:input type="hidden" path="status" id="status"/>
-				<form:input type="hidden" path="password" id="password"/>
-				<jsp:useBean id="now" class="java.util.Date"/>       
-				<fmt:formatDate value="${now}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="setDateTimeNow" />
-				<form:input type="hidden" path="joiningDate" id="joiningDate" value="${setDateTimeNow}"/>    
+				<form:input type="hidden" path="password" id="password"/>				
+				<fmt:formatDate value="${joiningDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="setDateTimeNow" />
+				<form:input type="hidden" path="joiningDate" id="joiningDate" value="${setDateTimeNow}"/>       
+				    
 				
                  <div class="form-group">
-                  <label  class="col-sm-4 control-label">Name :</label>
+                  <label  class="col-sm-4 control-label">First Name :</label>
 	                  <div class="col-sm-8">
 	                   <form:input path="name" id="Names" name="Names" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your Name" required="required" />                    
 	                  </div>

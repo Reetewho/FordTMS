@@ -8,6 +8,8 @@ import co.th.ford.tms.model.Load;
 public interface LoadDao {
 
 	Load findLoadByID(int loadID);
+		
+	List<Load> findLoadByusername(String driverid);
 
 	void saveLoad(Load load);
 	

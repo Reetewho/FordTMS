@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import co.th.ford.tms.model.LoadListReport;
 import co.th.ford.tms.model.PaymentReport1;
+import co.th.ford.tms.model.SetStopETA;
+import co.th.ford.tms.model.User;
 import co.th.ford.tms.service.CarrierService;
 
 
@@ -107,8 +110,8 @@ public class PaymentReportController {
 		    model.addAttribute("errorMsg",  messageSource.getMessage("NotEmpty.searchby-loadid.LoadID", new String[]{loadid}, Locale.getDefault()));
 		}else {
 			if(model.get("errorMsg") ==null) {
-				try {					
-					List<LoadListReport> loadlistreport = cservice.findbyLoadID(loadid);
+				try {								        
+					List<LoadListReport> loadlistreport = cservice.findbySystemsLoadID(loadid);
 					model.addAttribute("dataloadlistreport", loadlistreport);
 				}catch(Exception e) {
 					e.printStackTrace();

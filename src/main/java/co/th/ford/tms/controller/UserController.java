@@ -8,9 +8,12 @@ import java.util.Locale;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.joda.time.DateTime;
 //import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import co.th.ford.tms.model.Roles;
 import co.th.ford.tms.model.Department;
+import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.User;
 import co.th.ford.tms.service.UserService;
 import co.th.ford.tms.service.RolesService;
@@ -138,12 +142,15 @@ public class UserController {
 	public String updateEmployee(HttpSession session, @Valid User user, BindingResult result,
 			@RequestParam int ListRolests, @RequestParam int ListDepartments,@RequestParam String Contactnumbers, ModelMap model,
 			@PathVariable String editUsername) {
-
+		if (!checkAuthorization(session))return "redirect:/login";
 		
-        //user.setPassword(uservice.encryptUserPassword(Conpasswords));
+		
+		
+		
         user.setContactnumber(Contactnumbers);
 		user.setRole(ListRolests);
 		user.setDepartment(ListDepartments);
+		
 		uservice.updateUser(user);
 
 		List<User> users = uservice.findAllUsers();
@@ -177,7 +184,8 @@ public class UserController {
 	
 	@RequestMapping(value = { "/userReset/{editUsername}" }, method = RequestMethod.POST)
 	public String resetEmployee(HttpSession session,@RequestParam String Conpasswordsc,  ModelMap model,	@PathVariable String editUsername) {
-		 
+		if (!checkAuthorization(session))return "redirect:/login";
+
 		
 		User usera = uservice.findUserByusername(editUsername);
 		
@@ -235,6 +243,9 @@ public class UserController {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 
+		List<User> users = uservice.findAllUsers();
+		model.addAttribute("users", users);
+		
 		List<Roles> ListRoles = rolesService.findAllRoles();
 		model.addAttribute("ListRolest", ListRoles);
 
@@ -249,11 +260,42 @@ public class UserController {
 	public String addEmployee(HttpSession session, @RequestParam String Usernamea,@RequestParam String namesa, @RequestParam String LastNamea,@RequestParam String inputPasswordConfirm, @RequestParam String Email,
 			@RequestParam String Contactnumber, @RequestParam int ListRolests, @RequestParam int ListDepartments,
 			ModelMap model) {
+		if (!checkAuthorization(session))
+			return "redirect:/login";
+		
+		List<User> finduser = uservice.findAllUsers();
+		for(User findusers : finduser){
+			
+			if(findusers.getUsername().equalsIgnoreCase(Usernamea)) {
+				model.addAttribute("Error", "Duplicate name : " + Usernamea + " Please Try Again.");
+				
+				List<User> users = uservice.findAllUsers();
+				model.addAttribute("users", users);
+				
+				List<Roles> ListRoles = rolesService.findAllRoles();
+				model.addAttribute("ListRolest", ListRoles);
 
+				List<Department> ListDepartment = departmentService.findAllDepartment();
+				model.addAttribute("ListDepartments", ListDepartment);
+
+
+				return "adduser";
+				
+				
+			}
+			
+		}
+		
 				
 		  User  Newuser= new User();
 		  
-		  LocalDate dateadd = LocalDate.now();
+		  DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+			String strDateNow = DateTime.now().toString(dtf);
+			
+	        System.out.println("----------> ! Test Date Times  ! <----------" + LocalDateTime.parse(strDateNow, dtf)); 
+
+					  
+		 
 		  		  
 		  Newuser.setUsername(Usernamea); 
 		  Newuser.setPassword(uservice.encryptUserPassword(inputPasswordConfirm));
@@ -263,14 +305,15 @@ public class UserController {
 		  Newuser.setContactnumber(Contactnumber); 
 		  Newuser.setRole(ListRolests);
 		  Newuser.setDepartment(ListDepartments);
-		  Newuser.setJoiningDate(dateadd);		  
-		  Newuser.setLogoutDate(dateadd); 
+		  Newuser.setJoiningDate(LocalDateTime.parse(strDateNow, dtf));		  
+		  Newuser.setLogoutDate(LocalDateTime.parse(strDateNow, dtf));
 		 		  
 		  
-		  uservice.saveUser(Newuser);
 		  
-		 
-		 
+		  
+		  
+		  uservice.saveUser(Newuser);
+		  		 
 
 		return "redirect:/userList";
 	}

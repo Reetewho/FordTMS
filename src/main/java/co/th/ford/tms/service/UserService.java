@@ -15,6 +15,8 @@ public interface UserService {
 
 	List<User> findAllUsers(); 
 	
+	List<User> findByRole(int role);
+	
 	User findUserByusername(String username);
 
 	boolean isUsernameUnique(String username);

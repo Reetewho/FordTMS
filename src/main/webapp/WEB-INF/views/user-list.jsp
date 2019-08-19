@@ -54,7 +54,7 @@
       </div>
             <!-- /.box-header -->
             <div class="box-body ">
-              <table id="UserTable"  class="table table-bordered table-striped">
+              <table id="UserTable"  class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
 					<th >Name</th>
@@ -63,7 +63,7 @@
 					<th >Department</th>
 					<th >E-mail</th>
 					<th >Contact Number</th>
-					<th >Joining date</th>
+					<th >Register date</th>
 					<th >Last login</th>
 					<th >Status</th>
 					<th >Edit</th>

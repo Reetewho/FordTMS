@@ -5,9 +5,23 @@
   <link rel="stylesheet" href="<c:url value='/assets/bootstrap/css/bootstrap.min.css' />">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<c:url value='/assets/fontawesome/css/all.css' />">
-  <!-- DataTables -->
+  
+<!-- DataTables bootstrap 
   <link rel="stylesheet" href="<c:url value='/assets/plugins/datatables/dataTables.bootstrap.css' />">
+-->
+
   <link rel="stylesheet" href="<c:url value='/assets/plugins/datatables/extensions/Buttons-1.5.4/css/buttons.dataTables.min.css' />">
+  
+  
+  <!-- DataTables 1.10.16 -->
+  	<link rel="stylesheet" href="<c:url value='/assets/plugins/datatables/datatables.min.css' />">
+ 
+  	
+  <!-- DataTables heckBox-->
+  <link rel="stylesheet" href="<c:url value='/assets/plugins/datatables/dataTables.checkboxes.css' />">
+  
+
+  
   <!-- fullCalendar 2.2.5-->
   <link rel="stylesheet" href="<c:url value='/assets/plugins/fullcalendar/fullcalendar.min.css' />">
   <!-- bootstrap datepicker -->

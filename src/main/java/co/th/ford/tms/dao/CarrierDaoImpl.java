@@ -193,6 +193,7 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 				+ " l.loadStartDateTime, l.loadEndDateTime, "
 				+ " l.gatein, "
 				+ " l.gateout, "
+				+ " l.driverId, "
 				+ " l.completedFlag, l.carrierID "	
 				+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 				+ " left join tb_loadstop ls on l.loadID=ls.loadID "
@@ -227,8 +228,95 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 				loadlistreport1.setLoadEndDateTime(obj[6]==null?"":obj[6].toString());
 				loadlistreport1.setGatein(obj[7]==null?"":obj[7].toString());
 				loadlistreport1.setGateout(obj[8]==null?"":obj[8].toString());
-				loadlistreport1.setCompletedFlag(obj[9]==null?"":obj[9].toString());
-				loadlistreport1.setCarrierID(obj[10]==null?"":obj[10].toString());
+				loadlistreport1.setDriverid(obj[9]==null?"":obj[9].toString());
+				loadlistreport1.setCompletedFlag(obj[10]==null?"":obj[10].toString());
+				loadlistreport1.setCarrierID(obj[11]==null?"":obj[11].toString());
+				
+				
+				if(allList!=null && allList.size()>0) {
+					for (LoadListReport dataLoadList : allList) {
+						String strSystemLoadID = dataLoadList.getSystemLoadID();
+					    if (loadlistreport1.getSystemLoadID().equalsIgnoreCase(strSystemLoadID)) {
+					    	if(loadlistreport1.getCompletedFlag().equalsIgnoreCase("Completed")) {
+					    		allList.remove(dataLoadList);
+					    		allList.add(loadlistreport1);
+					    	}else if(loadlistreport1.getCompletedFlag().equalsIgnoreCase("In transit")) {
+					    		if(dataLoadList.getCompletedFlag().equalsIgnoreCase("In transit") 
+					    		|| dataLoadList.getCompletedFlag().equalsIgnoreCase("Load") 
+					    		|| dataLoadList.getCompletedFlag().equalsIgnoreCase("N/A")) {
+					    			allList.remove(dataLoadList);
+						    		allList.add(loadlistreport1);
+					    		}
+					    	}else if(loadlistreport1.getCompletedFlag().equalsIgnoreCase("Load")) {
+					    		if(dataLoadList.getCompletedFlag().equalsIgnoreCase("Load") 
+					    		|| dataLoadList.getCompletedFlag().equalsIgnoreCase("N/A")) {
+					    			allList.remove(dataLoadList);
+						    		allList.add(loadlistreport1);
+					    		}
+					    	}else if(loadlistreport1.getCompletedFlag().equalsIgnoreCase("N/A")) {
+					    		if(dataLoadList.getCompletedFlag().equalsIgnoreCase("N/A")) {
+					    			allList.remove(dataLoadList);
+						    		allList.add(loadlistreport1);
+					    		}
+					    	}
+					        
+					    }
+					}
+				}else {
+					allList.add(loadlistreport1);
+				}
+				
+				
+				
+				
+			}
+		
+		return allList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoadListReport> getSystemLoadID(String strLoadID){
+		Query query = getSession().createSQLQuery(
+				  " select l.loadID, l.systemLoadID, c.loadDate, l.loadDescription, ls.truckNumber, "
+				+ " l.loadStartDateTime, l.loadEndDateTime, "
+				+ " l.gatein, "
+				+ " l.gateout, "
+				+ " l.driverId, "
+				+ " l.completedFlag, l.carrierID "	
+				+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
+				+ " left join tb_loadstop ls on l.loadID=ls.loadID "
+				+ " left join tb_setstopeta ss on ls.id=ss.loadStopID "
+				+ " where (l.systemLoadID = :strLoadID) "			
+				+ " order by c.carrierID ");
+		query.setString("strLoadID", strLoadID);
+		System.out.println("Query Data : Find by Load ID => " + strLoadID);
+		List<LoadListReport> allList = new ArrayList<LoadListReport>();
+		List<Object[]> list=query.list();
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+//		LocalDate strDate;
+		LocalDateTime localDT;
+		String strDateNow;
+		
+		if(list!=null && list.size()>0)
+			for (Object[] obj : list) {
+				LoadListReport loadlistreport1 = new LoadListReport();
+				loadlistreport1.setLoadID(obj[0].toString());
+				loadlistreport1.setSystemLoadID(obj[1].toString());
+				
+//				strDateNow = obj[2].toString(); 
+//				strDate = LocalDate.parse(strDateNow, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S"));
+				localDT = sqlTimestampToJodaLocalDateTime((java.sql.Timestamp)obj[2]);
+				loadlistreport1.setLoadDate(localDT.toString(DateTimeFormat.forPattern("yyyy-MM-dd")));		
+				
+				loadlistreport1.setLoadDescription(obj[3]==null?"":obj[3].toString());
+				loadlistreport1.setTruckNumber(obj[4]==null?"":obj[4].toString());				
+				loadlistreport1.setLoadStartDateTime(obj[5]==null?"":obj[5].toString());
+				loadlistreport1.setLoadEndDateTime(obj[6]==null?"":obj[6].toString());
+				loadlistreport1.setGatein(obj[7]==null?"":obj[7].toString());
+				loadlistreport1.setGateout(obj[8]==null?"":obj[8].toString());
+				loadlistreport1.setDriverid(obj[9]==null?"":obj[9].toString());
+				loadlistreport1.setCompletedFlag(obj[10]==null?"":obj[10].toString());
+				loadlistreport1.setCarrierID(obj[11]==null?"":obj[11].toString());
 				
 				
 				if(allList!=null && allList.size()>0) {

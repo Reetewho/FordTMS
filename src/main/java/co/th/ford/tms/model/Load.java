@@ -9,9 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
-
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -62,12 +63,25 @@ public class Load {
 	
 	@Column(name = "completedFlag", nullable = false)
 	private String status;	
-		
-	@Column(name = "assign", nullable = false)
-	private String assign;
 	
-	@Column(name = "driverId", nullable = false)
-	private int driverid;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "assigntime", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime assign;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "dateassign", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime dateassign;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "dateaccept", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime dateaccept;
+	
+	@Column(name = "driverId", nullable = true)
+	private String driverid;
 	
 	@Column(name = "errorMessage", nullable = true)
 	private String errorMessage;

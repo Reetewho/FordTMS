@@ -3,6 +3,7 @@ package co.th.ford.tms.service;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +39,16 @@ public class UserServiceImpl implements UserService {
 	public void updateUser(User u) {
 		User entity = dao.findByUsername(u.getUsername());
 		if(entity!=null){
+			
 			entity.setName(u.getName());
+			entity.setLastname(u.getLastname());
+			entity.setEmail(u.getEmail());
 			entity.setJoiningDate(u.getJoiningDate());
 			entity.setDepartment(u.getDepartment());
 			entity.setPassword(u.getPassword());
 			entity.setContactnumber(u.getContactnumber());
 			entity.setRole(u.getRole());
-			entity.setLogoutDate(entity.getLogoutDate());
+			entity.setLogoutDate(u.getLogoutDate());
 			entity.setStatus(u.getStatus());
 		}
 	}
@@ -55,6 +59,10 @@ public class UserServiceImpl implements UserService {
 	
 	public List<User> findAllUsers() {
 		return dao.findAllUsers();
+	}
+	
+	public List<User> findByRole(int role) {
+		return dao.findByRole(role);
 	}
 
 	public User findUserByusername(String username) {

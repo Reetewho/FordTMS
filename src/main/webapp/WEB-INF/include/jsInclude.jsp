@@ -3,11 +3,26 @@
 <script src="<c:url value='/assets/plugins/jQuery/jQuery-2.2.0.min.js' />"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<c:url value='/assets/bootstrap/js/bootstrap.min.js' />"></script>
-<!-- DataTables -->
+<!-- DataTables bootstrap -->
 <script src="<c:url value='/assets/plugins/datatables/jquery.dataTables.min.js' />"></script>
+
+<!--
 <script src="<c:url value='/assets/plugins/datatables/dataTables.bootstrap.min.js' />"></script>
+-->
+
+<!-- DataTables -->
+<script src="<c:url value='/assets/plugins/datatables/datatables.min.js' />"></script>
+
+<!-- DataTables checkboxes -->
+<script src="<c:url value='/assets/plugins/datatables/dataTables.checkboxes.min.js' />"></script>
+
+
 <script src="<c:url value='/assets/plugins/datatables/extensions/Buttons-1.5.4/js/dataTables.buttons.min.js' />"></script>
 <script src="<c:url value='/assets/plugins/datatables/extensions/Buttons-1.5.4/js/buttons.html5.min.js' />"></script>
+
+
+
+
 <script src="<c:url value='/assets/plugins/ajax/libs/jszip/3.1.3/jszip.min.js' />"></script>
 <!-- Slimscroll -->
 <script src="<c:url value='/assets/plugins/slimScroll/jquery.slimscroll.min.js' />"></script>

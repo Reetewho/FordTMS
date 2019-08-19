@@ -43,7 +43,11 @@ public class LoadServiceImpl implements LoadService {
 			entity.setStatus(l.getStatus());
 			entity.setErrorMessage(l.getErrorMessage());
 			entity.setLastUpdateDate(l.getLastUpdateDate());
-			entity.setLastUpdateUser(l.getLastUpdateUser());
+			entity.setLastUpdateUser(l.getLastUpdateUser());			
+			entity.setAssign(l.getAssign());
+			entity.setDriverid(l.getDriverid());
+			entity.setDateaccept(l.getDateaccept());
+			entity.setDateassign(l.getDateassign());
 		}
 	}
 
@@ -62,6 +66,9 @@ public class LoadServiceImpl implements LoadService {
 	public Load findLoadByID(int loadID) {
 		return dao.findLoadByID(loadID);
 	}
+	
 
-		
+	public List<Load> findLoadByusername(String driverid) {
+		return dao.findLoadByusername(driverid);
+	}
 }
