@@ -54,6 +54,9 @@ public class LoadStop {
 	@Column(name = "truckNumber", nullable = false)
 	private String truckNumber;
 	
+	@Column(name = "loadstopremark", nullable = true)
+	private String loadstopremark;	
+	
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
 	@Column(name = "departureTime", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
@@ -74,6 +77,9 @@ public class LoadStop {
 	
 	@Column(name = "maniFest", nullable = false)
 	private String manifest;
+	
+	@Column(name = "statusLoad", nullable = false)
+	private String statusLoad;
 	//---------------------------------------------------------------------------------//
 	
 	@Column(name = "completedFlag", nullable = false)

@@ -129,7 +129,8 @@ var d = strDate.split("-");
 	        "<'row'<'col-sm-12'tr>>" +
 	        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 	                buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}] ,
-	                scrollX: true
+	                scrollX: true,
+	                'order': [[6, 'desc']]
 	            }); 
 	    $("#totalNA").html(' <c:out value = "${naStatus}"/> ');
 	    $("#totalLoad").html(' <c:out value = "${loadStatus}"/> ');

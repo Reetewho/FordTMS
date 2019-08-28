@@ -44,6 +44,8 @@ public class SetStopETAServiceImpl implements SetStopETAService {
 			entity.setErrorMessage(sse.getErrorMessage());
 			entity.setLastUpdateDate(sse.getLastUpdateDate());
 			entity.setLastUpdateUser(sse.getLastUpdateUser());
+			entity.setStatusSetStop(sse.getStatusSetStop());
+			entity.setSetStopremark(sse.getSetStopremark());
 		}
 	}
 

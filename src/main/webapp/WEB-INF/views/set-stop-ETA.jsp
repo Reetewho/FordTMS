@@ -145,7 +145,7 @@
 		         <select id="lstcity" name="lstcity" class="form-control">
 		          <c:if test = "${not empty ListCitys}">
 		          <c:forEach items="${ListCitys}" var="ListCity">
-		           <option value="${ListCity.cityID}" >
+		           <option value="${ListCity.cityID}"  ${ListCity.cityID==setStopETA.city?'selected':''} >
 		            ${i=i+1} : ${ListCity.cityNameTh}
 		           </option>
 		          </c:forEach>
@@ -153,12 +153,23 @@
 		         </select>               
 		        </div>
                  </div>
-                            
+                 <c:choose>
+                <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
+                 <div class="form-group">
+                  <label  class="col-sm-4 control-label">Remark :</label>
+                  <div class="col-sm-8">
+                  <form:textarea path="setStopremark" id="setStopremarks" class="form-control"  required="required" />                 
+                  </div>
+                </div>
+                 </c:when>
+                 </c:choose>
+                 
+                        <input  type="hidden" id="movementDateTimes" name="movementDateTimes" value="${movementDateTime}"  >
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
                 <a href="<c:url value='/loadStop-list/${loadDate}/${loadStop.load.systemLoadID}-${loadStop.load.loadID}' />"><button type="button" class="btn btn-default">Cancel</button></a>
-                <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                <button type="submit" id="submitbt" class="btn btn-primary pull-right">Submit</button>
               </div>
               <!-- /.box-footer -->
           </div>
@@ -183,9 +194,46 @@
 
 <!-- page script -->
 <script>
-  $(function () {
-	  	
-  });
+var statusStopETA = '${setStopETA.statusSetStop}';
+var statusLoadsroles = '${S_FordUser.role}';
+$(function () {
+	  
+	  
+	   
+	   if(${S_FordUser.role=='3' }){
+		  document.getElementById("movementDateTime").readOnly = true;
+	  }
+	   
+	   if(statusStopETA == "Inactive" && statusLoadsroles== "3"){
+	    	
+		   document.getElementById("movementDateTime").disabled = true;		  
+			  document.getElementById("estimatedDateTime").disabled = true;		  
+			  document.getElementById("latitude").disabled = true;		  
+			  document.getElementById("longitude").disabled = true;		  
+			  document.getElementById("longitude").disabled = true;		  
+			  document.getElementById("submitbt").style.visibility="hidden";
+			  document.getElementById("lstcity").disabled = true;
+			  document.getElementById("setStopremarks").disabled = true;
+		   
+			  if(statusLoads == "Inactive" && statusLoadsroles != "3"){
+			    	 
+				  document.getElementById("movementDateTime").disabled = false;		  
+				  document.getElementById("estimatedDateTime").disabled = false;		  
+				  document.getElementById("latitude").disabled = false;		  
+				  document.getElementById("longitude").disabled = false;		  
+				  document.getElementById("longitude").disabled = false;		  
+				  document.getElementById("submitbt").disabled = false;
+				  document.getElementById("lstcity").disabled = false;
+				  document.getElementById("setStopremarks").disabled = true;
+			   
+		   }  
+	   }  
+		  
+	
+
+	  
+
+}); 
 </script>
 </body>
 </html>

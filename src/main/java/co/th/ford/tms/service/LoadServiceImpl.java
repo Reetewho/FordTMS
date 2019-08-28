@@ -55,6 +55,10 @@ public class LoadServiceImpl implements LoadService {
 		dao.deleteLoadByID(loadID);
 	}
 	
+	public Load deleteLoadByLoadID(int loadID){
+		return dao.deleteLoadByLoadID(loadID);
+	}
+	
 	public List<Load> findAllLoads() {
 		return dao.findAllLoads();
 	}
@@ -70,5 +74,9 @@ public class LoadServiceImpl implements LoadService {
 
 	public List<Load> findLoadByusername(String driverid) {
 		return dao.findLoadByusername(driverid);
+	}
+	
+	public Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID) {
+		  return dao.findLoadByCarrierID_SystemLoadID(carrierID, systemLoadID);
 	}
 }

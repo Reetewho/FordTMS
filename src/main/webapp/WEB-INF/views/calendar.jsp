@@ -103,11 +103,11 @@
 
 <!-- page script -->
 <script>
- var _y=${_year};
- var _m=${_month};
- var _d=${_date};
- var dayclick=false;
- var options={
+var _y=${_year};
+var _m=${_month};
+var _d=${_date};
+var dayclick=false;
+var options={
 		 customButtons: { 
 	    	  myCustomButton: { 
 	    		  text: 'Custom', 
@@ -122,7 +122,7 @@
 		        right: ''
 		  },   	     
 	      timeFormat: ' ',
-		  dayClick: function(date, jsEvent, view) {
+	      dayClick: function(date, jsEvent, view) {
 			  if(!dayclick){
 			    window.location.href = "<c:url value='/load-list/"+date.format()+"' />";
 			    dayclick=true;

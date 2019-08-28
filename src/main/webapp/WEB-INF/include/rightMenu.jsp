@@ -80,6 +80,16 @@
         </li>
         </c:when>
          </c:choose>	
+         <c:choose>
+        <c:when test="${permissionMenu.id_menu=='7'}">
+        <li>
+          <a href="<c:url value='/manual-add-load' />">
+            <i class="fa fa-user"></i> &nbsp;<span>Manual Add Load</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose>
+         
         </c:forEach>
         
         <!-- 

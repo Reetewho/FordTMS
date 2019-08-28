@@ -15,9 +15,13 @@ public interface LoadDao {
 	
 	void deleteLoadByID(int loadID);	
 	
+	Load deleteLoadByLoadID(int loadID);
+	
 	List<Load> findLoadByCarrierID(int carrierID);
 	
 	List<Load> findAllLoads();
+	
+	Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID);
 
 	
 

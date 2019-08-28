@@ -13,7 +13,7 @@
     </a>
      </c:when>
      		 <c:when test="${S_FordUser.role=='2'}">
-				    <a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />" class="logo">   
+    				  <a href="<c:url value='/calendar' />" class="logo">   
 				      <!-- mini logo for sidebar mini 50x50 pixels -->
 				      <span class="logo-mini"><b>AP</b></span>
 				      <!-- logo for regular state and mobile devices -->

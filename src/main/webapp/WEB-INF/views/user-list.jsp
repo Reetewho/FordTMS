@@ -67,7 +67,7 @@
 					<th >Last login</th>
 					<th >Status</th>
 					<th >Edit</th>
-					<th >Process Active</th>
+					<th ></th>
 					<th ></th>
 					        
 					         
@@ -102,10 +102,10 @@
 						<td>${user.logoutDate}</td>
 						<c:choose>
 							<c:when test="${user.status=='1'}">
-								<td>Active</td>
+								<td>Activate</td>
 							</c:when>
 							<c:otherwise>
-								<td>Not Active</td>
+								<td>Deactivate</td>
 							</c:otherwise>
 						</c:choose>	
 					<td align="center"><a href="<c:url value='/userDetail/${user.username}' />"><img  src="<c:url value='/assets/dist/img/edit.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a></td>					

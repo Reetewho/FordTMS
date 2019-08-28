@@ -46,7 +46,7 @@ public class User {
 
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "joining_date", nullable = true)
+	@Column(name = "joining_date", nullable = false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime joiningDate;
 
@@ -65,7 +65,7 @@ public class User {
 	
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "lastLogin", nullable = true)
+	@Column(name = "lastLogin", nullable = false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime logoutDate;
 	

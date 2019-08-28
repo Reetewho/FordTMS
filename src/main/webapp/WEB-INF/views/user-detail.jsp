@@ -64,8 +64,10 @@
                <form:input type="hidden" path="username" id="username"/>
 				<form:input type="hidden" path="status" id="status"/>
 				<form:input type="hidden" path="password" id="password"/>				
-				<fmt:formatDate value="${joiningDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="setDateTimeNow" />
-				<form:input type="hidden" path="joiningDate" id="joiningDate" value="${setDateTimeNow}"/>       
+				<fmt:formatDate value="${joiningDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"  var="setDateTimeNow" />
+				<form:input type="hidden" path="joiningDate" id="joiningDates" value="${setDateTimeNow}"/>
+				<fmt:formatDate value="${logoutDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"  var="setDateTimeNows" />
+				<form:input type="hidden" path="logoutDate" id="logoutDates" value="${setDateTimeNows}"/>       
 				    
 				
                  <div class="form-group">

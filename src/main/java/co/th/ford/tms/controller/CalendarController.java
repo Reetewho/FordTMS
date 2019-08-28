@@ -109,10 +109,21 @@ public class CalendarController {
 		     
 		  List<Integer> yearList = new ArrayList<Integer>();
 		  
-		  yearList.add(intCurrentYear);
+		  int plus543=0;
+		  int numYearsEng = 0;
+		  if(environment.getRequiredProperty("local.datetime").equals("th"))plus543=543;	
+		  numYearsEng = intCurrentYear - plus543;
+		  
+		  yearList.add(numYearsEng);
+		  
 		  for (int i = 0; i < 4; i++) {
 		   intCurrentYear = intCurrentYear - 1;
-		   yearList.add(intCurrentYear);
+		   	   
+		   int plusa543=0;
+		   int numYearEng = 0;
+		   if(environment.getRequiredProperty("local.datetime").equals("th"))plusa543=543;	
+		   numYearEng = intCurrentYear - plusa543;
+		   yearList.add(numYearEng);
 		  }
 
 		  
@@ -178,5 +189,7 @@ public class CalendarController {
 		if(environment.getRequiredProperty("local.datetime").equals("th"))plus543=543;
 		return (date.getYear()+plus543)+"-"+date.getMonthOfYear()+"-"+date.getDayOfMonth();
 	}
+	
+	
 	
 }

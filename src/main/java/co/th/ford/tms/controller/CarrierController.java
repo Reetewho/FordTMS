@@ -100,7 +100,7 @@ public class CarrierController {
 	
 	
 	@RequestMapping(value = { "/load-list/{date}" }, method = RequestMethod.GET)
-	public String loadListWithDate(HttpSession session,@PathVariable String date,ModelMap model) {
+	public String loadListWithDate(HttpSession session,@PathVariable String date, ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
 		//Carrier carrier = cservice.findCarrierByDate(date);	
 		Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
@@ -113,7 +113,8 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
-			carrier = cservice.findCarrierByDate(date);	
+			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
+			//carrier = cservice.findCarrierByDate(date);	
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();
@@ -142,6 +143,12 @@ public class CarrierController {
 		List<String> listTest = new ArrayList<String>();
 		listTest.add("List A");
 		model.addAttribute("loadListTest", listTest);
+		
+		
+		if(session.getAttribute("deleteLoadIDSuccess") != null ) {
+			model.addAttribute("setAlertDeleteLoadSuccess", "Successfully, delete Load ID : " + session.getAttribute("deleteLoadIDSuccess").toString());
+			session.removeAttribute("deleteLoadIDSuccess");
+		}
 		
 		return "load-list";
 	}
@@ -175,6 +182,7 @@ public class CarrierController {
 					}
 					loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 					loadStop.setLastUpdateDate(LocalDateTime.now());
+					
 					lsservice.saveLoadStop(loadStop);
 					
 					if(roundLoadStop==numLoadStop) {						
@@ -197,16 +205,93 @@ public class CarrierController {
 				lservice.updateLoad(load);
 			}else {
 				model.addAttribute("Error", "Load Retrieve  :"+carrier.getCarrierCode()+" , Load ID : "+load.getSystemLoadID()+" Error : "+load.getErrorMessage());	
+				model.addAttribute("setAlertMsgDeleteLoad","true");
 				
 			}
 			
 		}
+		
+		
 		List<LoadStop> loadStops= lsservice.findLoadStopByLoadID(loadID);
 		model.addAttribute("loadDate", date);
 		model.addAttribute("load", load);
 		model.addAttribute("loadStops", loadStops);
 		return "loadStop-list";
 	}
+	
+	
+	/*
+	 * Start modify script by : Bunyong 2019-08-23
+	 */
+	@RequestMapping(value = { "/loadStop-list/{date}/{systemLoadID}-{loadID}" }, method = RequestMethod.POST)
+	public String processDeleteLoad(HttpSession session, ModelMap model,@PathVariable String date, 
+			@PathVariable int systemLoadID, @PathVariable int loadID, 
+			@RequestParam int hiddenDelloadID) {
+		
+		/*
+		 * System.out.println("Process delete systemLoadID : " + hiddenDelloadID); //
+		 * System.out.println("Process delete date : " + date); //
+		 * System.out.println("Process delete loadID : " + loadID); //
+		 * System.out.println("Process delete systemLoadID : " + systemLoadID);
+		 */
+		session.removeAttribute("deleteLoadIDSuccess");
+		Load delLoadData =lservice.deleteLoadByLoadID(hiddenDelloadID);
+		if(delLoadData == null) {	
+			session.setAttribute("deleteLoadIDSuccess", hiddenDelloadID);
+		}
+		return "redirect:/load-list/" + date;
+	}
+	
+	@RequestMapping(value = {"/manual-add-load" }, method = RequestMethod.GET)
+	public String showManualAddLoad(HttpSession session,ModelMap model) {
+		if(!checkAuthorization(session))return "redirect:/login";
+		LocalDate today = LocalDate.now();	   
+	    model.addAttribute("loadDate",  today);
+		return "manual-add-load";
+	}
+	
+	@RequestMapping(value = {"/manual-add-load" }, method = RequestMethod.POST)
+	public String saveManualAddLoad(HttpSession session, ModelMap model, 
+									@RequestParam("loadID") String loadID, 
+									@RequestParam("loadDate") String loadDate) {
+		if(!checkAuthorization(session))return "redirect:/login";
+		LocalDate today = LocalDate.now();	   
+	    model.addAttribute("loadDate",  today);
+	    
+	    
+	    Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(loadDate, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+	    
+	    if(carrier == null) {
+	    	model.addAttribute("Error", " Unsuccessfully, not found carrier. Please check date.");
+	    	
+	    }else {
+	    	Load loadDataExist = lservice.findLoadByCarrierID_SystemLoadID(carrier.getCarrierID(), Integer.parseInt(loadID));
+	        if(loadDataExist == null) {    
+		    	Load loadData = new Load();
+		    	loadData.setCarrierID(carrier.getCarrierID());
+		    	loadData.setCarrier(carrier);
+		    	loadData.setSystemLoadID(Integer.parseInt(loadID));
+		    	loadData.setAlertTypeCode("LOAD_TENDER_NEW");
+		    	loadData.setStatus("N/A");
+		    	loadData.setLastUpdateDate(LocalDateTime.now());
+		    	loadData.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());	
+				lservice.saveLoad(loadData);
+				
+				model.addAttribute("Success", "Successfully, manual add LoadID : " + loadID + ".");
+	        }else {
+	            model.addAttribute("Error", "Unsuccessfully, Load ID : " + loadID + " is exist in LoadData.");
+	        }
+	        
+	    }
+	    
+		return "manual-add-load";
+	}
+	
+	/*.
+	 * End modify script by : Bunyong 2019-08-23
+	 */
+	
+	
 	
 	@RequestMapping(value = { "/setStopETA/{date}/{systemLoadID}-{shippingLocation}-{loadStopID}" }, method = RequestMethod.GET)
 	public String setStopETA(HttpSession session,@PathVariable String date,@PathVariable int loadStopID,ModelMap model) {
@@ -234,35 +319,93 @@ public class CarrierController {
 		List<City> ListCity = cityService.findAllCity();
 		model.addAttribute("ListCitys", ListCity);
 		
+		
+		
 		return "set-stop-ETA";
 	}
 	
 	@RequestMapping(value = { "/setStopETA/{date}/{systemLoadID}-{shippingLocation}-{loadStopID}" }, method = RequestMethod.POST)	
 	public String processSetStopETA(HttpSession session,@PathVariable String date,@Valid SetStopETA setStopETA, @RequestParam String lstcity, BindingResult result,
 			ModelMap model, @PathVariable int loadStopID) {
-		if(!checkAuthorization(session))return "redirect:/login";
+		
+        System.out.println("Test Session role of user : " + setStopETA.getMovementDateTime()); 
+
+
+		if(!checkAuthorization(session))return "redirect:/login";				
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
-		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
-		load.setCarrier(carrier);		
-		loadStop.setLoad(load);
-		setStopETA.setLoadStop(loadStop);
+		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());
+		User sessionUser = (User)session.getAttribute("S_FordUser");
 		
+		if(sessionUser.getRole() == 2 || sessionUser.getRole() == 1 ) {
+			
+			//setStopETA.setMovementDateTime(loadStop.getArriveTime());
+			load.setCarrier(carrier);		
+			loadStop.setLoad(load);
+			setStopETA.setStatusSetStop("Inactive");
+			setStopETA.setLoadStop(loadStop);
+			
 	/*test*/	//ProcessSetStopETA pSetStopETA=new ProcessSetStopETA();
 	/*test*/	//pSetStopETA.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), setStopETA);
+			
+				
+				setStopETA.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+				setStopETA.setLastUpdateDate(LocalDateTime.now());
+				setStopETA.setStatusSetStop("Inactive");
+				setStopETA.setCity(lstcity);		
+				
+				//การปิดเพื่อนให้ ProcessSetStopETA ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
+				setStopETA.setStatus("true");
+				//
+				
+				if(setStopETA.getId()>0)sseservice.updateSetStopETA(setStopETA);
+				else sseservice.saveSetStopETA(setStopETA);
+				
+				
+				if(setStopETA.getStatus().equals("true")) {
+					setStopETA.setErrorMessage("");
+					loadStop.setStatus("setStop");
+					lsservice.updateLoadStop(loadStop);
+					model.addAttribute("Success", "Set Stop ETA of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+"  processed successfully");
+					
+				}else {
+					model.addAttribute("Error", "Process Set Stop ETA of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+setStopETA.getErrorMessage());
+					
+				}
+				
+				User sessionUsera = (User)session.getAttribute("S_FordUser");
+
+		        System.out.println("----------> ! Test Date Times session  ! <----------" + sessionUsera.getRole());
+
+				
+				List<City> ListCity = cityService.findAllCity();
+				model.addAttribute("ListCitys", ListCity);
+				model.addAttribute("loadDate", date);
+				model.addAttribute("loadStop", loadStop);	
+				model.addAttribute("setStopETA", setStopETA);
+				return "set-stop-ETA";							
+			
+	}else {
+		
+        System.out.println("Test Session role 3 " + sessionUser ); 
+
+	load.setCarrier(carrier);		
+	loadStop.setLoad(load);
+	setStopETA.setStatusSetStop("Inactive");
+	setStopETA.setLoadStop(loadStop);
+		
 		setStopETA.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		setStopETA.setLastUpdateDate(LocalDateTime.now());
+		setStopETA.setStatusSetStop("Inactive");
+		setStopETA.setCity(lstcity);		
 		
-		setStopETA.setCity(lstcity);
-		
-		//การปิดเพื่อนให้ ProcessSetStopETA ส่งไปไม่ได้เพื่อนเป็นการทดสอบระบบ
 		setStopETA.setStatus("true");
-		//
 		
+		
+		 System.out.println("Test MovementDateTime : " + setStopETA.getMovementDateTime() ); 
 		if(setStopETA.getId()>0)sseservice.updateSetStopETA(setStopETA);
 		else sseservice.saveSetStopETA(setStopETA);
-		
-		
+				
 		if(setStopETA.getStatus().equals("true")) {
 			setStopETA.setErrorMessage("");
 			loadStop.setStatus("setStop");
@@ -273,11 +416,17 @@ public class CarrierController {
 			model.addAttribute("Error", "Process Set Stop ETA of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+setStopETA.getErrorMessage());
 			
 		}
+		List<City> ListCity = cityService.findAllCity();
+		model.addAttribute("ListCitys", ListCity);
 		model.addAttribute("loadDate", date);
 		model.addAttribute("loadStop", loadStop);	
 		model.addAttribute("setStopETA", setStopETA);
-		return "set-stop-ETA";
+		return "set-stop-ETA";							
 	}
+		
+        
+		
+}
 	
 	
 	@RequestMapping(value = { "/loadStatusUpdate/{date}/{systemLoadID}-{shippingLocation}-{loadStopID}" }, method = RequestMethod.GET)
@@ -288,6 +437,8 @@ public class CarrierController {
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
 		load.setCarrier(carrier);
 		
+		loadStop.setLoadstopremark("Active");
+		lsservice.updateLoadStop(loadStop);
 		model.addAttribute("loadDate", date);
 		model.addAttribute("load", load);	
 		model.addAttribute("loadStop", loadStop);
@@ -300,10 +451,15 @@ public class CarrierController {
 		if(!checkAuthorization(session))return "redirect:/login";
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);		
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
-		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
+		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());
+		User sessionUser = (User)session.getAttribute("S_FordUser");
+		
+		if(sessionUser.getRole() == 2 || sessionUser.getRole() == 1 ) {
+			
 		load.setCarrier(carrier);		
 		loadStop.setLoad(load);
 		
+		loadStop.setStatusLoad("Inactive");
 		loadStop.setTruckNumber(loadStop1.getTruckNumber());
 		loadStop.setArriveTime(loadStop1.getArriveTime());
 		loadStop.setDepartureTime(loadStop1.getDepartureTime());
@@ -311,6 +467,7 @@ public class CarrierController {
 		loadStop.setShipingOrder(loadStop1.getShipingOrder());
 		loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
 		loadStop.setManifest(loadStop1.getManifest());
+		loadStop.setLoadstopremark(loadStop1.getLoadstopremark());
 		//----------------------------------------------------------
 		loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		loadStop.setLastUpdateDate(LocalDateTime.now());
@@ -352,6 +509,64 @@ public class CarrierController {
 			model.addAttribute("load", load);	
 			model.addAttribute("loadStop", loadStop);
 			return "load-status-update";
+			
+			
+			
+			
+		}else {
+			
+			load.setCarrier(carrier);		
+			loadStop.setLoad(load);
+			
+			loadStop.setStatusLoad("Inactive");
+			loadStop.setTruckNumber(loadStop1.getTruckNumber());
+			loadStop.setArriveTime(loadStop1.getArriveTime());
+			loadStop.setDepartureTime(loadStop1.getDepartureTime());
+			//----------------------------------------------------------
+			loadStop.setShipingOrder(loadStop1.getShipingOrder());
+			loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
+			loadStop.setManifest(loadStop1.getManifest());
+			loadStop.setLoadstopremark(loadStop1.getLoadstopremark());
+
+			//----------------------------------------------------------
+			loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+			loadStop.setLastUpdateDate(LocalDateTime.now());
+			
+			//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
+			loadStop.setStatus("true");
+					
+			
+			if(loadStop.getStatus().equals("true")) {
+				loadStop.setErrorMessage("");
+				loadStop.setStatus("update");
+//				loadStop.setStatusFlag(3);
+				lsservice.updateLoadStop(loadStop);			
+				List<LoadStop> ls=lsservice.findNotCompletedStatusByLoadID(load.getLoadID());
+				
+				if(ls !=null && ls.size() ==0) {
+					load.setStatus("Completed");
+//					load.setStatusFlag(4);
+					load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateDate(LocalDateTime.now());
+					lservice.updateLoad(load);
+				}else if(!load.getStatus().equalsIgnoreCase("In transit")) {
+					load.setStatus("In transit");
+//					load.setStatusFlag(3);
+					load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateDate(LocalDateTime.now());
+					lservice.updateLoad(load);
+				}			
+				model.addAttribute("Success", "Load Status Update of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+"  processed successfully");
+				
+			}else {
+				model.addAttribute("Error", "Process Load Status Update of  Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+loadStop.getErrorMessage());
+				
+			}
+				model.addAttribute("loadDate", date);
+				model.addAttribute("load", load);	
+				model.addAttribute("loadStop", loadStop);
+				return "load-status-update";
+		}
 	}
 	
 	public String getThaiDate(LocalDate date) {
@@ -379,8 +594,10 @@ public class CarrierController {
         	
             System.out.println("Result " + nItem + " | Item : " + arrItem); 
             nItem++;
+            
+            
         }
-        
+       
         session.removeAttribute("sessionSelectItem");
         session.setAttribute("sessionSelectItem", arrOfSelectItem);
         
@@ -413,7 +630,10 @@ public class CarrierController {
 	@RequestMapping(value = { "/show-driver-detail/{showusername}/{loaddates}" }, method = RequestMethod.GET)
 	public String showResultSelectMultipleCheck(HttpSession session,  ModelMap model,@PathVariable String showusername,@PathVariable String loaddates) {	 					
 		if (!checkAuthorization(session))return "redirect:/login";
-
+		
+		List<Load> user_ld = lservice.findLoadByusername(showusername);
+		
+		
 		String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
         System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
         int nSessionItem = 1;
@@ -424,12 +644,28 @@ public class CarrierController {
             nSessionItem++;
             Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
             allListLoad.add(loadDetail);
+         
             
         }	
-        
+      	
+        int totalallListLoads = allListLoad.size();         	       		
+        System.out.println("Result totalallListLoads : " + totalallListLoads + " | Item totalallListLoads : " + totalallListLoads); 
+        for(Load user_lds : user_ld){
+        	
+        	
+        	
+        if(totalallListLoads >= 2 || user_lds.getDateassign()==(LocalDateTime.now())); {
+			model.addAttribute("Error", " You Assign Maximum In To Day  :"+totalallListLoads+" Warning Date : "+user_lds.getDateassign());					
+
+
+        	}
+        }
+		
+		    model.addAttribute("totalallListLoads", totalallListLoads);
+		               
         	model.addAttribute("loaddates", loaddates);	
         
-			User user_r = uservice.findUserByusername(showusername);
+        	User user_r = uservice.findUserByusername(showusername);
 	      	model.addAttribute("user_r", user_r);
 	      	         	      	
 	      	model.addAttribute("allListLoads", allListLoad);
@@ -492,7 +728,7 @@ public class CarrierController {
 		
         session.removeAttribute("sessionSelectItem");
 		
-        return "show-driver-detail";
+        return "show-detail-submit";
 		}
 	
 	
@@ -500,9 +736,7 @@ public class CarrierController {
 	public String showResultDrivers(HttpSession session,  ModelMap model,@PathVariable String username) {	 					
 		if (!checkAuthorization(session))return "redirect:/login";
 		
-		User user =uservice.findUserByusername(username);
-		session.setAttribute("S_FordUser", user);		
-		
+
 		List<Load> Loadlistd = lservice.findLoadByusername(username);
 		model.addAttribute("Loadlistd", Loadlistd);
 	

@@ -12,6 +12,8 @@ public interface LoadService {
 	void updateLoad(Load load);
 	
 	void deleteLoadByID(int loadID);
+	
+	Load deleteLoadByLoadID(int loadID);
 
 	List<Load> findAllLoads(); 
 	
@@ -20,6 +22,9 @@ public interface LoadService {
 	List<Load> findLoadByusername(String driverid);
 	
 	List<Load> findLoadByCarrierID(int carrierID);
+	
+	
+	Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID);
 
 	
 	

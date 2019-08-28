@@ -102,7 +102,29 @@
       <!-- /.col -->
         <div class="col-md-12">
            <div class="box box-primary">
-
+			<div class="box-header">
+			
+            <c:if test="${Error!=null}">
+              <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                <c:out value="${Error}"></c:out>
+              </div>
+            </c:if>
+            </div>
+            <!-- /.box-header -->
+            
+            <div class="box-header">
+            <c:if test="${setAlertDeleteLoadSuccess != null}">
+              <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-check"></i> Success</h4>
+                <c:out value="${setAlertDeleteLoadSuccess}"></c:out>
+              </div>
+            </c:if>
+            </div>
+            <!-- /.box-header -->
+            
             <!-- /.box-header -->
             <div class="box-body ">
              <form method="POST" id="frm-example"  action="<c:url value='/drivers' />"  >            
@@ -225,7 +247,7 @@ var d = strDate.split("-");
 
 			         api.cells(
 			            api.rows(function(idx, data, node){
-			               return (data[9] !== 'N/A') ? true : false;
+			               return (data[9] === 'Completed') ? true : false;
 			            }).indexes(),
 			            0
 			         ).checkboxes.disable();

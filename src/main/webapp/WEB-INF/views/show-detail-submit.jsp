@@ -116,7 +116,6 @@
                 </tbody> 
               </table>	              
               <a href="<c:url value='/load-list/${loaddates}' />"><button type="button" class="btn btn-default">Back</button></a>
-              <a href="<c:url value='/driverconf/${user_r.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Submit</button></a>	                     
              </form>
             </div>
             <!-- /.box-body -->
@@ -144,12 +143,7 @@
   $(function () {
 	  	$("#DriverTable").DataTable({	        scrollX: true	            }); 
 	    
-	  	/* if(${totalallListLoads >= '2' }){
-	  		
-			alert("Passwords Not Match!!!")
-
-	  		
-	  	} */
+	  	
 	  	
   });
 </script>

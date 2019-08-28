@@ -36,6 +36,9 @@ public class SetStopETA {
 	@Column(name = "loadStopID", nullable = false)		
 	private int loadStopID;
 	
+	@Column(name = "setStopremark", nullable = true)		
+	private String setStopremark;
+	
 	@Transient
 	private LoadStop loadStop;
 		
@@ -52,6 +55,9 @@ public class SetStopETA {
 	
 //	@Column(name = "Stage", nullable = false)
 //	private String stage;
+	
+	@Column(name = "statusSetStop", nullable = false)
+	private String statusSetStop;
 	
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 

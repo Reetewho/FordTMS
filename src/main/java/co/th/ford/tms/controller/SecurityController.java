@@ -88,21 +88,22 @@ public class SecurityController {
 				int idroless = user.getRole();
 				List<PermissionMenu> permissionMenu = PermissionMenuService.getPermissionMenu(idroless);	
 				
+				
 					session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>)permissionMenu);			 
 										 
 					if(user.getRole()==1 || user.getRole()==2 ) {
-					session.setAttribute("S_FordUser", user);				
+					session.setAttribute("S_FordUser", user);	
+					
 					LocalDate todaydate = LocalDate.now();	
-				String endDate=todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
+					String endDate=todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
 					String startDate=todaydate.withDayOfMonth(1).toString();
 					nextPage="redirect:/calendar/"+startDate+"/"+endDate;
 					
 					}else if(user.getRole()==3) {
 						session.setAttribute("S_FordUser", user);		
-						
+
 						List<Load> Loadlistd = lservice.findLoadByusername(username);
 						model.addAttribute("Loadlistd", Loadlistd);
-						
 																			
 						
 						nextPage="load-list-drivers";
@@ -126,7 +127,6 @@ public class SecurityController {
 			
 			User dataUser = (User)session.getAttribute("S_FordUser");
 						
-			//LocalDate datesession = LocalDate.now();
 			DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 			String strDateNow = DateTime.now().toString(dtf);
 			

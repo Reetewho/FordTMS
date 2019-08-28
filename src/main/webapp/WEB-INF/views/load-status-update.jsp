@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,12 @@
   <title>AP Transport Center | Load Status Update</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
+<style>
+.qrcode-text {padding-right:1.7em;height:35px;width:100%; margin-right:auto}
+.qrcode-text-btn {display:inline-block; background:url(//dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg) 50% 50% no-repeat; height:25px; width:25px; margin:1% 0 -1% -5% ; cursor:pointer}
+.qrcode-text-btn > input[type=file] {position:absolute; overflow:hidden; width:1px; height:1px; opacity:0}
+
+</style>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -119,7 +126,7 @@
           </div>
        </div>
         <div class="col-md-7">
-         <form:form method="POST" modelAttribute="loadStop" data-toggle="validator" role="form">    
+         <form:form method="POST" id="Testex" modelAttribute="loadStop" data-toggle="validator" role="form">    
           <div class="box box-primary">
           	 <div class="box-header with-border">
               <h3 class="box-title">Load Stop Update</h3>
@@ -145,9 +152,19 @@
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Truck Number :</label>
                   <div class="col-sm-8" >
-                    <form:input path="truckNumber" id="truckNumber" class="form-control" required="required"/>                  
+                   <c:choose>
+	                <c:when test="${S_FordUser.role=='3' && loadStop.statusLoad == 'Inactive' }">
+	                    <form:input path="truckNumber" id="truckNumbera" class="form-control" required="required" />   
+					</c:when>
+       		 </c:choose>
+       		 <c:choose>
+	                <c:when test="${(loadStop.statusLoad == 'Active') || (loadStop.statusLoad == 'null') ||(loadStop.statusLoad == '')|| (S_FordUser.role=='1') || (S_FordUser.role=='2')}">
+                	<form:input path="truckNumber" id="truckNumberb" type="text" size="16" placeholder="Tracking Code" class="qrcode-text" required="required"/><label class=qrcode-text-btn><input type=file id="qrscann" accept="image/*" capture=environment onchange="openQRCamera(this);" tabindex=-1></label> 
+                  </c:when>
+       		 </c:choose>
                   </div>
                 </div>
+                
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Arrival Date Time :</label>
                   <div class="col-sm-8">
@@ -160,33 +177,55 @@
                     <form:input path="departureTime" id="departureTime" class="form-control"  required="required" />                   
                   </div>
                 </div>		
-                
+                 <c:choose>
+                <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">ShipingOrder :</label>
                   <div class="col-sm-8">
                     <form:input path="shipingOrder" id="shipingOrder" class="form-control"  required="required" />                   
                   </div>
                 </div>	
-                
+                	</c:when>
+       		 </c:choose>
+       		 <c:choose>
+                <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">WaybillNumber :</label>
                   <div class="col-sm-8">
                     <form:input path="waybillNumber" id="waybillNumber" class="form-control"  required="required" />                   
                   </div>
                 </div>	
-                
+                </c:when>
+       		 </c:choose>
+       		 <c:choose>
+                <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">ManiFest :</label>
                   <div class="col-sm-8">
                     <form:input path="manifest" id="manifest" class="form-control"  required="required" />                   
                   </div>
                 </div>	
-                          
+                      </c:when>
+       		 </c:choose>  
+       		 <c:choose>
+                <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">Remark :</label>
+                  <div class="col-sm-8">
+                     <form:textarea path="loadstopremark" id="loadstopremarks" class="form-control"  required="required" />                 
+                  </div>
+                </div>	
+                      </c:when>
+       		 </c:choose>     
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
                 <a href="<c:url value='/loadStop-list/${loadDate}/${load.systemLoadID}-${load.loadID}' />"><button type="button" class="btn btn-default">Cancel</button></a>
-                <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                 <c:choose>
+	                <c:when test="${(loadStop.statusLoad == 'Active') || (loadStop.statusLoad == null) || (loadStop.statusLoad == '')|| (S_FordUser.role=='1') || (S_FordUser.role=='2')}">
+                <button type="submit" id="submitbt" class="btn btn-primary pull-right">Submit</button>
+                </c:when>
+       		 </c:choose>
               </div>
               <!-- /.box-footer -->
           </div>
@@ -208,12 +247,73 @@
 <!-- ./wrapper -->
 
 <%@ include file="/WEB-INF/include/jsInclude.jsp" %>
-
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <!-- page script -->
 <script>
-  $(function () {
-	  	
-  });
+var statusLoads = '${loadStop.statusLoad}';
+var statusLoadsrole = '${S_FordUser.role}';
+function openQRCamera(node) {
+	  var reader = new FileReader();      
+	  reader.onload = function() {	     
+	    node.value = "";
+	    qrcode.callback = function(res) {
+	      if(res instanceof Error) {
+	        alert("No QR code found. Please make sure the QR code is within the camera's frame and try again.");
+	      } else {
+	        node.parentNode.previousElementSibling.value = res;
+	      }
+	    };
+	    qrcode.decode(reader.result);
+	  };
+	  reader.readAsDataURL(node.files[0]);
+	};
+	
+   $(function () {
+	  
+	  
+	   
+	   if(${S_FordUser.role=='3' }){
+		  document.getElementById("arriveTime").readOnly = true;
+		  document.getElementById("departureTime").readOnly = true;
+	  }
+	   
+	   if(statusLoads == "Inactive" && statusLoadsrole == "3"){
+		  
+			  document.getElementById("truckNumbera").disabled = true;		 
+			  document.getElementById("truckNumberb").disabled = false;		  
+
+			  document.getElementById("arriveTime").disabled = true;		 
+			  document.getElementById("departureTime").disabled = true;		  
+			  document.getElementById("shipingOrder").disabled = true;		  
+			  document.getElementById("waybillNumber").disabled = true;		  
+			  document.getElementById("manifest").disabled = true;
+			  document.getElementById("submitbt").disabled = true;
+			  document.getElementById("loadstopremarks").disabled = true;
+			  document.getElementById("qrscann").disabled = true;
+
+	   } 
+			  if(statusLoads == "Inactive" && statusLoadsrole != "3"){
+			    	
+				  document.getElementById("truckNumbera").disabled = false;	
+				  document.getElementById("truckNumberb").disabled = false;		  
+  
+				  document.getElementById("arriveTime").disabled = false;		 
+				  document.getElementById("departureTime").disabled = false;		  
+				  document.getElementById("shipingOrder").disabled = false;		  
+				  document.getElementById("waybillNumber").disabled = false;		  
+				  document.getElementById("manifest").disabled = false;
+				  document.getElementById("submitbt").disabled = false;
+				  document.getElementById("loadstopremarks").disabled = false;
+				  document.getElementById("qrscann").disabled = false;
+
+		    
+	   }  
+		  
+	
+
+	   
+   
+  }); 
 </script>
 </body>
 </html>

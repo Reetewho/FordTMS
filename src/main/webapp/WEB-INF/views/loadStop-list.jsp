@@ -56,11 +56,11 @@
         <div class="col-md-12">
           <div class="box box-primary">
           	<div class="box-header">
-	            <c:if test="${Error!=null} }">
+	            <c:if test="${Error!=null}">
 	              <div class="alert alert-danger alert-dismissible">
 	                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	                <h4><i class="icon fa fa-ban"></i> Error!</h4>
-	                <c:out value="${Error} }"></c:out>
+	                <c:out value="${Error}"></c:out>
 	              </div>
 	            </c:if>
             </div>
@@ -106,7 +106,7 @@
 						<td>${loadStop.waybillNumber}</td>
 						
 						<td>${loadStop.status}</td>
-						<td><a href="<c:url value='/loadStatusUpdate/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Status Update</a></td>
+						<td><a href="<c:url value='/loadStatusUpdate/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">On Times</a></td>
 						<!-- td><a href="<c:url value='/setStopETA/${load.carrier.carrierCode}-${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Set Stop ETA</a></td-->
 						 
 						<c:choose>
@@ -114,7 +114,7 @@
 								<td></td>
 							</c:when>
 							<c:otherwise>
-								<td><a href="<c:url value='/setStopETA/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Set Stop ETA</a></td>
+								<td><a href="<c:url value='/setStopETA/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">Delay</a></td>
 							</c:otherwise>
 						</c:choose>	
 								
@@ -132,6 +132,33 @@
         <!-- /.col -->
       </div>      
       <!-- /.row -->
+      
+      
+      
+            <!-- Modal -->
+ 		 	<div class="modal fade" id="myModalDeleteLoad" role="dialog">
+    		<div class="modal-dialog">
+				 <!-- Modal content-->
+			      <div class="modal-content">
+			      	<form method="POST" id="confirmDeleteLoadForm" data-toggle="validator" role="form" >
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Delete Load Data</h4>
+				        </div>
+				        <div class="modal-body">
+				          <input type="hidden" id="hiddenDelloadID" name="hiddenDelloadID"/> 
+				          <!--   <input type="text" id="txtDelloadID" name="txtDelloadID" readonly="readonly"/> -->
+				          <p>Confirm delete Load ID : <span  id="showLoadID" class="badge bg-red" style="font-size:16px;font-weight: 600;">-</span>.</p>
+				        </div>
+				        <div class="modal-footer">
+				          <button type="submit" class="btn btn-primary">Ok</button>
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			        </div>
+			        </form>
+			      </div>
+		      </div>
+		      </div>
+		      
     </section>
     <!-- /.content -->
     
@@ -147,10 +174,28 @@
 
 <!-- page script -->
 <script>
-  $(function () {
-	  	$("#loadStopTable").DataTable({	        scrollX: true	            } ); 
-	   
-  });
+ // $(function () {
+ //	  	$("#loadStopTable").DataTable({	        scrollX: true	            } ); 	   
+ // });
+  
+	$(document).ready(function(){
+		$("#loadStopTable").DataTable({	        scrollX: true	            } ); 
+	  
+		var setAlertMsg='${setAlertMsgDeleteLoad}';	
+		if(setAlertMsg == 'true'){
+			//var action = "<c:url value='/deleteLoadData' />";
+			//document.getElementById("confirmDeleteLoadForm").action = action;
+			document.getElementById("hiddenDelloadID").value = '${load.loadID}';
+			//document.getElementById("txtDelloadID").value = '${load.systemLoadID}';
+			document.getElementById("showLoadID").innerHTML = '${load.systemLoadID}';
+			//$("#processDeleteAttorney").attr("href", "<c:url value='/headerform-list' />");
+			//$("#processDeleteAttorney").attr("href", "<c:url value='/headerform-list' />");
+			$("#myModalDeleteLoad").modal();	
+		}
+		
+		
+	});
+	
 </script>
 </body>
 </html>

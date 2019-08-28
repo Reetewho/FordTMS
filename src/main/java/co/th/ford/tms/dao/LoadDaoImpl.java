@@ -36,6 +36,21 @@ public class LoadDaoImpl extends AbstractDao<Integer, Load> implements LoadDao {
 	}
 	
 	
+	public Load deleteLoadByLoadID(int loadID) {
+		Query query = getSession().createSQLQuery(
+				  " Delete "
+				+ " FROM tb_load "
+				+ " WHERE tb_load.loadID = :loadID ");
+		query.setInteger("loadID", loadID);
+		query.executeUpdate();
+		
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("loadID", loadID));
+		return (Load) criteria.uniqueResult();
+		
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<Load> findAllLoads() {
 		Criteria criteria = createEntityCriteria();
@@ -60,6 +75,13 @@ public class LoadDaoImpl extends AbstractDao<Integer, Load> implements LoadDao {
 		Criteria criteria = createEntityCriteria();
 		criteria.add(Restrictions.eq("driverid", driverid));
 		return (List<Load>) criteria.list();
+	}
+	
+	public Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID) {
+		  Criteria criteria = createEntityCriteria();
+		  criteria.add(Restrictions.eq("carrierID", carrierID));
+		  criteria.add(Restrictions.eq("systemLoadID", systemLoadID));
+		  return (Load) criteria.uniqueResult();
 	}
 	
 	
