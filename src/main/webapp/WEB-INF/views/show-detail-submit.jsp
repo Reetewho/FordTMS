@@ -142,9 +142,7 @@
 <script>
   $(function () {
 	  	$("#DriverTable").DataTable({	        scrollX: true	            }); 
-	    
-	  	
-	  	
+	  	/* $("#DriverTables").DataTable({	        scrollX: true	            }); 	 */  	
   });
 </script>
 </body>

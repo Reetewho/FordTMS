@@ -221,7 +221,7 @@ public class CarrierController {
 	
 	
 	/*
-	 * Start modify script by : Bunyong 2019-08-23
+	 * Start modify script by : Bunyong 2019-05-09
 	 */
 	@RequestMapping(value = { "/loadStop-list/{date}/{systemLoadID}-{loadID}" }, method = RequestMethod.POST)
 	public String processDeleteLoad(HttpSession session, ModelMap model,@PathVariable String date, 
@@ -235,6 +235,7 @@ public class CarrierController {
 		 * System.out.println("Process delete systemLoadID : " + systemLoadID);
 		 */
 		session.removeAttribute("deleteLoadIDSuccess");
+		
 		Load delLoadData =lservice.deleteLoadByLoadID(hiddenDelloadID);
 		if(delLoadData == null) {	
 			session.setAttribute("deleteLoadIDSuccess", hiddenDelloadID);
@@ -252,7 +253,7 @@ public class CarrierController {
 	
 	@RequestMapping(value = {"/manual-add-load" }, method = RequestMethod.POST)
 	public String saveManualAddLoad(HttpSession session, ModelMap model, 
-									@RequestParam("loadID") String loadID, 
+									@RequestParam("systemLoadID") String systemLoadID, 
 									@RequestParam("loadDate") String loadDate) {
 		if(!checkAuthorization(session))return "redirect:/login";
 		LocalDate today = LocalDate.now();	   
@@ -262,33 +263,102 @@ public class CarrierController {
 	    Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(loadDate, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
 	    
 	    if(carrier == null) {
-	    	model.addAttribute("Error", " Unsuccessfully, not found carrier. Please check date.");
+	    	model.addAttribute("Warning", " Unsuccessfully, not found carrier. Please check date.");
 	    	
 	    }else {
-	    	Load loadDataExist = lservice.findLoadByCarrierID_SystemLoadID(carrier.getCarrierID(), Integer.parseInt(loadID));
-	        if(loadDataExist == null) {    
-		    	Load loadData = new Load();
+	    	
+	    	Load loadDataExist = lservice.findLoadByCarrierID_SystemLoadID(carrier.getCarrierID(), Integer.parseInt(systemLoadID));
+	    	if(loadDataExist == null) {
+	    		Load loadData = new Load();
 		    	loadData.setCarrierID(carrier.getCarrierID());
 		    	loadData.setCarrier(carrier);
-		    	loadData.setSystemLoadID(Integer.parseInt(loadID));
+		    	loadData.setSystemLoadID(Integer.parseInt(systemLoadID));
 		    	loadData.setAlertTypeCode("LOAD_TENDER_NEW");
 		    	loadData.setStatus("N/A");
 		    	loadData.setLastUpdateDate(LocalDateTime.now());
 		    	loadData.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());	
+		    	loadData.setLoadAction("MANUAL");
 				lservice.saveLoad(loadData);
 				
-				model.addAttribute("Success", "Successfully, manual add LoadID : " + loadID + ".");
-	        }else {
-	            model.addAttribute("Error", "Unsuccessfully, Load ID : " + loadID + " is exist in LoadData.");
-	        }
-	        
+				
+				
+				Load load = lservice.findLoadByCarrierID_SystemLoadID(carrier.getCarrierID(), Integer.parseInt(systemLoadID));
+			
+				if(load.getStatus().equalsIgnoreCase("N/A")) {			
+					ProcessLoadRetrieve loadRetrieve=new ProcessLoadRetrieve(); 
+					List<LoadStop> loadStopList=loadRetrieve.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), load).getLoadStopList();
+					if(load.getStatus().equalsIgnoreCase("true")) {
+						int numLoadStop = loadStopList.size();
+						int roundLoadStop = 1;
+						for(LoadStop loadStop : loadStopList){
+			
+							if(loadStop.getStopSequence()==1) {	
+								if(loadStop.getArriveTime()==null) {
+									
+									load.setGatein("-");
+									lservice.updateLoad(load);
+								}else {
+									System.out.println(loadStop.getDepartureTime()+"Test value DepartureTime");
+								String numSequence = String.valueOf(loadStop.getArriveTime());
+								load.setGatein(numSequence);
+								lservice.updateLoad(load);
+								}
+								
+							}
+							loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+							loadStop.setLastUpdateDate(LocalDateTime.now());
+							lsservice.saveLoadStop(loadStop);
+							
+							if(roundLoadStop==numLoadStop) {						
+								if(loadStop.getDepartureTime()==null) {
+									load.setGateout("-");
+									lservice.updateLoad(load);
+								}else {
+								String numSequences = String.valueOf(loadStop.getDepartureTime());
+								load.setGateout(numSequences);	
+								lservice.updateLoad(load);
+								}
+							}
+							roundLoadStop=roundLoadStop+1;
+						}
+						load.setStatus("Load");								
+						load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+//						load.setStatusFlag(2);
+						load.setLastUpdateDate(LocalDateTime.now());
+					    load.setLoadAction(null);
+						lservice.updateLoad(load);
+					}else {
+						model.addAttribute("Warning", "Load Retrieve  :" + 
+										   carrier.getCarrierCode() +
+										   " , Load ID : " + load.getSystemLoadID() + " Error : " +
+										   load.getErrorMessage());
+						
+						Load delLoadData = lservice.deleteLoadByLoadID(load.getLoadID());
+						if(delLoadData == null) {	
+							System.out.println("Successfully, Delete SystemLoadID : " + systemLoadID);
+						}
+						//System.out.println("Result loadRetrieve fail, Load ID : " + load.getSystemLoadID());
+					}
+					
+				}
+				List<LoadStop> loadStops = lsservice.findLoadStopByLoadID(load.getLoadID());
+				model.addAttribute("loadStops", loadStops);
+				model.addAttribute("Success", "Successfully, manual add SystemLoadID : " + systemLoadID + ".");
+	    	}else {
+	    		model.addAttribute("Warning", "Unsuccessfully, SystemLoadID : " + systemLoadID + " is exist in LoadData.");
+	    	}
+	    	
+			
+			
 	    }
+	    
+
 	    
 		return "manual-add-load";
 	}
 	
 	/*.
-	 * End modify script by : Bunyong 2019-08-23
+	 * End modify script by : Bunyong 2019-05-09
 	 */
 	
 	
@@ -436,9 +506,10 @@ public class CarrierController {
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
 		load.setCarrier(carrier);
-		
-		loadStop.setLoadstopremark("Active");
+		if(loadStop.getStatusLoad() == null) {
+		loadStop.setStatusLoad("Active");
 		lsservice.updateLoadStop(loadStop);
+		}
 		model.addAttribute("loadDate", date);
 		model.addAttribute("load", load);	
 		model.addAttribute("loadStop", loadStop);
@@ -655,7 +726,7 @@ public class CarrierController {
         	
         	
         if(totalallListLoads >= 2 || user_lds.getDateassign()==(LocalDateTime.now())); {
-			model.addAttribute("Error", " You Assign Maximum In To Day  :"+totalallListLoads+" Warning Date : "+user_lds.getDateassign());					
+			model.addAttribute("Warning", " You Assign Maximum In To Day  :"+totalallListLoads+" Warning Date : "+user_lds.getDateassign());					
 
 
         	}

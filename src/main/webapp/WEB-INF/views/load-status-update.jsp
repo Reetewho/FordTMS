@@ -9,12 +9,63 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AP Transport Center | Load Status Update</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
+ 
 </head>
 <style>
-.qrcode-text {padding-right:1.7em;height:35px;width:100%; margin-right:auto}
-.qrcode-text-btn {display:inline-block; background:url(//dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg) 50% 50% no-repeat; height:25px; width:25px; margin:1% 0 -1% -5% ; cursor:pointer}
-.qrcode-text-btn > input[type=file] {position:absolute; overflow:hidden; width:1px; height:1px; opacity:0}
+/*Don't forget to add Font Awesome CSS : "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"*/
+input[type="text"] {
+  width: 100%;
+  margin: 8px 0;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  transition: 0.3s;
+}
 
+/* .inputWithIcon input[type="text"] {
+  padding-left: 40px;
+} */
+
+.inputWithIcon {
+  position: relative;
+}
+
+.inputWithIcon i {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  padding: 9px 8px;
+  color: #aaa;
+  transition: 0.3s;
+}
+
+
+.inputWithIcon.inputIconBg i {
+  background-color: #aaa;
+  color: #fff;
+  padding: 9px 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.inputWithIcon.inputIconBg input[type="text"]:focus + i {
+  color: #fff;
+  background-color: dodgerBlue;
+}
+
+.inputWithIcon label {
+  position: absolute;
+  left: 82%;
+  top: 2.5px;
+  padding: 0.5% 3%;
+  color: #aaa;
+  transition: 0.3s;
+}
+
+
+.inputWithIcon label {display:inline-flex; background:url(//dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg) 50% 50% no-repeat; height:28px;width: 20px;  cursor:pointer}
+
+.inputWithIcon label > input[type=file] {position:absolute; overflow:hidden; width:1px; height:1px; opacity:0}
+  
 </style>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -23,6 +74,7 @@
   <%@ include file="/WEB-INF/include/rightMenu.jsp" %>
 
   <!-- Content Wrapper. Contains page content -->
+  
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -151,15 +203,18 @@
                 </div>
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Truck Number :</label>
-                  <div class="col-sm-8" >
+                  <div class="col-sm-4" >
                    <c:choose>
 	                <c:when test="${S_FordUser.role=='3' && loadStop.statusLoad == 'Inactive' }">
 	                    <form:input path="truckNumber" id="truckNumbera" class="form-control" required="required" />   
 					</c:when>
        		 </c:choose>
        		 <c:choose>
-	                <c:when test="${(loadStop.statusLoad == 'Active') || (loadStop.statusLoad == 'null') ||(loadStop.statusLoad == '')|| (S_FordUser.role=='1') || (S_FordUser.role=='2')}">
-                	<form:input path="truckNumber" id="truckNumberb" type="text" size="16" placeholder="Tracking Code" class="qrcode-text" required="required"/><label class=qrcode-text-btn><input type=file id="qrscann" accept="image/*" capture=environment onchange="openQRCamera(this);" tabindex=-1></label> 
+	                <c:when test="${(loadStop.statusLoad == 'Active') || (loadStop.statusLoad == 'null') ||(loadStop.statusLoad == '')|| (S_FordUser.role=='1') || (S_FordUser.role=='2')}">               	
+                	<div class="inputWithIcon">
+						  <form:input path="truckNumber" id="truckNumberb" type="text" size="16" placeholder="Tracking Code" class="form-control" required="required"/>
+						  	<label aria-hidden="true"><input type="file" id="qrscann" accept="image/*" capture="environment" onchange="openQRCamera(this);" tabindex=-1></label>
+					</div>                	
                   </c:when>
        		 </c:choose>
                   </div>
@@ -241,6 +296,7 @@
   </div>
   <!-- /.content-wrapper -->  
   
+  
   <%@ include file="/WEB-INF/include/footer.jsp" %>
   
 </div>
@@ -280,21 +336,11 @@ function openQRCamera(node) {
 	   if(statusLoads == "Inactive" && statusLoadsrole == "3"){
 		  
 			  document.getElementById("truckNumbera").disabled = true;		 
-			  document.getElementById("truckNumberb").disabled = false;		  
-
-			  document.getElementById("arriveTime").disabled = true;		 
-			  document.getElementById("departureTime").disabled = true;		  
-			  document.getElementById("shipingOrder").disabled = true;		  
-			  document.getElementById("waybillNumber").disabled = true;		  
-			  document.getElementById("manifest").disabled = true;
-			  document.getElementById("submitbt").disabled = true;
-			  document.getElementById("loadstopremarks").disabled = true;
-			  document.getElementById("qrscann").disabled = true;
+			
 
 	   } 
 			  if(statusLoads == "Inactive" && statusLoadsrole != "3"){
 			    	
-				  document.getElementById("truckNumbera").disabled = false;	
 				  document.getElementById("truckNumberb").disabled = false;		  
   
 				  document.getElementById("arriveTime").disabled = false;		 

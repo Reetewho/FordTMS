@@ -40,11 +40,11 @@
           <div class="box box-primary">
           	<div class="row">
       	<div class="col-md-12">
-      		<c:if test="${Error!=null || Success!=null }">
-              <div class='alert ${Error!=null?"alert-danger":"alert-success"}  alert-dismissible'>
+      		<c:if test="${Warning!=null || Success!=null  }">
+              <div class='alert ${Warning!=null?"alert-warning":"alert-success"}  alert-dismissible'>
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa  ${Error!=null?'fa-ban':'fa-check'}"></i>${Error!=null?'Error!':'Success'} </h4>
-                <c:out value="${Error!=null?Error:Success} "></c:out>
+                <h4><i class="icon fa  ${Warning!=null?'fa-exclamation-triangle':'fa-check'}"></i>${Warning!=null?'Warning':'Success'} </h4>
+                <c:out value="${Warning!=null?Warning:Success} "></c:out>
               </div>
             </c:if>           
       	</div>
@@ -143,13 +143,9 @@
 <script>
   $(function () {
 	  	$("#DriverTable").DataTable({	        scrollX: true	            }); 
-	    
-	  	/* if(${totalallListLoads >= '2' }){
-	  		
-			alert("Passwords Not Match!!!")
-
-	  		
-	  	} */
+	  	
+	  /* 	$("#DriverTables").DataTable({	        scrollX: true	            });  */
+	  
 	  	
   });
 </script>

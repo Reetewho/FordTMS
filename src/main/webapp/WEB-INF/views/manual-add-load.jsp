@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | User Detail</title>
+  <title>AP Transport Center | Manual Add Load</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -24,7 +24,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       User Detail
+       Manual Add Load
         <small></small>
       </h1>
        <ol class="breadcrumb">
@@ -37,69 +37,91 @@
     
      <div class="row">
       	<div class="col-md-12">
-      		<c:if test="${Error!=null || Success!=null }">
-              <div class='alert ${Error!=null?"alert-danger":"alert-success"}  alert-dismissible'>
+      		<c:if test="${Warning!=null || Success!=null }">
+              <div class='alert ${Warning!=null?"alert-warning":"alert-success"}  alert-dismissible'>
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa  ${Error!=null?'fa-ban':'fa-check'}"></i>${Error!=null?'Error!':'Success'} </h4>
-                <c:out value="${Error!=null?Error:Success} "></c:out>
+                <h4><i class="icon fa  ${Warning!=null?'fa-ban':'fa-check'}"></i>${Warning!=null?'Warning!':'Success'} </h4>
+                <c:out value="${Warning!=null?Warning:Success} "></c:out>
               </div>
             </c:if>           
       	</div>
       </div>
       
-      <div class="row">
-      <!-- /.col -->   
-        <div class="col-md-12">
-        
-         <form method="POST" id="manualAddLoadForm" action="<c:url value='/manual-add-load' />"  onsubmit="return myFunction()" data-toggle="validator" role="form" > 
-            
-          <div class="box box-primary">
-          	 <div class="box-header with-border">
-              <h3 class="box-title">Manual Add LoadData</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body form-horizontal">                    
-				
-				<div class="form-group">
-                	<label  class="col-sm-4 control-label">Date :</label>
-	            	<div class="col-sm-8">
-	            		<div class="col-sm-5">
-	            		<input type="text" class="form-control pull-right datepicker" name="loadDate" id="loadDate" value="${loadDate}" data-error="Please Select Date" required="required"/>                  
-	            		</div>
-	            	</div>
-                </div>
-                
-            	<div class="form-group">
-                	<label  class="col-sm-4 control-label">LoadID :</label>
-	            	<div class="col-sm-8">
-	            		<div class="col-sm-5">
-	            			<input type="text" name="loadID" id="loadID" class="form-control" placeholder="LoadID" data-minlength="6" data-error="Minimum of 6 characters" required="required"/>                    
-	            		</div>
-	            	</div>
-                </div>
-                
-                
-         
-
-                          
-     
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer">
-                <a href="<c:url value='/calendar' />"><button type="button" class="btn btn-default">Cancel</button></a>
-                <button type="submit" class="btn btn-primary pull-right">Submit</button>
-              </div>
-              <!-- /.box-footer -->
-          </div>
-          <!-- /. box -->
-           </form> 
-        </div>        
-        <!-- /.col -->
+     <form method="POST" id="manualAddLoadForm" action="<c:url value='/manual-add-load' />"  onsubmit="return myFunction()" data-toggle="validator" role="form" >     
+      <div class="row" style="margin-bottom:20px"> 
+      	<div class="col-sm-2"> 
+		</div>
+      	<div class="col-sm-3"> 
+      		<div class="form-group input-group">
+      		<div class="input-group-addon">
+   				<label  class="control-label">LoadID :</label>
+   			</div>
+   			<input type="text" name="systemLoadID" id="systemLoadID" class="form-control" placeholder="LoadID" data-minlength="6" data-error="Minimum of 6 characters" required="required"/>
+      		</div>
+      	</div>
+      	<div class="col-sm-3"> 
+      		<div class="form-group  input-group date">
+      			 <div class="input-group-addon">
+      			 <label  class="control-label">Date :</label>
+      			 </div>
+      			 <input type="text" class="form-control pull-right datepicker" name="loadDate" id="loadDate" value="${loadDate}" data-error="Please Select Date" required="required"/> 
+      		</div>		 
+		</div>
+		<div class="col-sm-4"> 
+			<button type="submit" class="btn btn-primary">Submit</button>	
+      		<a href="<c:url value='/calendar' />"><button type="button" class="btn btn-default">Cancel</button></a>
+            	 
+		</div>
       </div>      
       <!-- /.row -->
+      </form> 
       
       
       
+      	 
+	<c:if test = "${not empty loadStops}">  
+	<div class="row"> 
+	
+		<div class="box-body ">
+              <table id="loadStopTable" class="table table-bordered table-striped" style="width : 100% ">
+                <thead>
+                <tr>
+                  	<th >Stop Sequence</th>
+					<th >Pickup GSDB</th>
+					<th >Pickup Supplier Name</th>
+					<th >Arrive Time</th>
+					<th >Departure Time</th>
+					<th >Status</th>                  
+                </tr>
+                </thead>
+                <tbody>
+	                <c:forEach items="${loadStops}" var="loadStop">
+						<tr >
+						<td>${loadStop.stopSequence}</td>
+						<td>${loadStop.stopShippingLocation}</td>
+						<td>${loadStop.stopShippingLocationName}</td>
+						<td>
+						<fmt:parseDate value="${loadStop.arriveTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedArriveTime" type="both" />
+						<fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${ parsedArriveTime }" />
+						</td>
+						<td>
+						<fmt:parseDate value="${loadStop.departureTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDepartureTime" type="both" />
+						<fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${ parsedDepartureTime }" />
+						</td>
+						<td>${loadStop.status}</td>
+								
+						</tr>
+					</c:forEach>
+                              
+                </tbody>                
+              </table>
+              
+		</div>
+        <!-- /.box-body -->
+	
+	</div>
+	</c:if>
+	
       
       	<!-- Modal -->
 		<div class="modal fade" id="myModalStopUser" role="dialog">
@@ -168,6 +190,8 @@
     
     
     $(document).ready(function(){
+    	$("#loadStopTable").DataTable({scrollX:true}); 
+    	
     	$('.datepicker').datepicker({
   	      autoclose: true,
   	      format: 'yyyy-mm-dd'

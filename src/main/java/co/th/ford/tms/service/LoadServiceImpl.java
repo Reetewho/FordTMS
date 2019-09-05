@@ -48,6 +48,7 @@ public class LoadServiceImpl implements LoadService {
 			entity.setDriverid(l.getDriverid());
 			entity.setDateaccept(l.getDateaccept());
 			entity.setDateassign(l.getDateassign());
+			entity.setLoadAction(l.getLoadAction());
 		}
 	}
 

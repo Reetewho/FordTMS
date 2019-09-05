@@ -6,17 +6,61 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AP Transport Center | Calendar</title>
-  <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
+  <%@ include file="/WEB-INF/include/cssInclude.jsp" %> 
+   <link rel="stylesheet" href="<c:url value='/assets/bootstrap/css/normalize.css' />">
+   <link rel="stylesheet" href="<c:url value='/assets/bootstrap/css/main.css' />">
+ 	<script src="<c:url value='/assets/bootstrap/js/modernizr-2.6.2.min.js' />"></script>
   <style>
-  .fc-title{
+   .fc-title{
 	  position: absolute;
 	  padding-top:0px;
 	  left: 40%;
 	  font-size:1.50em;
   }
+  
+  .back-link a {
+		color: #4ca340;
+		text-decoration: none; 
+		border-bottom: 1px #4ca340 solid;
+	}
+	.back-link a:hover,
+	.back-link a:focus {
+		color: #408536; 
+		text-decoration: none;
+		border-bottom: 1px #408536 solid;
+	}
+	h1 {
+		height: 100%;
+		/* The html and body elements cannot have any padding or margin. */
+		margin: 0;
+		font-size: 14px;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 32px;
+		margin-bottom: 3px;
+	}
+	.entry-header {
+		text-align: left;
+		margin: 0 auto 50px auto;
+		width: 80%;
+        max-width: 978px;
+		position: relative;
+		z-index: 10001;
+	}
+	#demo-content {
+		padding-top: 100px;
+	}
   </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
+<!-- ---------------------------------------Loading------------------------------------------------ -->
+		<div id="loader-wrapper" style="display: none">
+			<div id="loader"></div>
+			<div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+		</div>
+<!-- ---------------------------------------Loading------------------------------------------------ -->
+
 <div class="wrapper">
 
   <%@ include file="/WEB-INF/include/header.jsp" %>
@@ -99,6 +143,12 @@
 </div>
 <!-- ./wrapper -->
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="<c:url value='/assets/bootstrap/js/jquery-1.9.1.min.js' />"><\/script>')</script>
+
+
+<script src="<c:url value='/assets/bootstrap/js/main.js' />"></script>
+
 <%@ include file="/WEB-INF/include/jsInclude.jsp" %>
 
 <!-- page script -->
@@ -123,12 +173,14 @@ var options={
 		  },   	     
 	      timeFormat: ' ',
 	      dayClick: function(date, jsEvent, view) {
-			  if(!dayclick){
+			  if(!dayclick){			  
 			    window.location.href = "<c:url value='/load-list/"+date.format()+"' />";
 			    dayclick=true;
+			    document.getElementById("loader-wrapper").style.display = "block";
 			  }
+			  			 
 				//alert('Clicked on: ' + date.format());
-		   },
+		   }, 
 		   events: [
 			   <c:if test = "${not empty carriers}">
 			  	<c:forEach items="${carriers}" var="carriers">
@@ -286,6 +338,7 @@ var options={
   function getDateString(date){
 	  return  date.getFullYear()+"-"+((date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1))+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
   }
+  
 </script>
 </body>
 </html>

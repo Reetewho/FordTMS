@@ -66,7 +66,7 @@
                  <div class="form-group">
                   <label  class="col-sm-4 control-label">User Name :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="Usernamea" name="Usernamea" class="form-control" placeholder="Insert Your User Name" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required" />                    
+	                   <input  id="Usernamea" name="Usernamea" class="form-control" placeholder="Insert Your User Name" data-minlength="8" data-error="Minimum of 8 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
 	                  </div>
                 </div>
                
@@ -76,7 +76,7 @@
 	                   <input  id="Passworda" type = "password" name="Passworda" class="form-control" placeholder="Insert Your Password" data-minlength="5" data-error="Minimum of 5 characters" maxlength="16" data-error="Maximum of 16 characters" required="required" />	                   
 	                  </div>
 	                  <div class="col-sm-1">
-	                  <img src="<c:url value='/assets/dist/img/eyehidden.png' />"  alt="User Image" style="background-color:white" width= "25px" height="25px" onclick="hiddeneye()">
+	                  <img src="<c:url value='/assets/dist/img/eyehidden.png' />"  alt="User Image"  width= "20px" height="20px" onclick="hiddeneye()">
               		  </div>
 			    </div>
                 
@@ -192,31 +192,23 @@ function myFunction()
 	{
 	
 	
-	var pwdPolicy =/^\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])/;
+	var passwordformat =/^\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])/;
 	var mailformat = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	var nameformat = /^([a-zA-Z])+$/i;
 	var usernameformat= /^([a-zA-Z0-9])+$/i
-	var Contactnumberformat= /^([0-9])+$/i
-	
-	var Contactnumbers=document.getElementById("Contactnumber").value;
-	var usernameas=document.getElementById("Usernamea").value;
-	var pass=document.getElementById("Passworda").value;
-	var namese =document.getElementById("namesa").value;
-	var LastNamees=document.getElementById("LastNamea").value;
-	var passEmail=document.getElementById("Email").value;
-	
+	var Contactnumberformat= /^([0-9])+$/i	
 
-	if(usernameas.match(usernameformat))
-	{		
-	if(pass.match(pwdPolicy))
+if(document.getElementById("Usernamea").value.match(usernameformat))
+{		
+	if(document.getElementById("Passworda").value.match(passwordformat))
 	{
-		if(namese.match(nameformat))
+		if(document.getElementById("namesa").value.match(nameformat))
 		{
-			if(LastNamees.match(nameformat))	
+			if(document.getElementById("LastNamea").value.match(nameformat))	
 				{
-				if(Contactnumbers.match(Contactnumberformat))
+				if(document.getElementById("Contactnumber").value.match(Contactnumberformat))
 				{		
-				if(passEmail.match(mailformat))
+				if(document.getElementById("Email").value.match(mailformat))
 					{
 						return true;
 						
@@ -226,28 +218,31 @@ function myFunction()
 							return false;
 						 }
 				}else{
-					alert("Please fallow LastName policy");
+					alert("Please fallow Contactnumber policy");
+					document.getElementById("Contactnumber").focus();
 					return false;
 				}
+				
 				}else{
 					alert("Please fallow LastName policy");
+					document.getElementById("LastNamea").focus();
 					return false;
 				}
 		}else{
 			alert("Please fallow names policy");
+			document.getElementById("namesa").focus();
 			return false;
 		}
-	
-		
-		/* alert("Add User success");
-		return true; */
+
 	}else{
 			alert("Please fallow password policy");
 			document.getElementById("Passworda").focus();
 			return false;
 		}
+	
 	}else{
 		alert("Please fallow Username policy");
+		document.getElementById("Usernamea").focus();
 		return false;
 		}
 	}

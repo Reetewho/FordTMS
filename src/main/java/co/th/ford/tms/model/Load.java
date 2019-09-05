@@ -94,6 +94,10 @@ public class Load {
 	@Column(name = "lastUpdateUser", nullable = true)
 	private String lastUpdateUser;
 	
+	
+	@Column(name = "loadAction", nullable = true)
+	 private String loadAction;
+	
 //	@Column(name = "statusFlag", nullable = true)
 //	private int statusFlag;
 	
@@ -133,7 +137,9 @@ public class Load {
 	public String toString() {
 		return "Load [Load ID=" + loadID + ", Carrier ID=" + carrierID + ", System Load ID="
 				+ systemLoadID + ", Completed Flag " + status + ", Error Message= " + errorMessage
-				+ ", Last Update Date =" + lastUpdateDate + ", Last Update User =" + lastUpdateUser + "]";
+				+ ", Last Update Date =" + lastUpdateDate + ", Last Update User =" + lastUpdateUser 
+				+ ", Load Action =" +  loadAction
+				+ "]";
 //				+ ", Status Flag =" + statusFlag + "  ]";
 	}
 		

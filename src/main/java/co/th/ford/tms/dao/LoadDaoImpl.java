@@ -61,6 +61,7 @@ public class LoadDaoImpl extends AbstractDao<Integer, Load> implements LoadDao {
 	public List<Load> findLoadByCarrierID(int carrierID) {
 		Criteria criteria = createEntityCriteria();
 		criteria.add(Restrictions.eq("carrierID", carrierID));
+		criteria.add(Restrictions.or(Restrictions.ne("loadAction", "MANUAL"), Restrictions.isNull("loadAction")));
 		return (List<Load>) criteria.list();
 	}
 
