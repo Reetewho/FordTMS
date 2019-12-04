@@ -3,25 +3,21 @@ package co.th.ford.tms.timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
-import org.joda.time.Seconds;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 
 
 public class DateDifferent {
 
 	public static void main(String[] args) {
-	
-		
-		String dateStart = "";
-		String dateStop = "";
 
+		LocalDateTime localDateTime2 = LocalDateTime.now();
+		String dateFormat = "MM/dd/yyyy HH:mm:ss";
+		String date2 = localDateTime2.toString(dateFormat);
+		
+		String dateStart = "10/21/2019 14:50:58";
+
+		//HH converts hour in 24 hours format (0-23), day calculation
 		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
 		Date d1 = null;
@@ -29,20 +25,30 @@ public class DateDifferent {
 
 		try {
 			d1 = format.parse(dateStart);
-			d2 = format.parse(dateStop);
+			d2 = format.parse(date2);
 
-			DateTime dt1 = new DateTime(d1);
-			DateTime dt2 = new DateTime(d2);
+			//in milliseconds
+			long diff = d2.getTime() - d1.getTime();
 
-			System.out.print(Days.daysBetween(dt1, dt2).getDays() + " days, ");
-			System.out.print(Hours.hoursBetween(dt1, dt2).getHours() % 24 + " hours, ");
-			System.out.print(Minutes.minutesBetween(dt1, dt2).getMinutes() % 60 + " minutes, ");
-			System.out.print(Seconds.secondsBetween(dt1, dt2).getSeconds() % 60 + " seconds.");
+			long diffSeconds = diff / 1000 % 60;
+			long diffMinutes = diff / (60 * 1000) % 60;
+			long diffHours = diff / (60 * 60 * 1000) % 24;
+			long diffDays = diff / (24 * 60 * 60 * 1000);
 
-		 } catch (Exception e) {
+			System.out.print(diffDays + " days, ");
+			System.out.print(diffHours + " hours, ");
+			System.out.print(diffMinutes + " minutes, ");
+			System.out.print(diffSeconds + " seconds.");
+
+			if(diff >= 1800000) {
+				System.out.print( "testfuckingtest");
+			}
+			
+		} catch (Exception e) {
 			e.printStackTrace();
-		 }
+		}
 
-	  }
+		
+	}
 	
 }

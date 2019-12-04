@@ -113,8 +113,8 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
-			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
-			//carrier = cservice.findCarrierByDate(date);	
+			//carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
+			carrier = cservice.findCarrierByDate(date);	
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();
@@ -330,8 +330,8 @@ public class CarrierController {
 					}else {
 						model.addAttribute("Warning", "Load Retrieve  :" + 
 										   carrier.getCarrierCode() +
-										   " , Load ID : " + load.getSystemLoadID() + " Error : " +
-										   load.getErrorMessage());
+										   " , Load ID : " + load.getSystemLoadID() + " Warning : LoadID Not Found" 
+										   );
 						
 						Load delLoadData = lservice.deleteLoadByLoadID(load.getLoadID());
 						if(delLoadData == null) {	
@@ -345,7 +345,7 @@ public class CarrierController {
 				model.addAttribute("loadStops", loadStops);
 				model.addAttribute("Success", "Successfully, manual add SystemLoadID : " + systemLoadID + ".");
 	    	}else {
-	    		model.addAttribute("Warning", "Unsuccessfully, SystemLoadID : " + systemLoadID + " is exist in LoadData.");
+	    		model.addAttribute("Warning", "Unsuccessfully, SystemLoadID : " + systemLoadID + " is exist in System.");
 	    	}
 	    	
 			
@@ -381,6 +381,10 @@ public class CarrierController {
 			setStopETA.setEstimatedDateTime(loadStop.getArriveTime());
 			setStopETA.setMovementDateTime(loadStop.getArriveTime());
 			setStopETA.setStatus("N/A");
+		}
+		if(setStopETA.getStatusSetStop()==null){
+			setStopETA.setStatusSetStop("Active");
+			sseservice.updateSetStopETA(setStopETA);
 		}
 		model.addAttribute("loadDate", date);
 		model.addAttribute("loadStop", loadStop);	
@@ -505,11 +509,21 @@ public class CarrierController {
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
+
+		LocalDateTime localDateTime = loadStop.getArriveTime();
+		String dateFormat = "yyyy/MM/dd HH:mm:ss";
+		String date1 = localDateTime.toString(dateFormat);
+		long datetimescounts = lsservice.datetimecount(date1);
+		
 		load.setCarrier(carrier);
 		if(loadStop.getStatusLoad() == null) {
 		loadStop.setStatusLoad("Active");
 		lsservice.updateLoadStop(loadStop);
 		}
+		
+		System.out.println("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
+		
+		model.addAttribute("loadDatecount", datetimescounts);
 		model.addAttribute("loadDate", date);
 		model.addAttribute("load", load);	
 		model.addAttribute("loadStop", loadStop);

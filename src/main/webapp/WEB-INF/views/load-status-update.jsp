@@ -223,9 +223,17 @@ input[type="text"] {
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Arrival Date Time :</label>
                   <div class="col-sm-8">
-                   <form:input path="arriveTime" id="arriveTime" class="form-control" required="required" />                    
+                  <%-- <c:choose>
+	                <c:when test="${loadDatecount >= 1800000}">  --%> 
+                   <form:input path="arriveTime" id="arriveTime" class="form-control" required="required"/>  
+                    <%-- </c:when>
+                    <c:otherwise>
+                      <form:input path="arriveTime" id="arriveTime" class="form-control" required="required" disabled="true"/>                      
+                    </c:otherwise>                   
+       		 </c:choose>   --%>                
                   </div>
                 </div>
+                
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Departure Date Time :</label>
                   <div class="col-sm-8">
@@ -306,6 +314,8 @@ input[type="text"] {
 <script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <!-- page script -->
 <script>
+var datetimescounts = '${loadDatecount}';
+
 var statusLoads = '${loadStop.statusLoad}';
 var statusLoadsrole = '${S_FordUser.role}';
 function openQRCamera(node) {
@@ -327,7 +337,8 @@ function openQRCamera(node) {
    $(function () {
 	  
 	  
-	   
+	   if(datetimescounts >= 1800000){
+		   
 	   if(${S_FordUser.role=='3' }){
 		  document.getElementById("arriveTime").readOnly = true;
 		  document.getElementById("departureTime").readOnly = true;
@@ -355,7 +366,12 @@ function openQRCamera(node) {
 		    
 	   }  
 		  
-	
+	   }else{
+			  document.getElementById("arriveTime").disabled = true;
+			  document.getElementById("submitbt").disabled = true;
+
+		   
+	   }
 
 	   
    

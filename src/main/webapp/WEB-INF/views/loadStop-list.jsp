@@ -76,8 +76,16 @@
 					<th >Truck Number</th>
 					<th >Arrive Time</th>
 					<th >Departure Time</th>
-					<th >ShipingOrder</th>
-					<th >WaybillNumber</th>
+					<c:choose>
+						<c:when test="${S_FordUser.role!='3'}">
+							<th >ShipingOrder</th>
+						</c:when>
+					</c:choose>
+					<c:choose>
+						<c:when test="${S_FordUser.role!='3'}">
+							<th >WaybillNumber</th>
+						</c:when>
+					</c:choose>
 					<th >Status</th>
 					<th></th>
 					<th></th>                  
@@ -101,9 +109,16 @@
 						<fmt:parseDate value="${loadStop.departureTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDepartureTime" type="both" />
 						<fmt:formatDate pattern="yyyy-MM-dd'T'HH:mm:ss" value="${ parsedDepartureTime }" />
 						</td>
-						
-						<td>${loadStop.shipingOrder}</td>
-						<td>${loadStop.waybillNumber}</td>
+						<c:choose>
+							<c:when test="${S_FordUser.role!='3'}">
+								 <td>${loadStop.shipingOrder}</td> 
+							</c:when>
+						</c:choose>
+						<c:choose>
+							<c:when test="${S_FordUser.role!='3'}">	
+								<td>${loadStop.waybillNumber}</td>
+							</c:when>
+						</c:choose>
 						
 						<td>${loadStop.status}</td>
 						<td><a href="<c:url value='/loadStatusUpdate/${loadDate}/${load.systemLoadID}-${loadStop.stopShippingLocation}-${loadStop.id}' />">On Times</a></td>

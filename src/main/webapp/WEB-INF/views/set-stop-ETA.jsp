@@ -9,7 +9,7 @@
   <title>AP Transport Center | Set Stop ETA</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" onload="watchLocation()" >
 <div class="wrapper">
 
   <%@ include file="/WEB-INF/include/header.jsp" %>
@@ -125,20 +125,37 @@
                   <label  class="col-sm-4 control-label">Estimated Date Time :</label>
                   <div class="col-sm-8">
                    <form:input path="estimatedDateTime" id="estimatedDateTime" class="form-control" required="required" />                    
-                  </div>
+                  </div> 
                 </div>
+                
                 <div class="form-group">
-                  <label  class="col-sm-4 control-label">Latitude :</label>
-                  <div class="col-sm-8">
+                  <label  class="col-sm-4 control-label">Lat :</label>
+                  <div class="col-sm-2">
                     <form:input path="latitude" id="latitude" class="form-control"  required="required" />                   
                   </div>
-                </div>
-                <div class="form-group">
-                  <label  class="col-sm-4 control-label">Longitude :</label>
-                  <div class="col-sm-8">
-                    <form:input path="longitude" id="longitude" class="form-control"  required="required" />                   
-                  </div>
-                </div>	
+                                   
+                  <label  class="col-sm-2 control-label">Long :</label>                 
+                   <div class="col-sm-2">
+                    	<form:input path="longitude" id="longitude" class="form-control"  required="required" /> 
+                   </div>                   
+                   <c:choose>
+		            <c:when test="${setStopETA.statusSetStop == 'Active'|| setStopETA.statusSetStop == null}">
+		                    <div class="col-sm-1">
+		                   	<img src="<c:url value='/assets/dist/img/map.png' />"  alt="User Image"  width= "20px" height="20px" onclick="init()">
+		                  </div>  
+                    </c:when>
+                 </c:choose>  
+                 
+                 <c:choose>
+		            <c:when test="${setStopETA.statusSetStop == 'Inactive'}">
+		                    <div class="col-sm-1">
+		                   	<img src="<c:url value='/assets/dist/img/map.png' />"  alt="User Image"  width= "20px" height="20px" >
+		                  </div>  
+                    </c:when>
+                 </c:choose> 
+                              
+               </div> 
+           
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">City :</label>
 		          <div class="col-sm-8">  
@@ -194,6 +211,7 @@
 
 <!-- page script -->
 <script>
+
 var statusStopETA = '${setStopETA.statusSetStop}';
 var statusLoadsroles = '${S_FordUser.role}';
 $(function () {
@@ -228,12 +246,48 @@ $(function () {
 			   
 		   }  
 	   }  
-		  
-	
-
-	  
-
 }); 
+
+function watchLocation(successCallback, errorCallback) {
+   successCallback = successCallback || function(){};
+   errorCallback = errorCallback || function(){};        
+
+   
+// Try HTML5-spec geolocation.
+var geolocation = navigator.geolocation;
+
+if (geolocation) {
+    // We have a real geolocation service.
+    try {
+      function handleSuccess(position) {
+        successCallback(position.coords);
+      }
+
+      geolocation.watchPosition(handleSuccess, errorCallback, {
+        enableHighAccuracy: true,
+        maximumAge: 5000 // 5 sec.
+      });
+    } catch (err) {
+      errorCallback();
+    }
+  } else {
+    errorCallback();
+  }
+
+
+}
+
+	function init() {
+	  watchLocation(function(coords) {
+	    document.getElementById('latitude').value =  coords.latitude;               
+	    document.getElementById('longitude').value = coords.longitude;
+	  }, function() {
+		  alert("Please Allow permission GPS");
+		     
+	  });
+	}
+
+
 </script>
 </body>
 </html>

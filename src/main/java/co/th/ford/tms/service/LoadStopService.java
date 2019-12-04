@@ -20,6 +20,7 @@ public interface LoadStopService {
 	
 	List<LoadStop> findLoadStopByLoadID(int loadID);
 
-	 List<LoadStop> findNotCompletedStatusByLoadID(int loadID);
+	List<LoadStop> findNotCompletedStatusByLoadID(int loadID);
 	
+	long datetimecount(String datetimecounts);
 }

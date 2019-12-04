@@ -124,14 +124,21 @@ var d = strDate.split("-");
 
   $(function () {
 	 
-	  	$("#DriverTable").DataTable({
+	  	var t = $("#DriverTable").DataTable({
 			dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
 	        "<'row'<'col-sm-12'tr>>" +
 	        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 	                buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}] ,
 	                scrollX: true,
-	                'order': [[6, 'desc']]
+	                'order': [[7, 'N/A']]
 	            }); 
+	  	
+	  	 t.on( 'order.dt', function () {
+	         t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	             cell.innerHTML = i+1;
+	         } );
+	     } ).draw();
+	  	
 	    $("#totalNA").html(' <c:out value = "${naStatus}"/> ');
 	    $("#totalLoad").html(' <c:out value = "${loadStatus}"/> ');
 	    $("#totalIntransit").html(' <c:out value = "${inTransit}"/> ');

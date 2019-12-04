@@ -143,10 +143,7 @@ public class UserController {
 			@RequestParam int ListRolests, @RequestParam int ListDepartments,@RequestParam String Contactnumbers, ModelMap model,
 			@PathVariable String editUsername) {
 		if (!checkAuthorization(session))return "redirect:/login";
-		
-		
-		
-		
+				
         user.setContactnumber(Contactnumbers);
 		user.setRole(ListRolests);
 		user.setDepartment(ListDepartments);
