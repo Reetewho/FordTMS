@@ -102,8 +102,8 @@ public class CarrierController {
 	@RequestMapping(value = { "/load-list/{date}" }, method = RequestMethod.GET)
 	public String loadListWithDate(HttpSession session,@PathVariable String date, ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
-		//Carrier carrier = cservice.findCarrierByDate(date);	
-		Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+		Carrier carrier = cservice.findCarrierByDate(date);	
+		//Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
 		if(carrier==null) {
 			carrier = new Carrier();
 			carrier.setStatus("N/A");			
@@ -509,7 +509,24 @@ public class CarrierController {
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
-
+		if(loadStop.getArriveTime() == null) {
+			
+			//loadStop.setArriveTime(load.getLoadStartDateTime());
+			model.addAttribute("Warning", "Load Arrival Date Time And Departure Date Time Fail : "+load.getSystemLoadID());
+			load.setCarrier(carrier);
+			if(loadStop.getStatusLoad() == null) {
+			loadStop.setStatusLoad("Active");
+			lsservice.updateLoadStop(loadStop);
+			}
+			
+			//System.out.println("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
+			
+			//model.addAttribute("loadDatecount", datetimescounts);
+			model.addAttribute("loadDate", date);
+			model.addAttribute("load", load);	
+			model.addAttribute("loadStop", loadStop);
+			return "load-status-update";
+		}else {
 		LocalDateTime localDateTime = loadStop.getArriveTime();
 		String dateFormat = "yyyy/MM/dd HH:mm:ss";
 		String date1 = localDateTime.toString(dateFormat);
@@ -529,7 +546,7 @@ public class CarrierController {
 		model.addAttribute("loadStop", loadStop);
 		return "load-status-update";
 	}
-	
+	}
 	@RequestMapping(value = { "/loadStatusUpdate/{date}/{systemLoadID}-{shippingLocation}-{loadStopID}" }, method = RequestMethod.POST)	
 	public String processLoadStatusUpdate(HttpSession session,@PathVariable String date,@Valid LoadStop loadStop1, BindingResult result,
 			ModelMap model, @PathVariable int loadStopID) {
@@ -557,8 +574,8 @@ public class CarrierController {
 		loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 		loadStop.setLastUpdateDate(LocalDateTime.now());
 		//ปิดเพื่อไม่ให้อัพเดท
-		/*test*/	//ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
-		/*test*/	//pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
+		ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
+		pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
 		
 		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
 		loadStop.setStatus("true");

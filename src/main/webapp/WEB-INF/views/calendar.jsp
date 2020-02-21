@@ -69,11 +69,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-       Calendar
-        <small></small>
-      </h1>
+    <section class="content-header">     
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
         <li><a href="#">Calendar</a></li>        

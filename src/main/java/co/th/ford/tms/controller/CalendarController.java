@@ -63,8 +63,8 @@ public class CalendarController {
 		 model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		 model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
 		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());	 
-		 //List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
-		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
+		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		 //List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
 		 model.addAttribute("carriers", c);
 		 
 		  List<String> monthList = getMonthList();
@@ -143,8 +143,8 @@ public class CalendarController {
 		 model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		 model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
 		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
-		 //List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
-		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
+		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		 //List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
 		 model.addAttribute("carriers", c);
 		return "calendar";
 	}
@@ -157,8 +157,8 @@ public class CalendarController {
 		model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
 		model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
-		//List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
-		List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(LocalDate.parse(startDate, dtf)), getThaiDate(LocalDate.parse(endDate, dtf)));
+		List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		//List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(LocalDate.parse(startDate, dtf)), getThaiDate(LocalDate.parse(endDate, dtf)));
 		model.addAttribute("carriers", c);
 		
 		  List<String> monthList = getMonthList();

@@ -10,8 +10,7 @@ import co.th.ford.tms.webservice.Base;
 
 public class ProcessLoadStatusUpdate extends Base{
 		
-	/*private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";*/
-	
+	//private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";	
 	private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
 	private  final String inputXML = 
@@ -41,7 +40,10 @@ public class ProcessLoadStatusUpdate extends Base{
 	
 	public LoadStop submit(String Authenticationm,String SOAPAction,LoadStop lsModel){		
 		try{			
-			SOAPBody sb = getResponse(sendRequest(wsEndpoint,Authenticationm,SOAPAction,String.format(inputXML, ""+lsModel.getLoad().getSystemLoadID(),lsModel.getTruckNumber(),lsModel.getStopShippingLocation(),lsModel.getArriveTime(),lsModel.getDepartureTime())));
+			SOAPBody sb = getResponse(sendRequest(wsEndpoint, Authenticationm, SOAPAction,
+					String.format(inputXML, "" + lsModel.getLoad().getSystemLoadID(), lsModel.getTruckNumber(),
+							lsModel.getStopShippingLocation(), lsModel.getArriveTime(),
+							lsModel.getDepartureTime())));
 			lsModel.setStatus(extract(sb,"ns1:CompletedSuccessfully"));
 			if(!lsModel.getStatus().equals("true")) {				
 				lsModel.setErrorMessage(extract(sb,"ns1:SystemMessage"));

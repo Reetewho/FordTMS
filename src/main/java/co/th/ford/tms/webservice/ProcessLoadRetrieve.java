@@ -13,11 +13,9 @@ import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
 import co.th.ford.tms.webservice.Base;
 
-
 public class ProcessLoadRetrieve extends Base{
 		
-	/*private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";*/
-	
+	//private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";
 	private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
 	private  final String inputXML = 

@@ -80,6 +80,8 @@ public class LoadStop {
 	
 	@Column(name = "statusLoad", nullable = false)
 	private String statusLoad;
+	
+
 	//---------------------------------------------------------------------------------//
 	
 	@Column(name = "completedFlag", nullable = false)

@@ -53,6 +53,7 @@ public class LoadStopServiceImpl implements LoadStopService {
 			entity.setWaybillNumber(ls.getWaybillNumber());
 			entity.setManifest(ls.getManifest());
 			entity.setLoadstopremark(ls.getLoadstopremark());
+
 			//----------------------------------------------------------------
 			entity.setStatusLoad(ls.getStatusLoad());
 			entity.setStatus(ls.getStatus());

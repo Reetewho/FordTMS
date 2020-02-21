@@ -10,7 +10,7 @@ import co.th.ford.tms.webservice.Base;
 
 public class ProcessSetStopETA extends Base{
 		
-	/*private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";*/
+	//private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";
 	private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
 	private  final String inputXML = 

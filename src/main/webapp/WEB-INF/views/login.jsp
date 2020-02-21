@@ -59,7 +59,7 @@
         <div class="col-xs-8">
           <div class="checkbox icheck">
             <label>
-              <input type="checkbox" name="rememberMy" value="1"  /> Remember Me
+              <input type="checkbox" name="rememberMy" id="rememberMy" value="1"  /> Remember Me
             </label>
           </div>
         </div>
@@ -103,7 +103,33 @@
       increaseArea: '20%' // optional
     });
   });
- 
+  
+  $(function() {
+	    if (localStorage.chkbx && localStorage.chkbx != '') {
+	        $('#rememberMy').attr('checked', 'checked');
+	        $('#username').val(localStorage.usrname);
+	        $('#password').val(localStorage.pass);
+	    } else {
+	        $('#rememberMy').removeAttr('checked');
+	        $('#username').val('');
+	        $('#password').val('');
+	    }
+
+	    $('#rememberMy').click(function() {
+
+	        if ($('#rememberMy').is(':checked')) {
+	            // save username and password
+	            localStorage.usrname = $('#username').val();
+	            localStorage.pass = $('#password').val();
+	            localStorage.chkbx = $('#rememberMy').val();
+	        } else {
+	            localStorage.usrname = '';
+	            localStorage.pass = '';
+	            localStorage.chkbx = '';
+	        }
+	    });
+	});
+  
 	/*
 	* This method will : after click link provide delete attribute href.
 	$(".clicklink").on("click", function(){ 

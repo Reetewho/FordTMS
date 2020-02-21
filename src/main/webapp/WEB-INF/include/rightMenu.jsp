@@ -10,7 +10,7 @@
          <img src="<c:url value='/assets/dist/svg/004-chick.svg' />" class="img-circle" alt="User Image" style="background-color:white">
         </div>
         <div class="pull-left info">
-          <p>${S_FordUser.name}</p>
+          <%-- <p>${S_FordUser.name}</p> --%>
           <a href="#"><i class="fas fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -32,7 +32,7 @@
 	        <c:when test="${permissionMenu.id_menu=='2'}">
 	         <li>
 				  <a href="<c:url value='/load-list-drivers/${S_FordUser.username}' />">
-				       <i class="fas fa-calendar-alt"></i> &nbsp;&nbsp;<span>Inbox Load List</span>            
+				       <i class="fas fa-list"></i> &nbsp;&nbsp;<span>Inbox Load List</span>            
 				  </a>
 			  </li>
 			</c:when>     
@@ -48,7 +48,7 @@
        <c:when test="${permissionMenu.id_menu=='3'}">
         <li>
           <a href="<c:url value='/searchby-loadid' />">
-            <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Search by Load ID</span>            
+            <i class="fas fa-search"></i> &nbsp;&nbsp;<span>Search by Load ID</span>            
           </a>
         </li>
         </c:when>
@@ -66,7 +66,7 @@
         <c:when test="${permissionMenu.id_menu=='5'}">
         <li>
           <a href="<c:url value='/paymentreport' />">
-            <i class="fas fa-file-alt"></i> &nbsp;&nbsp;<span>Summary Report</span>            
+            <i class="fas fa-receipt"></i> &nbsp;&nbsp;<span>Summary Report</span>            
           </a>
         </li>
         </c:when>
@@ -84,7 +84,7 @@
         <c:when test="${permissionMenu.id_menu=='7'}">
         <li>
           <a href="<c:url value='/manual-add-load' />">
-            <i class="fa fa-user"></i> &nbsp;<span>Manual Add Load</span>            
+            <i class="fas fa-plus-square"></i> &nbsp;<span>Manual Add Load</span>            
           </a>
         </li>
         </c:when>

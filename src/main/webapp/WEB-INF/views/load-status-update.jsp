@@ -67,7 +67,8 @@ input[type="text"] {
 .inputWithIcon label > input[type=file] {position:absolute; overflow:hidden; width:1px; height:1px; opacity:0}
   
 </style>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini"  >
+<!-- <body class="hold-transition skin-blue sidebar-mini" onload="watchLocation()" > -->
 <div class="wrapper">
 
   <%@ include file="/WEB-INF/include/header.jsp" %>
@@ -110,13 +111,13 @@ input[type="text"] {
     
       <div class="row">
       	<div class="col-md-12">
-      		<c:if test="${Error!=null || Success!=null }">
-              <div class='alert ${Error!=null?"alert-danger":"alert-success"}  alert-dismissible'>
+      		<c:if test="${Warning!=null || Success!=null }">
+              <div class='alert ${Warning!=null?"alert-warning":"alert-success"}  alert-dismissible'>
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa  ${Error!=null?'fa-ban':'fa-check'}"></i>${Error!=null?'Error!':'Success'} </h4>
-                <c:out value="${Error!=null?Error:Success} "></c:out>
+                <h4><i class="icon fa  ${Warning!=null?'fa-ban':'fa-check'}"></i>${Warning!=null?'Warning!':'Success'} </h4>
+                <c:out value="${Warning!=null?Warning:Success} "></c:out>
               </div>
-            </c:if>           
+            </c:if>              
       	</div>
       </div>
       
@@ -232,14 +233,13 @@ input[type="text"] {
                     </c:otherwise>                   
        		 </c:choose>   --%>                
                   </div>
-                </div>
-                
+                </div>               
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Departure Date Time :</label>
                   <div class="col-sm-8">
                     <form:input path="departureTime" id="departureTime" class="form-control"  required="required" />                   
                   </div>
-                </div>		
+                </div>	               
                  <c:choose>
                 <c:when test="${S_FordUser.role=='1' || S_FordUser.role=='2'}">
                 <div class="form-group">
@@ -376,6 +376,42 @@ function openQRCamera(node) {
 	   
    
   }); 
+   
+  /*   function watchLocation(successCallback, errorCallback) {
+	   successCallback = successCallback || function(){};
+	   errorCallback = errorCallback || function(){};        
+
+	   
+	// Try HTML5-spec geolocation.
+	var geolocation = navigator.geolocation;
+
+	if (geolocation) {
+	    // We have a real geolocation service.
+	    try {
+	      function handleSuccess(position) {
+	        successCallback(position.coords);
+	      }
+
+	      geolocation.watchPosition(handleSuccess, errorCallback, {
+	        enableHighAccuracy: true,
+	        maximumAge: 5000 // 5 sec.
+	      });
+	    } catch (err) {
+	      errorCallback();
+	    }
+	  } else {
+	    errorCallback();
+	  }
+	}
+
+		function init() {
+		  watchLocation(function(coords) {
+		    document.getElementById('latitude').value =  coords.latitude;               
+		    document.getElementById('longitude').value = coords.longitude;
+		  }, function() {
+			  alert("Please Allow permission GPS");			     
+		  });
+		}  */
 </script>
 </body>
 </html>

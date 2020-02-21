@@ -71,10 +71,10 @@ public class SecurityController {
 		    model.addAttribute("EmptyPassword",  messageSource.getMessage("NotEmpty.user.password", new String[]{password}, Locale.getDefault()));
 		}else {
 			
-			List<User> user_l =uservice.findAllUsers();
+			List<User> user_l = uservice.findAllUsers();
 			
 			for (User user_ls : user_l) {
-		 
+
 			if(user_ls !=null && user_ls.getUsername().equals(username)) {
 				
 				if(user_ls !=null && uservice.decryptUserPassword(user_ls.getPassword()).equals(password)) {
