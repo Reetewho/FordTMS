@@ -73,7 +73,6 @@
 						</tr>					
              </table>
              </div>
-             
              <div class="box-body ">
                <form method="POST" id="frmDrivere" >                                    
               <table id="DriverTable"  class="table table-bordered table-striped" style="width : 100% ">
@@ -85,7 +84,7 @@
                   <th>Route No.</th>
                   <th>Load Start Date Time</th>
                   <th>Load End Date Time</th>                  
-                  <th>Status</th>                  
+                  <th>Status</th>    
                 </tr>
                 </thead>
                 <tbody>
@@ -111,12 +110,15 @@
 						<c:if test = "${allListLoad.status=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
 						<c:if test = "${allListLoad.status=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
 						<c:if test = "${allListLoad.status=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
-					</tr>
-				</c:forEach>               
+					</tr>				
+				</c:forEach>  				           
                 </tbody> 
-              </table>	              
+              </table>	 
+              	<!-- -------------------------------------------------------------------------------------------------------------------- -->
+				<input type="hidden" name="assignId" id="assignId" value="${S_FordUser.username}">
+				<!-- -------------------------------------------------------------------------------------------------------------------- -->             
               <a href="<c:url value='/load-list/${loaddates}' />"><button type="button" class="btn btn-default">Back</button></a>
-              <a href="<c:url value='/driverconf/${user_r.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Submit</button></a>	                     
+              <a href="<c:url value='/driverconf/${S_FordUser.username}/${user_r.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Submit</button></a>	                     
              </form>
             </div>
             <!-- /.box-body -->

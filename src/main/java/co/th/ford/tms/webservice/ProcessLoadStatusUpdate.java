@@ -10,8 +10,8 @@ import co.th.ford.tms.webservice.Base;
 
 public class ProcessLoadStatusUpdate extends Base{
 		
-	//private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";	
-	private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
+	private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";	
+	//private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
 	private  final String inputXML = 
 			        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cis=\"http://www.i2.com/cis\"> \r\n" +					 
@@ -31,7 +31,9 @@ public class ProcessLoadStatusUpdate extends Base{
 					"              <cis:ArrivalEventCode>DRVRCHKIN_</cis:ArrivalEventCode>\r\n" + 
 					"               <cis:DepartureDateTime>%s</cis:DepartureDateTime>\r\n" + 
 					"               <cis:DepartureEventCode>DRVRCHKOUT_</cis:DepartureEventCode>\r\n" + 
-					"               <cis:UpdateStatusFlag>true</cis:UpdateStatusFlag>\r\n" + 
+					"               <cis:Latitude>%s</cis:Latitude>\r\n" + 
+					"               <cis:Longitude>%s</cis:Longitude>\r\n" + 
+					"               <cis:UpdateStatusFlag>true</cis:UpdateStatusFlag>\r\n" + 												
 					"            </cis:StopArrivalDepartureData>\r\n" + 
 					"         </cis:LoadStatusUpdateData>        \r\n" + 
 					"      </cis:processLoadStatusUpdate>\r\n" + 
@@ -42,8 +44,9 @@ public class ProcessLoadStatusUpdate extends Base{
 		try{			
 			SOAPBody sb = getResponse(sendRequest(wsEndpoint, Authenticationm, SOAPAction,
 					String.format(inputXML, "" + lsModel.getLoad().getSystemLoadID(), lsModel.getTruckNumber(),
-							lsModel.getStopShippingLocation(), lsModel.getArriveTime(),
-							lsModel.getDepartureTime())));
+							lsModel.getStopShippingLocation(), lsModel.getArriveTime(),							
+							lsModel.getDepartureTime(),
+							lsModel.getLatitude(), lsModel.getLongitude())));
 			lsModel.setStatus(extract(sb,"ns1:CompletedSuccessfully"));
 			if(!lsModel.getStatus().equals("true")) {				
 				lsModel.setErrorMessage(extract(sb,"ns1:SystemMessage"));

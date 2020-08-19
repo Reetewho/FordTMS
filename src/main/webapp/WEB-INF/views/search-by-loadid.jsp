@@ -135,7 +135,8 @@
 								<tr >
 								
 								<c:choose>
-									<c:when test="${dataloadlistreport.driverid == S_FordUser.username}">
+									<%-- <c:when test="${dataloadlistreport.driverid == S_FordUser.username or dataloadlistreport.assignname == S_FordUser.username}"> --%>
+									<c:when test="${dataloadlistreport.driverid == S_FordUser.username or  S_FordUser.role == 1 or  S_FordUser.role == 2}">
 										<td>
 											<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${dataloadlistreport.loadDate}/${dataloadlistreport.systemLoadID}-${dataloadlistreport.loadID}' />">
 											${dataloadlistreport.systemLoadID}

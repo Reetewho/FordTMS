@@ -12,4 +12,5 @@ public class PaymentReport1 {
 	private String completedFlag;
 	private String gatein;
 	private String gateout;
+	private String driverId;
 }

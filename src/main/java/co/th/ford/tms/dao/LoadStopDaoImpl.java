@@ -57,6 +57,7 @@ public class LoadStopDaoImpl extends AbstractDao<Integer, LoadStop> implements L
 		Criteria criteria = createEntityCriteria();
 		criteria.add(Restrictions.eq("loadID", loadID));
 		criteria.add(Restrictions.ne("status", "update"));
+		criteria.add(Restrictions.ne("status", "setStop")); 
 		return (List<LoadStop>) criteria.list();
 	}
 	

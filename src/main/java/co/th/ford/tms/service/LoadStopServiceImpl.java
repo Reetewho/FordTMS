@@ -53,7 +53,8 @@ public class LoadStopServiceImpl implements LoadStopService {
 			entity.setWaybillNumber(ls.getWaybillNumber());
 			entity.setManifest(ls.getManifest());
 			entity.setLoadstopremark(ls.getLoadstopremark());
-
+			entity.setLatitude(ls.getLatitude());
+			entity.setLongitude(ls.getLongitude());
 			//----------------------------------------------------------------
 			entity.setStatusLoad(ls.getStatusLoad());
 			entity.setStatus(ls.getStatus());

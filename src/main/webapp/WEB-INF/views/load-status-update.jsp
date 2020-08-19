@@ -33,7 +33,7 @@ input[type="text"] {
 .inputWithIcon i {
   position: absolute;
   left: 0;
-  top: 8px;
+  top: 18px;
   padding: 9px 8px;
   color: #aaa;
   transition: 0.3s;
@@ -55,7 +55,7 @@ input[type="text"] {
 .inputWithIcon label {
   position: absolute;
   left: 82%;
-  top: 2.5px;
+  top: 3px;
   padding: 0.5% 3%;
   color: #aaa;
   transition: 0.3s;
@@ -220,7 +220,34 @@ input[type="text"] {
        		 </c:choose>
                   </div>
                 </div>
-                
+        <!--  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+                 <div class="form-group">
+                  <label  class="col-sm-4 control-label">Lat :</label>
+                  <div class="col-sm-2">
+                    <form:input path="latitude"  id="latitude" class="form-control"  required="required" />                   
+                  </div>
+                                   
+                  <label  class="col-sm-2 control-label">Long :</label>                 
+                   <div class="col-sm-2">
+                    	<form:input path="longitude"   id="longitude" class="form-control"  required="required" /> 
+                   </div>                   
+                   <c:choose>
+		            <c:when test="${setStopETA.statusSetStop == 'Active'|| setStopETA.statusSetStop == null}">
+		                    <div class="col-sm-1">
+		                   	<img src="<c:url value='/assets/dist/img/map.png' />"  alt="User Image"  width= "20px" height="20px" onclick="init()">
+		                  </div>  
+                    </c:when>
+                 </c:choose>  
+                 
+                 <c:choose>
+		            <c:when test="${setStopETA.statusSetStop == 'Inactive'}">
+		                    <div class="col-sm-1">
+		                   	<img src="<c:url value='/assets/dist/img/map.png' />"  alt="User Image"  width= "20px" height="20px" >
+		                  </div>  
+                    </c:when>
+                 </c:choose>                              
+               </div> 
+        <!--  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Arrival Date Time :</label>
                   <div class="col-sm-8">
@@ -275,7 +302,7 @@ input[type="text"] {
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Remark :</label>
                   <div class="col-sm-8">
-                     <form:textarea path="loadstopremark" id="loadstopremarks" class="form-control"  required="required" />                 
+                     <form:textarea path="loadstopremark" id="loadstopremarks" placeholder="ในกรณีของการเปลี่ยนคนขับรถหรือเปลี่ยนรถที่ใช้ในการขับและอื่นๆ"  class="form-control"  required="required" />                 
                   </div>
                 </div>	
                       </c:when>
@@ -334,12 +361,13 @@ function openQRCamera(node) {
 	  reader.readAsDataURL(node.files[0]);
 	};
 	
-   $(function () {
+  /* $(function () {
 	  
 	  
-	   if(datetimescounts >= 1800000){
+	   if(datetimescounts <= 1800000 || datetimescounts <= 5400000 ){
 		   
-	   if(${S_FordUser.role=='3' }){
+		   
+	   if(${S_FordUser.role=='3' }){  
 		  document.getElementById("arriveTime").readOnly = true;
 		  document.getElementById("departureTime").readOnly = true;
 	  }
@@ -348,12 +376,10 @@ function openQRCamera(node) {
 		  
 			  document.getElementById("truckNumbera").disabled = true;		 
 			
-
 	   } 
 			  if(statusLoads == "Inactive" && statusLoadsrole != "3"){
 			    	
-				  document.getElementById("truckNumberb").disabled = false;		  
-  
+				  document.getElementById("truckNumberb").disabled = false;		   
 				  document.getElementById("arriveTime").disabled = false;		 
 				  document.getElementById("departureTime").disabled = false;		  
 				  document.getElementById("shipingOrder").disabled = false;		  
@@ -362,22 +388,26 @@ function openQRCamera(node) {
 				  document.getElementById("submitbt").disabled = false;
 				  document.getElementById("loadstopremarks").disabled = false;
 				  document.getElementById("qrscann").disabled = false;
-
 		    
 	   }  
-		  
+			  
+			 		  
 	   }else{
+				    
+			alert("Unavailable. Please wait until To Time and Try again.");	 
 			  document.getElementById("arriveTime").disabled = true;
-			  document.getElementById("submitbt").disabled = true;
-
-		   
+			  document.getElementById("submitbt").disabled = true;		   
 	   }
-
 	   
+
+	   if(datetimescounts > 5400000){
+     		  document.getElementById("arriveTime").disabled = true;
+			  document.getElementById("submitbt").disabled = true;										  			  
+		  }
    
-  }); 
+  }); */
    
-  /*   function watchLocation(successCallback, errorCallback) {
+      function watchLocation(successCallback, errorCallback) {
 	   successCallback = successCallback || function(){};
 	   errorCallback = errorCallback || function(){};        
 
@@ -411,7 +441,7 @@ function openQRCamera(node) {
 		  }, function() {
 			  alert("Please Allow permission GPS");			     
 		  });
-		}  */
+		}   
 </script>
 </body>
 </html>

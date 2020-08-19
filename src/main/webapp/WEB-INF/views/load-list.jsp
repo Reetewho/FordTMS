@@ -127,7 +127,7 @@
             
             <!-- /.box-header -->
             <div class="box-body ">
-             <form method="POST" id="frm-example"  action="<c:url value='/drivers' />"  >            
+             <form method="POST" id="frm-example"  action="<c:url value='/job-number' />"  >            
               <table  id="example" class="table table-bordered table-striped" style="width : 100% ">
                 <thead>
                 <tr>
@@ -175,15 +175,15 @@
 						<td>${load.status}</td>
 						<c:if test = "${load.status=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
 						<c:if test = "${load.status=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
-						<c:if test = "${load.status=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
-						<c:if test = "${load.status=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
+						<c:if test = "${load.status=='In transit'||load.status=='Driver In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
+						<c:if test = "${load.status=='Completed'||load.status=='Driver Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
 					</tr>
 				</c:forEach>               
                 </tbody> 
               </table>		
                 <button type="submit" class="btn btn-primary pull-right">Assign</button>     
                 <input type="hidden" name="loaddates" id="loaddates" value="${loadDate}"/>           
-              <input type="hidden" name="console-select-rows" id="console-select-rows" value=""/>               
+              	<input type="hidden" name="console-select-rows" id="console-select-rows" value=""/>               
              </form>                                      	                        
             </div>
             <!-- /.box-body -->

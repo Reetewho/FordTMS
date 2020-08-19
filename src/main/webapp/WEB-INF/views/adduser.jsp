@@ -218,30 +218,30 @@ if(document.getElementById("Usernamea").value.match(usernameformat))
 							return false;
 						 }
 				}else{
-					alert("Please fallow Contactnumber policy");
+					alert("Please follow Contactnumber policy");
 					document.getElementById("Contactnumber").focus();
 					return false;
 				}
 				
 				}else{
-					alert("Please fallow LastName policy");
+					alert("Please follow LastName policy");
 					document.getElementById("LastNamea").focus();
 					return false;
 				}
 		}else{
-			alert("Please fallow names policy");
+			alert("Please follow names policy");
 			document.getElementById("namesa").focus();
 			return false;
 		}
 
 	}else{
-			alert("Please fallow password policy");
+			alert("Please follow password policy");
 			document.getElementById("Passworda").focus();
 			return false;
 		}
 	
 	}else{
-		alert("Please fallow Username policy");
+		alert("Please follow Username policy");
 		document.getElementById("Usernamea").focus();
 		return false;
 		}

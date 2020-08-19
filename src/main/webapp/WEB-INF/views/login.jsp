@@ -52,7 +52,7 @@
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password"  name="password" id="password" class="form-control" placeholder="Enter Password" data-minlength="8" data-error="Minimum of 8 characters" required="required"/>
+        <input type="password"  name="password" id="password" class="form-control" placeholder="Enter Password" data-minlength="5" data-error="Minimum of 5 characters" required="required"/>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">

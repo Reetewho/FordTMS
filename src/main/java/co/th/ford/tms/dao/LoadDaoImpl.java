@@ -1,13 +1,17 @@
 package co.th.ford.tms.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
 import co.th.ford.tms.model.Load;
+import co.th.ford.tms.model.PaymentReport1;
 
 
 @Repository("loadDao")
@@ -85,6 +89,11 @@ public class LoadDaoImpl extends AbstractDao<Integer, Load> implements LoadDao {
 		  return (Load) criteria.uniqueResult();
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public List<Load> findLoadByDate(LocalDateTime loadStartDateTime,LocalDateTime loadEndDateTime){
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.between("loadStartDateTime", loadStartDateTime, loadEndDateTime));
+		return (List<Load>) criteria.list();
+	}
 	
 }

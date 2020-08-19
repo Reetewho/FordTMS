@@ -47,8 +47,8 @@ public class PaymentReportController {
 		//List<Employee> employees = service.findAllEmployees();
 		//model.addAttribute("employees", employees);
 	    List<PaymentReport1> subreport = cservice.findPaymentByCompleted(getThaiDate(yesterday),getThaiDate(yesterday));
-	    model.addAttribute("startDate",  today);
-		model.addAttribute("endDate", yesterday);
+	    model.addAttribute("startDate",  yesterday);
+		model.addAttribute("endDate", today);
 		return "paymentreport1";
 	}
 	
@@ -80,6 +80,7 @@ public class PaymentReportController {
 					LocalDate endlocalDate = LocalDate.parse(endDate);						
 					List<PaymentReport1> paymentreport = cservice.findPaymentByCompleted(getThaiDate(startlocalDate), getThaiDate(endlocalDate));
 					//List<Report1> report = cservice.findAll(startlocalDate.toString( DateTimeFormat.forPattern("yyyy-MM-dd")), endlocalDate.toString( DateTimeFormat.forPattern("yyyy-MM-dd")));
+					System.out.println(paymentreport);
 					model.addAttribute("paymentreport", paymentreport);
 				}catch(Exception e) {
 					e.printStackTrace();
@@ -112,6 +113,7 @@ public class PaymentReportController {
 			if(model.get("errorMsg") ==null) {
 				try {								        
 					List<LoadListReport> loadlistreport = cservice.findbySystemsLoadID(loadid);
+					System.out.println("----------> ! Start Data Output Item List ! <---------- ||" + loadlistreport); 
 					model.addAttribute("dataloadlistreport", loadlistreport);
 				}catch(Exception e) {
 					e.printStackTrace();

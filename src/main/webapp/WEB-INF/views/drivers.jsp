@@ -94,6 +94,7 @@
 						<td>${user.contactnumber}</td>
 						<td>${user.joiningDate}</td>
 						<td>${user.logoutDate}</td>
+						<td>${user.logoutDate}</td>
 						<c:choose>
 							<c:when test="${user.status=='1'}">
 								<td>Active</td>
@@ -102,10 +103,7 @@
 								<td>Not Active</td>
 							</c:otherwise>
 						</c:choose>							 						
- 						<c:forEach items="${sessionSelectItem}" var="sessionSelectItems"> 
- 						
- 						</c:forEach>	
- 						 
+ 						<c:forEach items="${sessionSelectItem}" var="sessionSelectItems"></c:forEach>	
  						<td align="center"><a href="<c:url value='/show-driver-detail/${user.username}/${loaddates}' />"><button type="button" class="btn btn-primary pull-right">Assign Driver</button></a></td>	
 											 
  					</tr>
@@ -137,7 +135,9 @@
 <!-- page script -->
 <script>
   $(function () {
-	  	$("#UserTable").DataTable({	        scrollX: true	            }); 
+	  	$("#UserTable").DataTable({	      
+	  		scrollX: true	         
+	  		}); 
 	   
   });
 </script>

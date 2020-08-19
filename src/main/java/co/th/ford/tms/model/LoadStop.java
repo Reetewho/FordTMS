@@ -50,7 +50,14 @@ public class LoadStop {
 	@Column(name = "stopShippingLocationName", nullable = false)
 	private String stopShippingLocationName;
 	
-		
+	@NotNull	
+	@Column(name = "latitude", nullable = false)
+	private double latitude;
+	
+	@NotNull
+	@Column(name = "longitude", nullable = false)
+	private double longitude;
+			
 	@Column(name = "truckNumber", nullable = false)
 	private String truckNumber;
 	

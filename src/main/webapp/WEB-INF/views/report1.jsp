@@ -32,31 +32,83 @@
     <!-- Main content -->
     <section class="content">  
      <div class="row" style="margin-bottom:20px"> 
-     	<form method="POST" action="<c:url value='/report' />" data-toggle="validator" role="form" >        
-        <div class="col-md-2" ></div>
-        <div class="col-md-3">
-        				<div class="form-group  input-group date">
-		                  <div class="input-group-addon">
-		                    <i class="fa fa-calendar"></i> Start Date : 
-		                  </div>
-		                  <input type="text" class="form-control pull-right datepicker" name="startDate" id="startDate" value="${startDate}" data-error="Please Select Start Date" required="required"/>
-						  
-						</div>
-        </div>        
-        <div class="col-md-1" ></div>
-        <div class="col-md-3">
-        				<div class="form-group  input-group date">
-		                  <div class="input-group-addon">
-		                   <i class="fa fa-calendar"></i> End Date : 
-		                  </div>
-		                  <input type="text" class="form-control pull-right datepicker" name="endDate" id="endDate" value="${endDate}" data-error="Please Select End Date" required="required"/>
-						  
-						</div>
-        </div>
-        <div class="col-md-1" style="padding-top:3px"><input type="submit" value="search"/></div>
-       <div class="col-md-2"></div>
-       </form>
-     </div>
+	     	<form method="POST" action="<c:url value='/report' />" data-toggle="validator" role="form" >        
+	        <div class="col-md-2" ></div>
+	        <div class="col-md-3">
+     			<div class="form-group  input-group date">
+	                <div class="input-group-addon">
+	                	<i class="fa fa-calendar"></i> Start Date : 
+	                </div>
+                	<input type="text" class="form-control pull-right datepicker" name="startDate" id="startDate" value="${startDate}" data-error="Please Select Start Date" required="required"/>  
+				</div>
+	        </div>        
+	        <div class="col-md-1" ></div>
+	        <div class="col-md-3">
+   				<div class="form-group  input-group date">
+                	<div class="input-group-addon">
+                		<i class="fa fa-calendar"></i> End Date : 
+                	</div>
+                	<input type="text" class="form-control pull-right datepicker" name="endDate" id="endDate" value="${endDate}" data-error="Please Select End Date" required="required"/>
+				</div>
+	        </div>
+	        <div class="col-md-1" style="padding-top:3px"><input type="submit" value="search"/></div>
+	       <div class="col-md-2"></div>
+	       </form>
+	     </div>
+        
+     <!--    <div class="row">
+	        <div class="col-md-3">
+	          <div class="box box-default box-solid">
+	            <div class="box-header ">
+	              <h3 class="box-title">Assigned</h3>
+	              <div class="box-tools pull-right">
+	                <span  id="totalAssigned"  style="font-size:16px;font-weight: 600;">-</span>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="col-md-3">
+	          <div class="box box-warning box-solid">
+	            <div class="box-header ">
+	              <h3 class="box-title">Checked- In</h3>
+	              <div class="box-tools pull-right">
+	                <span  id="totalCheckedIn" class="badge bg-yellow" style="font-size:16px;font-weight: 600;">-</span>
+	              </div>
+	            </div>	            
+	          </div>	          
+	        </div>
+	        
+	        
+	        <div class="col-md-3">
+	          <div class="box box-primary box-solid">
+	            <div class="box-header ">
+	              <h3 class="box-title">Ontime</h3>
+	              <div class="box-tools pull-right">
+	                <span  id="totalOntime"  style="font-size:16px;font-weight: 600;">-</span>
+	              </div>
+	            </div>	            
+	          </div>	         
+	        </div>
+	        
+	        
+	        <div class="col-md-3">
+	          <div class="box box-info box-solid">
+	            <div class="box-header ">
+	              <h3 class="box-title">Delayed</h3>
+	              <div class="box-tools pull-right">
+	                <span  id="totalDelayed" class="badge bg-aqua" style="font-size:16px;font-weight: 600;">-</span>
+	              </div>
+	              
+	            </div>	            
+	          </div>	         
+	        </div>  
+	        
+	              	     	
+	     </div>--> 
+	     
+        
+        
       <div class="row">
       <!-- /.col -->
         <div class="col-md-12">
@@ -70,6 +122,7 @@
 					<th >Route No.</th>
 					<th >Pickup GSDB</th>
 					<th >Pickup Supplier Name</th>
+					<th >Driver Name</th>
 					<th >Truck Number</th>
 					<th >Arrive Time</th>
 					<th >Departure Time</th>
@@ -82,7 +135,11 @@
 					<th >Longitude</th>                  
                 </tr>
                 </thead>
-                <tbody>
+                <tbody>                
+		                <%-- <c:set var="assigned" value="${0}"/>
+		                <c:set var="CheckedIn" value="${0}"/>
+		                <c:set var="Ontime" value="${0}"/>	
+		                <c:set var="Delayed" value="${0}"/>	           --%>      
 	               <c:if test = "${not empty report}">
 						<c:forEach items="${report}" var="report">
 							<tr >
@@ -91,6 +148,7 @@
 							<td>${report.loadDescription}</td>
 							<td>${report.stopShippingLocation}</td>
 							<td>${report.stopShippingLocationName}</td>
+							<td>${report.driverId}</td>
 							<td>${report.truckNumber}</td>
 							<td>${report.arriveTime}</td>				
 							<td>${report.departureTime}</td>
@@ -101,6 +159,12 @@
 							<td>${report.estimatedDateTime}</td>				
 							<td>${report.latitude}</td>
 							<td>${report.longitude}</td>
+							
+								<%-- <c:if test = "${report.driverId!=''}"> <c:set var="assigned" value="${assigned+1}"/>  </c:if>							
+								<c:if test = "${report.arriveTime!=''}"> <c:set var="CheckedIn" value="${CheckedIn+1}"/>  </c:if>
+								<c:if test = "${report.completedFlag=='update'}"> <c:set var="Ontime" value="${Ontime+1}"/>  </c:if>
+								<c:if test = "${report.completedFlag=='setStop'}"> <c:set var="Delayed" value="${Delayed+1}"/>  </c:if> --%>
+								
 							</tr>
 						</c:forEach>
 					</c:if>    
@@ -152,6 +216,13 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 	      autoclose: true,
 	      format: 'yyyy-mm-dd'
 	    });
+	  	 
+	    
+	   /*  $("#totalAssigned").html(' <c:out value = "${assigned}"/> ');
+	    $("#totalCheckedIn").html(' <c:out value = "${CheckedIn}"/> ');
+	    $("#totalOntime").html(' <c:out value = "${Ontime}"/> ');
+	    $("#totalDelayed").html(' <c:out value = "${Delayed}"/> '); */
+	  	 
   });
 </script>
 </body>

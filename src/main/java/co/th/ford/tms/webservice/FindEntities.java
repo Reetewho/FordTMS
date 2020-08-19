@@ -12,8 +12,8 @@ import co.th.ford.tms.webservice.Base;
 
 public class FindEntities extends Base{
 		
-	//private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";
-	private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
+	private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";
+	//private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
 	private  final String inputXML = 
 					"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cis=\"http://www.i2.com/cis\">" + 

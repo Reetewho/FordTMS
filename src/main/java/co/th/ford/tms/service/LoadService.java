@@ -1,6 +1,10 @@
 package co.th.ford.tms.service;
 
 import java.util.List;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+
 import co.th.ford.tms.model.Load;
 
 
@@ -23,6 +27,7 @@ public interface LoadService {
 	
 	List<Load> findLoadByCarrierID(int carrierID);
 	
+	List<Load> findLoadByDate(LocalDateTime loadStartDateTime ,LocalDateTime loadEndDateTime); 
 	
 	Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID);
 

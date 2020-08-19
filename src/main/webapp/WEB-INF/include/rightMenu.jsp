@@ -90,6 +90,26 @@
         </c:when>
          </c:choose>
          
+       <%--  <c:choose>
+        <c:when test="${permissionMenu.id_menu=='8'}">
+        <li>
+          <a href="<c:url value='/Monitor' />">
+            <i class="fas fa-desktop"></i> &nbsp;<span>Monitor</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose>  --%>
+         
+         <c:choose>
+        <c:when test="${permissionMenu.id_menu=='8'}">
+        <li>
+          <a href="<c:url value='/AdminReport' />">
+            <i class="fas fa-receipt"></i> &nbsp;<span>Operation Report(Admin)</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose>
+         
         </c:forEach>
         
         <!-- 

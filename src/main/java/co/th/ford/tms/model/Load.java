@@ -83,6 +83,9 @@ public class Load {
 	@Column(name = "driverId", nullable = true)
 	private String driverid;
 	
+	@Column(name = "assignname", nullable = true)
+	private String assignname;
+	
 	@Column(name = "errorMessage", nullable = true)
 	private String errorMessage;
 	

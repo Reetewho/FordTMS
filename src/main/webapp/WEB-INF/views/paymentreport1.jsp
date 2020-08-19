@@ -58,11 +58,11 @@
 	     
 		  <div class="row">
 	        <div class="col-md-3">
-	          <div class="box box-danger box-solid">
+	          <div class="box box-default box-solid">
 	            <div class="box-header ">
 	              <h3 class="box-title">N/A Status</h3>
 	              <div class="box-tools pull-right">
-	                <span  id="totalNA" class="badge bg-red" style="font-size:16px;font-weight: 600;">-</span>
+	                <span  id="totalNA"  style="font-size:16px;font-weight: 600;">-</span>
 	              </div>
 	              <!-- /.box-tools -->
 	            </div>
@@ -87,6 +87,23 @@
 	          <!-- /.box -->
 	        </div>
 	        <!-- /.col -->
+	        
+	        <div class="col-md-3">
+	          <div class="box box-primary box-solid">
+	            <div class="box-header ">
+	              <h3 class="box-title">Assigned</h3>
+	              <div class="box-tools pull-right">
+	                <span  id="totalAssigned"  style="font-size:16px;font-weight: 600;">-</span>
+	              </div>
+	              <!-- /.box-tools -->
+	            </div>
+	            <!-- /.box-header -->            
+	            <!-- /.box-body -->
+	          </div>
+	          <!-- /.box -->
+	        </div>
+	        <!-- /.col -->
+	        
 	        <div class="col-md-3">
 	          <div class="box box-info box-solid">
 	            <div class="box-header ">
@@ -129,6 +146,7 @@
 	                  	<th >Load ID</th>
 						<th >Route No.</th>
 						<th >Truck Number</th>
+						<th >Driver Name</th>
 						<th >Load Start Date Time</th>
 						<th >Load End Date Time</th>  
 						<th >Gate In</th> 
@@ -139,7 +157,8 @@
 	                <tbody>
 		                <c:set var="naStatus" value="${0}"/>
 		                <c:set var="loadStatus" value="${0}"/>
-		                <c:set var="inTransit" value="${0}"/>
+		                <c:set var="assigned" value="${0}"/>
+		                <c:set var="inTransit" value="${0}"/>		                
 		                <c:set var="completed" value="${0}"/>
 			            <c:if test = "${not empty paymentreport}">
 							<c:forEach items="${paymentreport}" var="paymentreport">
@@ -147,6 +166,7 @@
 								<td>${paymentreport.systemLoadID}</td>
 								<td>${paymentreport.loadDescription}</td>
 								<td>${paymentreport.truckNumber}</td>
+								<td>${paymentreport.driverId}</td>	
 								<td>${paymentreport.loadStartDateTime}</td>				
 								<td>${paymentreport.loadEndDateTime}</td>
 								<td>${paymentreport.gatein}</td>
@@ -154,8 +174,11 @@
 								<td>${paymentreport.completedFlag}</td>
 								<c:if test = "${paymentreport.completedFlag=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
 								<c:if test = "${paymentreport.completedFlag=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
+								<%-- <c:if test = "${paymentreport.driverId!=null}"> <c:set var="assigned" value="${assigned+1}"/>  </c:if> --%>
+								<c:if test = "${paymentreport.driverId!=''}"> <c:set var="assigned" value="${assigned+1}"/>  </c:if>
 								<c:if test = "${paymentreport.completedFlag=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
 								<c:if test = "${paymentreport.completedFlag=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
+								
 								</tr>
 							</c:forEach>
 						</c:if>    
@@ -210,6 +233,7 @@
 		  	 
 		    $("#totalNA").html(' <c:out value = "${naStatus}"/> ');
 		    $("#totalLoad").html(' <c:out value = "${loadStatus}"/> ');
+		    $("#totalAssigned").html(' <c:out value = "${assigned}"/> ');
 		    $("#totalIntransit").html(' <c:out value = "${inTransit}"/> ');
 		    $("#completed").html(' <c:out value = "${completed}"/> ');
 	  });

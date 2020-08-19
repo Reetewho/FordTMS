@@ -2,6 +2,8 @@ package co.th.ford.tms.service;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.th.ford.tms.dao.LoadDao;
 import co.th.ford.tms.model.Load;
+import co.th.ford.tms.model.PaymentReport1;
 
 
 @Service("loadService")
@@ -45,6 +48,7 @@ public class LoadServiceImpl implements LoadService {
 			entity.setLastUpdateDate(l.getLastUpdateDate());
 			entity.setLastUpdateUser(l.getLastUpdateUser());			
 			entity.setAssign(l.getAssign());
+			entity.setAssignname(l.getAssignname());
 			entity.setDriverid(l.getDriverid());
 			entity.setDateaccept(l.getDateaccept());
 			entity.setDateassign(l.getDateassign());
@@ -71,6 +75,10 @@ public class LoadServiceImpl implements LoadService {
 	public Load findLoadByID(int loadID) {
 		return dao.findLoadByID(loadID);
 	}
+	
+	public List<Load> findLoadByDate(LocalDateTime loadStartDateTime ,LocalDateTime loadEndDateTime) {
+		return dao.findLoadByDate(loadStartDateTime, loadEndDateTime);
+	} 
 	
 
 	public List<Load> findLoadByusername(String driverid) {
