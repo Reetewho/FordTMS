@@ -241,7 +241,6 @@ var d = strDate.split("-");
 			        buttons: [{extend: 'excelHtml5',text: 'Export To Excel',filename: 'ExportLoad_'+d[2]+d[1]+d[0]}],
 			        'autoWidth':true,
 					   'scrollX': true,
-
 			   'initComplete': function(settings){
 			         var api = this.api();
 

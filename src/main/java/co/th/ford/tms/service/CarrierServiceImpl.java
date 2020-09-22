@@ -63,6 +63,14 @@ public class CarrierServiceImpl implements CarrierService {
 		return dao.getReport1(startDate, endDate);
 	} 
 	
+	public List<Report1> findAllLoadId(String startDate ,String endDate) {
+		return dao.getReportByLoad(startDate, endDate);
+	}
+	
+	public List<Report1> findSystembyLoadId(int LoadstopbyLoadId) {
+		return dao.getSystemLoadIDbyLoadID(LoadstopbyLoadId);
+	}
+	
 	public List<Carrier> findListCarriersByDate(String startDate,String endDate){
 		return dao.findListCarriersByDate(startDate, endDate);
 	}

@@ -20,7 +20,8 @@
 <script src="<c:url value='/assets/plugins/datatables/extensions/Buttons-1.5.4/js/dataTables.buttons.min.js' />"></script>
 <script src="<c:url value='/assets/plugins/datatables/extensions/Buttons-1.5.4/js/buttons.html5.min.js' />"></script>
 
-
+<!-- DataTables Edit -->
+<script src="<c:url value='/assets/plugins/jquery-tabledit/jquery.tabledit.min.js' />"></script>
 
 
 <script src="<c:url value='/assets/plugins/ajax/libs/jszip/3.1.3/jszip.min.js' />"></script>

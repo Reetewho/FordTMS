@@ -21,6 +21,10 @@ public interface CarrierDao {
 
 	List<Report1> getReport1(String startDate,String endDate);
 	
+	List<Report1> getReportByLoad(String startDate,String endDate);
+	
+	List<Report1> getSystemLoadIDbyLoadID(int LoadstopbyLoadId);
+	
 	Carrier findCarrierByDate(String date);
 	
 	List<Carrier> findListCarriersByDate(String startDate,String endDate);

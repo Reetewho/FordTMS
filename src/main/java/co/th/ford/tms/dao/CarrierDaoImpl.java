@@ -109,9 +109,9 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 		public List<Report1> getReport1(String startDate,String endDate){
 			Query query = getSession().createSQLQuery(
 					  " select l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
-					+"  ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.lastUpdateUser,  "
+					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
 					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ss.latitude,ss.longitude,ss.movementDateTime,ss.estimatedDateTime,"
-					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate "
+					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
 					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
 					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
@@ -130,30 +130,159 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					report1.setSystemLoadID(obj[0].toString());
 					report1.setAlertTypeCode(obj[1].toString());
 					report1.setLoadDescription(obj[2]==null?"":obj[2].toString());
-					report1.setStopSequence(obj[3]==null?"":obj[3].toString());
-					report1.setStopShippingLocation(obj[4]==null?"":obj[4].toString());
-					report1.setStopShippingLocationName(obj[5]==null?"":obj[5].toString());
-					report1.setTruckNumber(obj[6]==null?"":obj[6].toString());
-					report1.setLastUpdateUser(obj[7]==null?"":obj[7].toString());					
-					report1.setDepartureTime(obj[8]==null?"":obj[8].toString());
-					report1.setArriveTime(obj[9]==null?"":obj[9].toString());				
-					report1.setCompletedFlag(obj[10]==null?"":obj[10].toString());
-					report1.setLatitude(obj[11]==null?"":obj[11].toString());
-					report1.setLongitude(obj[12]==null?"":obj[12].toString());
-					report1.setMovementDateTime(obj[13]==null?"":obj[13].toString());
-					report1.setEstimatedDateTime(obj[14]==null?"":obj[14].toString());
-					report1.setLoadStartDateTime(obj[15]==null?"":obj[15].toString());
-					report1.setLoadEndDateTime(obj[16]==null?"":obj[16].toString());
-					report1.setDriverId(obj[17]==null?"":obj[17].toString());
-					report1.setAssignname(obj[18]==null?"":obj[18].toString());
-					report1.setLoadstopremark(obj[19]==null?"":obj[19].toString());
-					report1.setContactnumber(obj[20]==null?"":obj[20].toString());
-					report1.setLastUpdateDate(obj[21]==null?"":obj[21].toString());
+					report1.setId(obj[3]==null?3:((Integer)obj[3]).intValue());
+					report1.setStopSequence(obj[4]==null?"":obj[4].toString());
+					report1.setStopShippingLocation(obj[5]==null?"":obj[5].toString());
+					report1.setStopShippingLocationName(obj[6]==null?"":obj[6].toString());
+					report1.setTruckNumber(obj[7]==null?"":obj[7].toString());
+					report1.setWaybillNumber(obj[8]==null?"":obj[8].toString());					
+					report1.setLastUpdateUser(obj[9]==null?"":obj[9].toString());					
+					report1.setDepartureTime(obj[10]==null?"":obj[10].toString());
+					report1.setArriveTime(obj[11]==null?"":obj[11].toString());				
+					report1.setCompletedFlag(obj[12]==null?"":obj[12].toString());
+					report1.setLatitude(obj[13]==null?"":obj[13].toString());
+					report1.setLongitude(obj[14]==null?"":obj[14].toString());
+					report1.setMovementDateTime(obj[15]==null?"":obj[15].toString());
+					report1.setEstimatedDateTime(obj[16]==null?"":obj[16].toString());
+					report1.setLoadStartDateTime(obj[17]==null?"":obj[17].toString());
+					report1.setLoadEndDateTime(obj[18]==null?"":obj[18].toString());
+					report1.setDriverId(obj[19]==null?"":obj[19].toString());
+					report1.setAssignname(obj[20]==null?"":obj[2].toString());
+					report1.setLoadstopremark(obj[21]==null?"":obj[21].toString());
+					report1.setContactnumber(obj[22]==null?"":obj[22].toString());
+					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
+					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
+					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
+					
+
+					
 					allList.add(report1);
 				}
 			
 			return allList;
 		}
+	 
+	 @SuppressWarnings("unchecked")
+		public List<Report1> getReportByLoad(String startDate,String endDate){
+			Query query = getSession().createSQLQuery(
+					  " select l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
+					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
+					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
+					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
+					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
+					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
+					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
+					+ " left join tb_user us on l.driverId=us.username   "
+					+ " where date(l.loadStartDateTime) >= :startDate and date(l.LoadEndDateTime) <= :endtDate "
+					+ " group by ls.loadID"
+					+ " order by c.carrierID ");		
+						
+			query.setString("startDate", startDate);
+			query.setString("endtDate", endDate);
+			System.out.println("###### "+startDate+" "+endDate);
+			List<Report1> allList = new ArrayList<Report1>();
+			List<Object[]> list=query.list();
+			if(list!=null && list.size() >0)
+				for (Object[] obj : list) {
+					Report1 report1=new Report1();
+					report1.setSystemLoadID(obj[0].toString());
+					report1.setAlertTypeCode(obj[1].toString());
+					report1.setLoadDescription(obj[2]==null?"":obj[2].toString());
+					report1.setId(obj[3]==null?3:((Integer)obj[3]).intValue());
+					report1.setStopSequence(obj[4]==null?"":obj[4].toString());
+					report1.setStopShippingLocation(obj[5]==null?"":obj[5].toString());
+					report1.setStopShippingLocationName(obj[6]==null?"":obj[6].toString());
+					report1.setTruckNumber(obj[7]==null?"":obj[7].toString());
+					report1.setWaybillNumber(obj[8]==null?"":obj[8].toString());					
+					report1.setLastUpdateUser(obj[9]==null?"":obj[9].toString());					
+					report1.setDepartureTime(obj[10]==null?"":obj[10].toString());
+					report1.setArriveTime(obj[11]==null?"":obj[11].toString());				
+					report1.setCompletedFlag(obj[12]==null?"":obj[12].toString());
+					report1.setLatitude(obj[13]==null?"":obj[13].toString());
+					report1.setLongitude(obj[14]==null?"":obj[14].toString());
+					report1.setMovementDateTime(obj[15]==null?"":obj[15].toString());
+					report1.setEstimatedDateTime(obj[16]==null?"":obj[16].toString());
+					report1.setLoadStartDateTime(obj[17]==null?"":obj[17].toString());
+					report1.setLoadEndDateTime(obj[18]==null?"":obj[18].toString());
+					report1.setDriverId(obj[19]==null?"":obj[19].toString());
+					report1.setAssignname(obj[20]==null?"":obj[2].toString());
+					report1.setLoadstopremark(obj[21]==null?"":obj[21].toString());
+					report1.setContactnumber(obj[22]==null?"":obj[22].toString());
+					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
+					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
+					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
+					
+
+					
+					allList.add(report1);
+				}
+			
+			return allList;
+		}
+	 
+	 
+	 
+	 
+	 @SuppressWarnings("unchecked")
+		public List<Report1> getSystemLoadIDbyLoadID(int LoadstopbyLoadId){
+			Query query = getSession().createSQLQuery(
+					  " select l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
+					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
+					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
+					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
+					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
+					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
+					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
+					+ " left join tb_user us on l.driverId=us.username   "
+					+ " where ls.loadID = :LoadstopbyLoadId "
+					+ " order by c.carrierID ");		
+						
+			query.setInteger("LoadstopbyLoadId", LoadstopbyLoadId);
+			System.out.println("######" +LoadstopbyLoadId);
+			List<Report1> allList = new ArrayList<Report1>();
+			List<Object[]> list=query.list();
+			if(list!=null && list.size() >0)
+				for (Object[] obj : list) {
+					Report1 report1=new Report1();
+					report1.setSystemLoadID(obj[0].toString());
+					report1.setAlertTypeCode(obj[1].toString());
+					report1.setLoadDescription(obj[2]==null?"":obj[2].toString());
+					report1.setId(obj[3]==null?3:((Integer)obj[3]).intValue());
+					report1.setStopSequence(obj[4]==null?"":obj[4].toString());
+					report1.setStopShippingLocation(obj[5]==null?"":obj[5].toString());
+					report1.setStopShippingLocationName(obj[6]==null?"":obj[6].toString());
+					report1.setTruckNumber(obj[7]==null?"":obj[7].toString());
+					report1.setWaybillNumber(obj[8]==null?"":obj[8].toString());					
+					report1.setLastUpdateUser(obj[9]==null?"":obj[9].toString());					
+					report1.setDepartureTime(obj[10]==null?"":obj[10].toString());
+					report1.setArriveTime(obj[11]==null?"":obj[11].toString());				
+					report1.setCompletedFlag(obj[12]==null?"":obj[12].toString());
+					report1.setLatitude(obj[13]==null?"":obj[13].toString());
+					report1.setLongitude(obj[14]==null?"":obj[14].toString());
+					report1.setMovementDateTime(obj[15]==null?"":obj[15].toString());
+					report1.setEstimatedDateTime(obj[16]==null?"":obj[16].toString());
+					report1.setLoadStartDateTime(obj[17]==null?"":obj[17].toString());
+					report1.setLoadEndDateTime(obj[18]==null?"":obj[18].toString());
+					report1.setDriverId(obj[19]==null?"":obj[19].toString());
+					report1.setAssignname(obj[20]==null?"":obj[2].toString());
+					report1.setLoadstopremark(obj[21]==null?"":obj[21].toString());
+					report1.setContactnumber(obj[22]==null?"":obj[22].toString());
+					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
+					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
+					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
+					
+
+					
+					allList.add(report1);
+				}
+			
+			return allList;
+		}
+	 
+	 
+	 
+	 
+	 
 	
 	@SuppressWarnings("unchecked")
 	public List<PaymentReport1> getPaymentReport1(String startDate,String endDate){

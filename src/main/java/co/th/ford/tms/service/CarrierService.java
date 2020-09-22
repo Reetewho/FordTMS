@@ -25,6 +25,10 @@ public interface CarrierService {
 	
 	List<Report1> findAll(String startDate ,String endDate);
 	
+	List<Report1> findAllLoadId(String startDate ,String endDate);
+	
+	List<Report1> findSystembyLoadId(int LoadstopbyLoadId);
+	
 	List<Carrier> findListCarriersByDate(String startDate,String endDate);
 	
 	List<PaymentReport1> findPaymentByCompleted(String startDate ,String endDate);

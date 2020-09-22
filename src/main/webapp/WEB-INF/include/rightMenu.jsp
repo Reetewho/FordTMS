@@ -110,6 +110,26 @@
         </c:when>
          </c:choose>
          
+         <c:choose>
+        <c:when test="${permissionMenu.id_menu=='8'}">
+        <li>
+          <a href="<c:url value='/Nostra' />">
+            <i class="fas fa-receipt"></i> &nbsp;<span>Nostra Report(Admin)</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose>
+         
+          <c:choose>
+        <c:when test="${permissionMenu.id_menu=='8'}">
+        <li>
+          <a href="<c:url value='/testRestAPI' />">
+            <i class="fas fa-receipt"></i> &nbsp;<span>summarylist (Admin)</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose>
+         
         </c:forEach>
         
         <!-- 

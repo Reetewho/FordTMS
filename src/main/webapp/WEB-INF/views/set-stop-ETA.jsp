@@ -394,9 +394,6 @@ if (geolocation) {
 	  });
 	}
 	
-	
-
-
 </script>
 </body>
 </html>

@@ -14,6 +14,7 @@ public class Report1 {
 	private String stopShippingLocation;	
 	private String stopShippingLocationName;		
 	private String truckNumber;	
+	private String waybillNumber;	
 	private String lastUpdateUser;
 	private String departureTime;	
 	private String arriveTime;
@@ -28,4 +29,8 @@ public class Report1 {
 	private String loadstopremark;
 	private String contactnumber;
 	private String lastUpdateDate;
+	private int id;
+	private String loadstopYardCode;
+	private int loadID;
+	
 }

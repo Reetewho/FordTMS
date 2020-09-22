@@ -57,6 +57,8 @@ public class ProcessLoadRetrieve extends Base{
 						lsModel.setArriveTime(LocalDateTime.parse(sb.getElementsByTagName("ns1:AppointmentDependentDockCommitmentStartDateTime").item(i).getFirstChild().getNodeValue()));
 						if(sb.getElementsByTagName("ns1:AppointmentDependentDockCommitmentEndDateTime")!=null && sb.getElementsByTagName("ns1:AppointmentDependentDockCommitmentEndDateTime").item(i) !=null)
 						lsModel.setDepartureTime(LocalDateTime.parse(sb.getElementsByTagName("ns1:AppointmentDependentDockCommitmentEndDateTime").item(i).getFirstChild().getNodeValue()));
+						lsModel.setLatitude(Double.parseDouble(sb.getElementsByTagName("ns1:Latitude").item(i).getFirstChild().getNodeValue()));					
+						lsModel.setLongitude(Double.parseDouble(sb.getElementsByTagName("ns1:Longitude").item(i).getFirstChild().getNodeValue()));												
 						lsModel.setStatus("load");
 //						lsModel.setStatusFlag(2);
 						lsList.add(lsModel);						

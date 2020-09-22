@@ -79,6 +79,9 @@ public class LoadStop {
 	@Column(name = "shipingOrder", nullable = false)
 	private String shipingOrder;
 	
+	@Column(name = "SystemLoads", nullable = false)
+	private int SystemLoads;
+	
 	@Column(name = "waybillNumber", nullable = false)
 	private String waybillNumber;
 	
@@ -88,6 +91,8 @@ public class LoadStop {
 	@Column(name = "statusLoad", nullable = false)
 	private String statusLoad;
 	
+	@Column(name = "loadstopYardCode", nullable = true)
+	private String loadstopYardCode;
 
 	//---------------------------------------------------------------------------------//
 	

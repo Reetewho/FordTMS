@@ -112,8 +112,8 @@ public class CarrierController {
 	@RequestMapping(value = { "/load-list/{date}" }, method = RequestMethod.GET)
 	public String loadListWithDate(HttpSession session,@PathVariable String date, ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
-		//Carrier carrier = cservice.findCarrierByDate(date);	
-		Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+		Carrier carrier = cservice.findCarrierByDate(date);	
+		//Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
 		if(carrier==null) {
 			carrier = new Carrier();
 			carrier.setStatus("N/A");			
@@ -123,8 +123,8 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
-			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
-			//carrier = cservice.findCarrierByDate(date);	
+			//carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
+			carrier = cservice.findCarrierByDate(date);	
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();
@@ -268,6 +268,7 @@ public class CarrierController {
 		if(!checkAuthorization(session))return "redirect:/login";
 		LocalDate today = LocalDate.now();	   
 	    model.addAttribute("loadDate",  today);
+	    systemLoadID = systemLoadID.trim();
 	    
 	    
 	    Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(loadDate, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
