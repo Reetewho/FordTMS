@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>co.th.ford.tms</groupId>
-	<artifactId>FordTMS</artifactId>
+	<artifactId>FordTMS2</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>FordTMS</name>
+	<name>FordTMS2</name>
 
 	<properties>
 		<springframework.version>4.3.17.RELEASE</springframework.version>
@@ -23,11 +23,26 @@
 	</properties>
 
 	<dependencies>
+	<dependency>
+	    <groupId>org.codehaus.jackson</groupId>
+	    <artifactId>jackson-mapper-asl</artifactId>
+	    <version>1.5.0</version>
+	</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
+		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
-		    <version>2.9.8</version>
+		    <version>2.11.2</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.11.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.11.2</version>
+		</dependency>	
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -178,14 +193,14 @@
 					<version>2.6</version>
 					<configuration>
 						<warSourceDirectory>src/main/webapp</warSourceDirectory>
-						<warName>FordTMS</warName>
+						<warName>FordTMS2</warName>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
 					</configuration>
 				</plugin>
 			</plugins>
 			
 		</pluginManagement>
-		<finalName>FordTMS</finalName>
+		<finalName>FordTMS2</finalName>
 	</build>
 </project>
 

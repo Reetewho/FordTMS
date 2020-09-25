@@ -54,112 +54,8 @@
     <!-- Main content -->
     <section class="content">  
      	<div class="row" style="margin-bottom:20px"> 
-	     	<form method="POST" action="<c:url value='/Nostra' />" data-toggle="validator" role="form" >        
-	        <%-- <div class="col-md-2" ></div>
-	        <div class="col-md-3">
-     			<div class="form-group  input-group date">
-	                <div class="input-group-addon">
-	                	<i class="fa fa-calendar"></i> Start Date : 
-	                </div>
-                	<input type="text" class="form-control pull-right datepicker" name="startDate" id="startDate" value="${startDate}" data-error="Please Select Start Date" required="required"/>  
-				</div>
-	        </div>  --%>       
-	        <%-- <div class="col-md-1" ></div>
-	        <div class="col-md-3">
-   				<div class="form-group  input-group date">
-                	<div class="input-group-addon">
-                		<i class="fa fa-calendar"></i> End Date : 
-                	</div>
-                	<input type="text" class="form-control pull-right datepicker" name="endDate" id="endDate" value="${endDate}" data-error="Please Select End Date" required="required"/>
-				</div>
-	        </div> --%>
-	        <!-- <div class="col-md-1" style="padding-top:3px"><input type="submit" value="search"/></div>	        
-	       <div class="col-md-2"></div>
-	       </form>
-	     </div> -->
-	     <%-- 
-	      <div class="row" style="margin-bottom:20px"> 
-	     	<form method="POST" id="frm-payment" action="<c:url value='/updateNostraAPI' />" >      
-	        <div class="col-md-2" ></div>
-	        <div class="col-md-8">
-	        	<input type = "hidden" name="startDate" id="startDate" value="${startDate}" />
-	        	<input type = "hidden" name="endDate" id="endDate" value="${endDate}" />
-	        
-	        	<input type = "hidden" name = "console-select-rows" id = "console-select-rows" value = "" />
-				<button type = "submit" name="subbt" id="subbt" class = "btn btn-primary pull-right" >Call Nostra</button> 
-	        </div>        
-	       <div class="col-md-2"></div>
-	       </form>
-	     </div> --%>
-        
-        <!-- <div class="row">
-	        <div class="col-md-3">
-	          <div class="box box-default box-solid">
-	            <div class="box-header ">
-	              <h3 class="box-title">Assigned</h3>
-	              <div class="box-tools pull-right">
-	                <span  id="totalAssigned"  style="font-size:16px;font-weight: 600;">-</span>
-	              </div>
-	              /.box-tools
-	            </div>
-	            /.box-header           
-	            /.box-body
-	          </div>
-	          /.box
-	        </div>
-	        /.col
-	        <div class="col-md-3">
-	          <div class="box box-warning box-solid">
-	            <div class="box-header ">
-	              <h3 class="box-title">Checked- In</h3>
-	              <div class="box-tools pull-right">
-	                <span  id="totalCheckedIn" class="badge bg-yellow" style="font-size:16px;font-weight: 600;">-</span>
-	              </div>
-	              /.box-tools
-	            </div>
-	            /.box-header           
-	            /.box-body
-	          </div>
-	          /.box
-	        </div>
-	        /.col
-	        
-	        <div class="col-md-3">
-	          <div class="box box-primary box-solid">
-	            <div class="box-header ">
-	              <h3 class="box-title">Ontime</h3>
-	              <div class="box-tools pull-right">
-	                <span  id="totalOntime"  style="font-size:16px;font-weight: 600;">-</span>
-	              </div>
-	              /.box-tools
-	            </div>
-	            /.box-header            
-	            /.box-body
-	          </div>
-	          
-	          /.box
-	        </div>
-	        /.col
-	        
-	        <div class="col-md-3">
-	          <div class="box box-info box-solid">
-	            <div class="box-header ">
-	              <h3 class="box-title">Delayed</h3>
-	              <div class="box-tools pull-right">
-	                <span  id="totalDelayed" class="badge bg-aqua" style="font-size:16px;font-weight: 600;">-</span>
-	              </div>
-	              /.box-tools
-	            </div>
-	            /.box-header            
-	            /.box-body
-	          </div>
-	          /.box
-	        </div>       
-	     	/.col
-	     </div>
-	     /.row
-         -->
-        
+	     	<form method="POST" action="<c:url value='/Nostra' />" data-toggle="validator" role="form" > 
+	     	</form>       
       <div class="row">
       <!-- /.col -->
         <div class="col-md-12">
@@ -172,16 +68,16 @@
                   	<th >Route No.</th>
                   	<th >Pickup GSDB</th>
                   	<th >Pickup Supplier Name</th>
-                  	<th >Truck Number</th>	
-                  	<th >Jobs Number</th>	
-                  	<th >Yard</th>	
+                  	<!-- <th >Truck Number</th> -->	
+                  	<!-- <th >Jobs Number</th> -->	
+                  	<!-- <th >Yard</th> -->	
                   	<th >Arrive Plan</th> 
                   	<th >Arrive Actual</th>	
 					<th >Departure Plan</th>
 					<th >Departure Actual</th>
 					<th >ETA</th>
 					<th >Color</th>
-                  	<th >Driver Name</th>
+                  	<!-- <th >Driver Name</th> -->
                   	<!-- <th >Last Update</th> -->                 	
 					<th >Latitude</th>
 					<th >Longitude</th>
@@ -191,11 +87,7 @@
 					        	       
                 </tr>
                 </thead>
-                <tbody>                
-		                <c:set var="assigned" value="${0}"/>
-		                <c:set var="CheckedIn" value="${0}"/>
-		                <c:set var="Ontime" value="${0}"/>	
-		                <c:set var="Delayed" value="${0}"/>	                
+                <tbody>                		                      
 	               <c:if test = "${not empty lsLoadID}">
 						<c:forEach items="${lsLoadID}" var="report">
 							<tr >
@@ -203,9 +95,9 @@
 							<td>${report.loadDescription}</td>
 							<td>${report.stopShippingLocation}</td>
 							<td>${report.stopShippingLocationName}</td>
-							<td>${report.truckNumber}</td>
-							<td>${report.waybillNumber}</td>
-							<td>${report.loadstopYardCode}</td>	
+							<%-- <td>${report.truckNumber}</td> --%>
+							<%-- <td>${report.waybillNumber}</td> --%>
+							<%-- <td>${report.loadstopYardCode}</td> --%>	
 							<td>${report.arriveTime}</td>
 							<c:choose>
 								<c:when test="${report.completedFlag=='update'}">
@@ -231,19 +123,16 @@
 											</c:otherwise>
 							</c:choose>				
 							<td></td>
-							<td></td>
-							
-							<td>${report.driverId}</td>															
-							<%-- <td>${report.lastUpdateDate}</td> --%>		
-							
+							<td></td>							
 							<td>${report.latitude}</td>
 							<td>${report.longitude}</td>		
 							<td style="display:none;">${report.id}</td>
 							<td style="display:none;">${report.loadID}</td>
 							</tr>
 						</c:forEach>
-					</c:if>    
-                </tbody>                
+					</c:if> 
+                </tbody>          
+                	<%-- <a href="<c:url value='/loadStop-list/${loadDate}/${load.systemLoadID}-${load.loadID}' />"><button type="button" class="btn btn-default">Cancel</button></a> --%>					                        
               </table>
             </div>
             <!-- /.box-body -->
@@ -275,93 +164,15 @@ var ed=strEndDate.split("-");
 var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 
   $(function () {	  	 
-	  
-	  document.getElementById("subbt").disabled = true;
-	  
-	  $('#reportTable').Tabledit({
-		    url: 'Nostra.jsp',
-		    editButton: false,
-		    deleteButton: false,
-		    hideIdentifier: false,
-		    columns: {
-		        identifier: [0, 'ID'],
-		        editable: [[5, 'truckNumber'], [6, 'WaybillNumber'], [7, 'Yard','{"1": "","2": "ABC", "3": "APC", "4": "ARC"}'], [8, 'DriverName','{"1": "","2": "Driver1", "3": "Driver2", "4": "Driver3"}']]
-		    },
-		    scrollX: true
-		});
-	  
 	   var events = $('#events');
 	   var table =	$("#reportTable").DataTable({
 		   
 	  		dom: "<'row'<'col-sm-2'l><'col-sm-7'B><'col-sm-3'f>>" +
 	        "<'row'<'col-sm-12'tr>>" +
 	        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-	        buttons: [
-	            {
-	                text: 'Get selected data',
-	                action: function () {
-	                	 
-	                    var dataJson = '';
-	                    var jsonGroupStr = '{"theGroupData":[]}';
-	                    var objGroupdata = JSON.parse(jsonGroupStr);
-	                   
-	                    $.each(table.rows('.selected').nodes(), function (i, item) {
-	                        var id = item.id;
-	                        
-	                        var dataSystemLoadID = item.cells[1].innerText;
-	                        var dataRouteNo = item.cells[2].innerText;
-	                        var dataTruckNumber = item.cells[5].innerText;
-	                        var dataWaybillNumber = item.cells[6].innerText;
-	                        var dataYard = item.cells[7].innerText;
-	                        var dataDriver = item.cells[8].innerText;
-	                        var dataSystemID = item.cells[16].innerText;
-	                        var dataLoadID = item.cells[17].innerText;
-	                        var itemObjJson = {	                        	
-	                            SystemLoadID: dataSystemLoadID,
-	                            RouteNo: dataRouteNo,
-	                            TruckNumber: dataTruckNumber,
-	                            WaybillNumber: dataWaybillNumber,
-	                            Yard: dataYard,
-	                            Driverids: dataDriver,
-	                            SystemID: dataSystemID, 
-	                            LoadID: dataLoadID 
-	                        };
-
-	                        objGroupdata['theGroupData'].push(itemObjJson);
-		                   
-
-	                    });
-
-	                    var myJSON = JSON.stringify(objGroupdata);
-	                    alert("Please press the OK button to confirm." );
-	                    document.getElementById("subbt").disabled = false;
-	                    document.getElementById("console-select-rows").value = myJSON;
-	                    
-	                }
-	            }
-	        ],
-		    'initComplete': function(settings){
-		         var api = this.api();
-		      },
-	      'columnDefs': [
-	         {
-	            'targets': 0,
-	            'checkboxes': {
-	               'selectRow': true
-	            }
-	         }
-	      ],
-	      'select': {
-	         'style': 'multi'
-	      },
-	      'order': [[0, 'asc']]
-	      
-	      
-	      
+	        buttons: [  ], scrollX: true          	            
 	            }); 
-	   
-	   
-		  	
+	
 	  	 //Date picker
 	    $('.datepicker').datepicker({
 	      autoclose: true,

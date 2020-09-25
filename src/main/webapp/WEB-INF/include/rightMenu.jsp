@@ -120,7 +120,7 @@
         </c:when>
          </c:choose>
          
-          <c:choose>
+         <%--  <c:choose>
         <c:when test="${permissionMenu.id_menu=='8'}">
         <li>
           <a href="<c:url value='/testRestAPI' />">
@@ -128,7 +128,7 @@
           </a>
         </li>
         </c:when>
-         </c:choose>
+         </c:choose> --%>
          
         </c:forEach>
         

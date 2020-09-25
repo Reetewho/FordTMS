@@ -86,7 +86,7 @@
 	        	<input type = "hidden" name="endDate" id="endDate" value="${endDate}" />
 	        
 	        	<input type = "hidden" name = "console-select-rows" id = "console-select-rows" value = "" />
-				<button type = "submit" name="subbt" id="subbt" class = "btn btn-primary pull-right" >Call Nostra</button> 
+				<button style="display:none;" type = "submit" name="subbt" id="subbt" class = "btn btn-primary pull-right" >Call Nostra</button> 
 	        </div>        
 	       <div class="col-md-2"></div>
 	       </form>
@@ -175,7 +175,7 @@
                   	<th >Pickup Supplier Name</th>
                   	<th >Truck Number</th>	
                   	<th >Jobs Number</th>	
-                  	<th >Yard</th>	
+                  	<!-- <th >Yard</th> -->	
                   	<th >Driver Name</th>
                   	<th >Last Update</th>
                   	<th >Arrive Plan</th> 
@@ -184,8 +184,8 @@
 					<th >Departure Plan</th>
 					<th >Departure Actual</th>
 					<!-- <th >Departure Status</th> -->						
-					<th >Latitude</th>
-					<th >Longitude</th>
+					<!-- <th >Latitude</th> -->
+					<!-- <th >Longitude</th> -->
 				
 					<th style="display:none;"></th>
 					<th style="display:none;"></th>
@@ -212,10 +212,10 @@
 							<td>${report.stopShippingLocationName}</td>
 							<td>${report.truckNumber}</td>
 							<td>${report.waybillNumber}</td>
-							<td>${report.loadstopYardCode}</td>	
+							<%-- <td>${report.loadstopYardCode}</td> --%>	
 							<td>${report.driverId}</td>								
 							<td>${report.lastUpdateDate}</td>		
-							<td>${report.arriveTime}</td>
+							<td>${report.loadStartDateTime}</td>
 							<c:choose>
 								<c:when test="${report.completedFlag=='update'}">
 									<td>${report.arriveTime}</td>
@@ -238,7 +238,7 @@
 												<td></td>
 											</c:otherwise>
 							</c:choose>	 --%>											
-							<td>${report.departureTime}</td>							
+							<td>${report.loadEndDateTime}</td>							
 							<c:choose>
 								<c:when test="${report.completedFlag=='update'}">
 									<td>${report.departureTime}</td>
@@ -262,8 +262,8 @@
 												<td></td>
 											</c:otherwise>
 							</c:choose>			 --%>				
-							<td>${report.latitude}</td>
-							<td>${report.longitude}</td>		
+							<%-- <td>${report.latitude}</td> --%>
+							<%-- <td>${report.longitude}</td> --%>		
 							<td style="display:none;">${report.id}</td>
 							<td style="display:none;">${report.loadID}</td>
 
@@ -318,7 +318,7 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 		    hideIdentifier: false,
 		    columns: {
 		        identifier: [0, 'ID'],
-		        editable: [[5, 'truckNumber'], [6, 'WaybillNumber'], [7, 'Yard','{"1": "","2": "ABC", "3": "APC", "4": "ARC"}'], [8, 'DriverName','{"1": "","2": "Driver1", "3": "Driver2", "4": "Driver3"}']]
+		        editable: [[5, 'truckNumber'], [6, 'WaybillNumber'], /* [7, 'Yard','{"1": "","2": "ABC", "3": "APC", "4": "ARC"}'], */ [7, 'DriverName','{"1": "","2": "Driver1", "3": "Driver2", "4": "Driver3"}']]
 		    },
 		    scrollX: true
 		});
@@ -345,31 +345,32 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 	                        var dataRouteNo = item.cells[2].innerText;
 	                        var dataTruckNumber = item.cells[5].innerText;
 	                        var dataWaybillNumber = item.cells[6].innerText;
-	                        var dataYard = item.cells[7].innerText;
-	                        var dataDriver = item.cells[8].innerText;
-	                        var dataSystemID = item.cells[16].innerText;
-	                        var dataLoadID = item.cells[17].innerText;
+	                        var dataDriver = item.cells[7].innerText;
+	                        var dataSystemID = item.cells[13].innerText;
+	                        var dataLoadID = item.cells[14].innerText;
 	                        var itemObjJson = {	                        	
 	                            SystemLoadID: dataSystemLoadID,
 	                            RouteNo: dataRouteNo,
 	                            TruckNumber: dataTruckNumber,
 	                            WaybillNumber: dataWaybillNumber,
-	                            Yard: dataYard,
 	                            Driverids: dataDriver,
 	                            SystemID: dataSystemID, 
 	                            LoadID: dataLoadID 
 	                        };
 
 	                        objGroupdata['theGroupData'].push(itemObjJson);
-		                   
-
+		                   	                        
 	                    });
-
-	                    var myJSON = JSON.stringify(objGroupdata);
-	                    alert("Please press the OK button to confirm." );
-	                    document.getElementById("subbt").disabled = false;
-	                    document.getElementById("console-select-rows").value = myJSON;
 	                    
+	                    var r = confirm("Press a button!");
+                        if (r == true) {
+                        	 var myJSON = JSON.stringify(objGroupdata);
+     	                    //alert("Please press the OK button to confirm." );
+     	                    document.getElementById("subbt").disabled = false;
+     	                    document.getElementById("console-select-rows").value = myJSON;
+     	                   document.getElementById("subbt").click();
+                        } else {	      }
+                        document.getElementById("demo").innerHTML = txt; 
 	                }
 	            }
 	        ],

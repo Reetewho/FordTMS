@@ -2,6 +2,7 @@ package co.th.ford.tms.controller;
 
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +32,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -47,10 +54,12 @@ import co.th.ford.tms.model.JobWaypoint;
 import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
 import co.th.ford.tms.model.Report1;
+import co.th.ford.tms.model.Summary;
 import co.th.ford.tms.model.Yard;
 import co.th.ford.tms.service.CarrierService;
 import co.th.ford.tms.service.LoadService;
 import co.th.ford.tms.service.LoadStopService;
+import co.th.ford.tms.service.SummaryService;
 import co.th.ford.tms.service.YardService;
 
 
@@ -62,6 +71,9 @@ public class ReportController {
 	
 	@Autowired
 	CarrierService cservice;
+	
+	@Autowired
+	SummaryService smervice;
 	
 	@Autowired
 	YardService ydervice;
@@ -78,9 +90,13 @@ public class ReportController {
 	@Autowired
 	Environment environment;
 	
-	private static final String CREATE_SHIPMENT_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/shipment/Create";	
-	private static final String LOGIN_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/user/login";
-    private static final String SUMMARY_LIST_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/shipment/summary/list";
+//	private static final String CREATE_SHIPMENT_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/shipment/Create";	
+//	private static final String LOGIN_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/user/login";
+//    private static final String SUMMARY_LIST_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/shipment/summary/list";
+    
+    private static final String CREATE_SHIPMENT_NOSTRA_URL = "https://l2apitracking.nostralogistics.com/api/shipment/Create";	
+	private static final String LOGIN_NOSTRA_URL = "https://l2apitracking.nostralogistics.com/api/user/login";
+    private static final String SUMMARY_LIST_NOSTRA_URL = "https://l2apitracking.nostralogistics.com/api/shipment/summary/list";
 	
 	private static RestTemplate restTemplate = new RestTemplate();
 	
@@ -253,8 +269,11 @@ public class ReportController {
 				try {
 					
 					Map map = new HashMap<String, String>();
-					map.put("username", "marcotest");
-					map.put("password", "nostra1234");
+					map.put("username", "marcotechnology");
+					map.put("password", "Z)2opyqj");
+					
+//					map.put("username", "marcotest");
+//					map.put("password", "nostra1234");
 
 					RestTemplate restTemplate = new RestTemplate();
 					ResponseEntity<String> resp = restTemplate.postForEntity(LOGIN_NOSTRA_URL, map, String.class);
@@ -310,8 +329,13 @@ public class ReportController {
 	    for (int i = 0; i< arr.length(); i++){
 	    	if(arr.getJSONObject(i).getString("SystemID") != null ) {
 	    		
+	    		int intLoadID = 0;
+				intLoadID = Integer.parseInt(arr.getJSONObject(i).getString("LoadID")); 
+	    		
 	       int intsystemid = Integer.parseInt(arr.getJSONObject(i).getString("SystemID"));  
 	        LoadStop loadStop=lsservice.findLoadStopByID(intsystemid);
+	        
+	        Load loads=lservice.findLoadByID(intLoadID);
 	        
 	        int intsystemlaod = Integer.parseInt(arr.getJSONObject(i).getString("SystemLoadID")); 
 			  System.out.println("----------> !Test! <----------" + intsystemlaod);		    
@@ -326,20 +350,21 @@ public class ReportController {
 		    	
 		    	// set `content-type` header
 		    	headersSummary.setContentType(MediaType.APPLICATION_JSON);
-		    	headersSummary.add("GISC-CompanyId", "40");
+		    	headersSummary.add("GISC-CompanyId", "170");
+		    	//headersSummary.add("GISC-CompanyId", "40");
 		    	headersSummary.add("Cookie", strCookie);
 
 		    	String jobId = Integer.toString(loadStop.getSystemLoads());
 		    	String TruckNumberId = loadStop.getTruckNumber();
 		    	
-		    	LocalDateTime localDateTime1 = loadStop.getArriveTime();
+		    	LocalDateTime localDateTime1 = loads.getLoadStartDateTime();
 				String dateFormat1 = "yyyy/MM/dd HH:mm:ss";
 				String date1 = localDateTime1.toString(dateFormat1);
 				
-				LocalDateTime localDateTime2 = loadStop.getDepartureTime();
+				LocalDateTime localDateTime2 = loads.getLoadEndDateTime();
 				String dateFormat2 = "yyyy/MM/dd HH:mm:ss";
 				String date2 = localDateTime2.toString(dateFormat2);
-	
+				if(jobId != "0") {
 		    	Map map = new HashMap<>();
 		        
 		        //Map map = new HashMap<String, String>();
@@ -356,8 +381,7 @@ public class ReportController {
 				map.put("lastWaypointIsTerminal", "false");
 				map.put("waypointFindBestSequent", "false");
 
-				int intLoadID = 0;
-				intLoadID = Integer.parseInt(arr.getJSONObject(i).getString("LoadID")); 
+				
 				
 				Load loadID1 =  lservice.findLoadByID(Integer.parseInt(arr.getJSONObject(i).getString("LoadID")));
 				System.out.println("Test-Start-Load-ID "+loadID1);
@@ -379,7 +403,7 @@ public class ReportController {
 					loadStop2.setSystemLoads(intsystemlaod);	
 					loadStop2.setTruckNumber(arr.getJSONObject(i).getString("TruckNumber"));
 					loadStop2.setWaybillNumber(arr.getJSONObject(i).getString("WaybillNumber"));
-					loadStop2.setLoadstopYardCode(arr.getJSONObject(i).getString("Yard"));
+					//loadStop2.setLoadstopYardCode(arr.getJSONObject(i).getString("Yard"));
 					lsservice.updateLoadStop(loadStop2);
 															
 					jobWaypoint = new JobWaypoint();
@@ -448,6 +472,7 @@ public class ReportController {
 				}
 			}
 		}
+	    	}
 	    }	
 		return nextPage;
 	}
@@ -455,7 +480,7 @@ public class ReportController {
 	
 	@ RequestMapping(value = {"/Nostra-Detail/{loadID}/{systemLoadID}"}, method = RequestMethod.GET)
 	public String NostraDetails(HttpSession session, HttpServletRequest requestServer,@PathVariable int loadID,@PathVariable int systemLoadID,ModelMap model) {
-		if(!checkAuthorization(session))return "redirect:/login";
+		//if(!checkAuthorization(session))return "redirect:/login";
 		String nextPage="NostraDetail";
 		
 		List<Report1> ReportbySystemLoadId = cservice.findSystembyLoadId(loadID);
@@ -474,7 +499,8 @@ public class ReportController {
     	
     	// set `content-type` header
     	headersSummary.setContentType(MediaType.APPLICATION_JSON);
-    	headersSummary.add("GISC-CompanyId", "40");
+    	headersSummary.add("GISC-CompanyId", "170");
+    	//headersSummary.add("GISC-CompanyId", "40");
     	headersSummary.add("Cookie", strCookie);
     	
     	
@@ -493,9 +519,42 @@ public class ReportController {
 	    	System.out.println("Show request : " + request);
 	    	ResponseEntity<String> entityPOST = respCreatetList.postForEntity(SUMMARY_LIST_NOSTRA_URL,request,String.class);
 	    	System.out.println(entityPOST.getBody());
+	    	
+	    	ObjectMapper objectMapper = new ObjectMapper();
+	    	
+	    	JsonNode rootJson;
+			try {
+				
+				rootJson = objectMapper.readTree(entityPOST.getBody());
+//				System.out.println("Show body [timestamp] : " + rootJson.path("timestamp").path("actualStartDate").textValue());
+//				
+//				System.out.println("Show body [timestamp] : " + rootJson.path("timestamp").asText("actualStartDate"));
+//				System.out.println("Show body [timestamp] : " + rootJson.path("timestamp").asText("actualEndDate"));
+			
+				//LocalDateTime StartdateTime = LocalDateTime.parse(rootJson.path("actualStartDate").asText());
+				//LocalDateTime EnddateTime = LocalDateTime.parse(rootJson.path("actualEndDate").asText());
+				
+				//Summary FindSum = smervice.findSummaryLoadByID(loadID);
+				//FindSum.setLoadIDSummary(rootJson.path("shipmentCode").asText());	
+				//FindSum.setSummaryStatus(rootJson.path("shipmentStatusId").asText());
+				//FindSum.setStopDate(StartdateTime);
+				//FindSum.setStopDate(EnddateTime);
+					
+				//smervice.saveSummarylist(FindSum);
+								
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	
+	    	
+	 	    
+	    	
 
-	    	
-	    	
 		model.addAttribute("lsLoadID",  ReportbySystemLoadId);		
 		return nextPage;
 	}
