@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -63,6 +64,8 @@ import co.th.ford.tms.service.DepartmentService;
 @RequestMapping("/")
 public class CarrierController {
 	
+	static final Logger log = Logger.getLogger(CarrierController.class);
+	
 	@Autowired
 	DepartmentService departmentService;
 	
@@ -112,8 +115,8 @@ public class CarrierController {
 	@RequestMapping(value = { "/load-list/{date}" }, method = RequestMethod.GET)
 	public String loadListWithDate(HttpSession session,@PathVariable String date, ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
-		Carrier carrier = cservice.findCarrierByDate(date);	
-		//Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+//		Carrier carrier = cservice.findCarrierByDate(date);	
+		Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
 		if(carrier==null) {
 			carrier = new Carrier();
 			carrier.setStatus("N/A");			
@@ -123,8 +126,8 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
-			//carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
-			carrier = cservice.findCarrierByDate(date);	
+			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
+//			carrier = cservice.findCarrierByDate(date);	
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();
@@ -183,7 +186,7 @@ public class CarrierController {
 							load.setGatein("-");
 							lservice.updateLoad(load);
 						}else {
-							System.out.println(loadStop.getDepartureTime()+"Test value DepartureTime");
+							log.info(loadStop.getDepartureTime()+"Test value DepartureTime");
 						String numSequence = String.valueOf(loadStop.getArriveTime());
 						load.setGatein(numSequence);
 						lservice.updateLoad(load);
@@ -239,10 +242,10 @@ public class CarrierController {
 			@RequestParam int hiddenDelloadID) {
 		
 		/*
-		 * System.out.println("Process delete systemLoadID : " + hiddenDelloadID); //
-		 * System.out.println("Process delete date : " + date); //
-		 * System.out.println("Process delete loadID : " + loadID); //
-		 * System.out.println("Process delete systemLoadID : " + systemLoadID);
+		 * log.info("Process delete systemLoadID : " + hiddenDelloadID); //
+		 * log.info("Process delete date : " + date); //
+		 * log.info("Process delete loadID : " + loadID); //
+		 * log.info("Process delete systemLoadID : " + systemLoadID);
 		 */
 		session.removeAttribute("deleteLoadIDSuccess");
 		
@@ -309,7 +312,7 @@ public class CarrierController {
 									load.setGatein("-");
 									lservice.updateLoad(load);
 								}else {
-									System.out.println(loadStop.getDepartureTime()+"Test value DepartureTime");
+									log.info(loadStop.getDepartureTime()+"Test value DepartureTime");
 								String numSequence = String.valueOf(loadStop.getArriveTime());
 								load.setGatein(numSequence);
 								lservice.updateLoad(load);
@@ -346,9 +349,9 @@ public class CarrierController {
 						
 						Load delLoadData = lservice.deleteLoadByLoadID(load.getLoadID());
 						if(delLoadData == null) {	
-							System.out.println("Successfully, Delete SystemLoadID : " + systemLoadID);
+							log.info("Successfully, Delete SystemLoadID : " + systemLoadID);
 						}
-						//System.out.println("Result loadRetrieve fail, Load ID : " + load.getSystemLoadID());
+						//log.info("Result loadRetrieve fail, Load ID : " + load.getSystemLoadID());
 					}
 					
 				}
@@ -405,7 +408,7 @@ public class CarrierController {
 			setStopETA.setStatusSetStop("Active");
 			sseservice.updateSetStopETA(setStopETA);
 		}
-		System.out.println("----------> ! Test StatusLoad Times ++++++++++++  ! <----------" + loadStop.getStatusLoad());
+		log.info("----------> ! Test StatusLoad Times ++++++++++++  ! <----------" + loadStop.getStatusLoad());
 		
 
 		model.addAttribute("loadDate", date);
@@ -424,7 +427,7 @@ public class CarrierController {
 	public String processSetStopETA(HttpSession session,@PathVariable String date,@Valid SetStopETA setStopETA,@Valid LoadStop loadStop1, @RequestParam String lstcity, BindingResult result,
 			ModelMap model, @PathVariable int loadStopID ) {
 		
-        System.out.println("Test Session role of user : " + setStopETA.getMovementDateTime()); 
+        log.info("Test Session role of user : " + setStopETA.getMovementDateTime()); 
 
 		if(!checkAuthorization(session))return "redirect:/login";				
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);
@@ -491,7 +494,7 @@ public class CarrierController {
 				
 				User sessionUsera = (User)session.getAttribute("S_FordUser");
 
-		        System.out.println("----------> ! Test Date Times session  ! <----------" + sessionUsera.getRole());
+		        log.info("----------> ! Test Date Times session  ! <----------" + sessionUsera.getRole());
 
 				
 				List<City> ListCity = cityService.findAllCity();
@@ -503,7 +506,7 @@ public class CarrierController {
 			
 	}else {
 		
-        System.out.println("Test Session role 3 " + sessionUser ); 
+        log.info("Test Session role 3 " + sessionUser ); 
 
 	load.setCarrier(carrier);		
 	loadStop.setLoad(load);
@@ -518,7 +521,7 @@ public class CarrierController {
 		setStopETA.setStatus("true");
 		
 		
-		 System.out.println("Test MovementDateTime : " + setStopETA.getMovementDateTime() ); 
+		 log.info("Test MovementDateTime : " + setStopETA.getMovementDateTime() ); 
 		if(setStopETA.getId()>0)sseservice.updateSetStopETA(setStopETA);
 		else sseservice.saveSetStopETA(setStopETA);
 				
@@ -544,7 +547,7 @@ public class CarrierController {
 			}	
 			
 			model.addAttribute("Success", "Set Stop ETA of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+"  processed successfully");
-			System.out.println("Test Truck number role  " + loadStop1.getTruckNumber() ); 
+			log.info("Test Truck number role  " + loadStop1.getTruckNumber() ); 
 		}else {
 			model.addAttribute("Error", "Process Set Stop ETA of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+setStopETA.getErrorMessage());
 			
@@ -575,7 +578,7 @@ public class CarrierController {
 			lsservice.updateLoadStop(loadStop);
 			}
 			
-			//System.out.println("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
+			//log.info("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
 			
 			//model.addAttribute("loadDatecount", datetimescounts);
 			model.addAttribute("loadDate", date);
@@ -595,7 +598,7 @@ public class CarrierController {
 		lsservice.updateLoadStop(loadStop);
 		}
 		
-		System.out.println("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
+		log.info("---------> Start Request[POST] <--------- " +"get Result datetimecount : " + datetimescounts 	);
 					
 		model.addAttribute("loadDatecount", datetimescounts);
 		model.addAttribute("loadDate", date);
@@ -749,7 +752,7 @@ public class CarrierController {
 		if (!checkAuthorization(session))return "redirect:/login"; 
 
 		
-		System.out.println("---------> Start Request[POST] <--------- " +
+		log.info("---------> Start Request[POST] <--------- " +
 				"get Result SelectMultipleCheck : " + getSelectItemData +
 				"---------> End Request[POST] <---------");
 			
@@ -758,7 +761,7 @@ public class CarrierController {
 		int nItem = 1;		
         for (String arrItem : arrOfSelectItem) {
         	
-            System.out.println("Result " + nItem + " | Item : " + arrItem); 
+            log.info("Result " + nItem + " | Item : " + arrItem); 
             nItem++;
             
             
@@ -769,12 +772,12 @@ public class CarrierController {
         
         
         String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
-        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        log.info("----------> ! Start Loop Session Select Item ! <----------"); 
         int nSessionItem = 1;
         List<Load> allListLoad = new ArrayList<Load>();
         for (String arrSessionItem : getSessionSelectItem) {
          
-            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            log.info("Result " + nSessionItem + " | Item : " + arrSessionItem); 
             nSessionItem++;
             Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
             allListLoad.add(loadDetail);
@@ -805,7 +808,7 @@ public class CarrierController {
 		
 		
 		
-		System.out.println("---------> Start Request[POST] <--------- " +
+		log.info("---------> Start Request[POST] <--------- " +
 				"get Result SelectMultipleCheck : " + getSelectItemData +
 				"---------> End Request[POST] <---------");
 			
@@ -814,7 +817,7 @@ public class CarrierController {
 		int nItem = 1;
         for (String arrItem : arrOfSelectItem) {
         	
-            System.out.println("Result " + nItem + " | Item : " + arrItem); 
+            log.info("Result " + nItem + " | Item : " + arrItem); 
             nItem++;
             
             
@@ -825,12 +828,12 @@ public class CarrierController {
         
         
         String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
-        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        log.info("----------> ! Start Loop Session Select Item ! <----------"); 
         int nSessionItem = 1; 
         List<Load> allListLoads = new ArrayList<Load>();
         for (String arrSessionItem : getSessionSelectItem) {
          
-            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            log.info("Result " + nSessionItem + " | Item : " + arrSessionItem); 
             nSessionItem++;     
             Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
             allListLoads.add(loadDetail);
@@ -838,11 +841,11 @@ public class CarrierController {
         }			       
         	
         String[] ForWaybillNumber = WaybillNumbers.split(",");
-        System.out.println("----------> ! Start Loop Load Waybill Select Item ! <----------"); 
+        log.info("----------> ! Start Loop Load Waybill Select Item ! <----------"); 
         int nSessionItems = 1;
      
         for (String ForWaybillNumbers : ForWaybillNumber) {
-        	System.out.println("Result " + nSessionItems + " | Item : " + ForWaybillNumbers+ " | Load : " + Integer.valueOf(arrOfSelectItem[nSessionItems-1]));     
+        	log.info("Result " + nSessionItems + " | Item : " + ForWaybillNumbers+ " | Load : " + Integer.valueOf(arrOfSelectItem[nSessionItems-1]));     
         	
         	 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------  */
             Load load =lservice.findLoadByID(Integer.valueOf(arrOfSelectItem[nSessionItems-1]));
@@ -862,7 +865,7 @@ public class CarrierController {
     							load.setGatein("-");
     							lservice.updateLoad(load);
     						}else {
-    							System.out.println(loadStop.getDepartureTime()+"Test value DepartureTime");
+    							log.info(loadStop.getDepartureTime()+"Test value DepartureTime");
     						String numSequence = String.valueOf(loadStop.getArriveTime());
     						load.setGatein(numSequence);
     						lservice.updateLoad(load);
@@ -903,7 +906,7 @@ public class CarrierController {
     		/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------  */
                      
             List<LoadStop> loadStop = lsservice.findLoadStopByLoadID(Integer.valueOf(arrOfSelectItem[nSessionItems-1]));  
-            System.out.println("----------> ! "+loadStop.get(0)+" ! <----------"); 
+            log.info("----------> ! "+loadStop.get(0)+" ! <----------"); 
             for(LoadStop loadItem : loadStop) {
             	loadItem.setWaybillNumber(ForWaybillNumbers);
                 lsservice.updateLoadStop(loadItem);
@@ -934,19 +937,19 @@ public class CarrierController {
 		
 		
 		String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
-        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        log.info("----------> ! Start Loop Session Select Item ! <----------"); 
         int nSessionItem = 1;
         List<Load> allListLoad = new ArrayList<Load>();
         for (String arrSessionItem : getSessionSelectItem) {
          
-            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            log.info("Result " + nSessionItem + " | Item : " + arrSessionItem); 
             nSessionItem++;
             Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
             allListLoad.add(loadDetail);          
         }	
 
         int totalallListLoads = allListLoad.size();         	       		
-        System.out.println("Result totalallListLoads : " + totalallListLoads + " | Item totalallListLoads : " + totalallListLoads); 
+        log.info("Result totalallListLoads : " + totalallListLoads + " | Item totalallListLoads : " + totalallListLoads); 
         for(Load user_lds : user_ld){
         	
         	
@@ -980,19 +983,19 @@ public class CarrierController {
 	public String showResultSelectMultipleChecks(HttpSession session,@PathVariable String assignId,@PathVariable String showusernames,@PathVariable String loaddates,
 			  ModelMap model,HttpServletRequest request) {	 					
 		if (!checkAuthorization(session))return "redirect:/login";
-		System.out.println("----------> ! Start Loop Session Select AssignName ! "+assignId+" <----------"); 
+		log.info("----------> ! Start Loop Session Select AssignName ! "+assignId+" <----------"); 
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");	
 		model.addAttribute("loaddates", loaddates);	
         LocalDateTime formatDateTime = LocalDateTime.parse(loaddates, dtf);
         LocalDateTime datesession = LocalDateTime.now();
         
 		String[] getSessionSelectItem = (String[])session.getAttribute("sessionSelectItem");
-        System.out.println("----------> ! Start Loop Session Select Item ! <----------"); 
+        log.info("----------> ! Start Loop Session Select Item ! <----------"); 
         int nSessionItem = 1;
         List<Load> allListLoad = new ArrayList<Load>();
         for (String arrSessionItem : getSessionSelectItem) {
          
-            System.out.println("Result " + nSessionItem + " | Item : " + arrSessionItem); 
+            log.info("Result " + nSessionItem + " | Item : " + arrSessionItem); 
             nSessionItem++;
             Load loadDetail = lservice.findLoadByID(Integer.valueOf(arrSessionItem));
             allListLoad.add(loadDetail);
@@ -1009,7 +1012,7 @@ public class CarrierController {
             
             lservice.updateLoad(loadDetail);
             
-            System.out.println("Result " + datesession + " | Item : " + loadDetail); 
+            log.info("Result " + datesession + " | Item : " + loadDetail); 
             
             model.addAttribute("Success", "Assign To Driver Success : " + showusernames + ".");
             
@@ -1083,9 +1086,9 @@ public class CarrierController {
 //						
 //						LocalDate endlocalDate = LocalDate.parse(endDate);						
 //						List<Load> Monitorstatus = lservice.findLoadByDate(getThaiDateLD(startlocalDate), getThaiDateLD(endlocalDate));
-//						System.out.println("Result Test Time Start 1 " +  " | Item : " + getThaiDateLD(startlocalDate)); 
-//						System.out.println("Result Test Time Load 2 " +  " | Item : " + Monitorstatus); 
-//						 System.out.println("Result Test Time End 3 " +  " | Item : " + getThaiDateLD(endlocalDate)); 
+//						log.info("Result Test Time Start 1 " +  " | Item : " + getThaiDateLD(startlocalDate)); 
+//						log.info("Result Test Time Load 2 " +  " | Item : " + Monitorstatus); 
+//						 log.info("Result Test Time End 3 " +  " | Item : " + getThaiDateLD(endlocalDate)); 
 //						//List<Report1> report = cservice.findAll(startlocalDate.toString( DateTimeFormat.forPattern("yyyy-MM-dd")), endlocalDate.toString( DateTimeFormat.forPattern("yyyy-MM-dd")));
 //						model.addAttribute("Monitorstatus", Monitorstatus);
 //					}catch(Exception e) {

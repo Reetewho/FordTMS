@@ -53,6 +53,8 @@ public class LoadServiceImpl implements LoadService {
 			entity.setDateaccept(l.getDateaccept());
 			entity.setDateassign(l.getDateassign());
 			entity.setLoadAction(l.getLoadAction());
+			entity.setNostraStatus(l.getNostraStatus());
+			entity.setNostraRemark(l.getNostraRemark());
 		}
 	}
 

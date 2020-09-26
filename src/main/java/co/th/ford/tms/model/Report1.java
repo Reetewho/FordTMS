@@ -7,6 +7,8 @@ import lombok.Data;
 public class Report1 {
 	
 	private String systemLoadID;
+	private String nostraStatus;
+	private String nostraRemark;
 	private String alertTypeCode;	
 	private String loadDescription;	
 	private String driverId; 
@@ -32,5 +34,8 @@ public class Report1 {
 	private int id;
 	private String loadstopYardCode;
 	private int loadID;
+	private String actualStartDate;
+	private String actualEndDate;
+	private String etaDate;
 	
 }

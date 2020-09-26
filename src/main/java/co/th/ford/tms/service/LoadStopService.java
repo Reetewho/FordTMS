@@ -18,6 +18,8 @@ public interface LoadStopService {
 	
 	LoadStop findLoadStopByID(int loadStopID);
 	
+	LoadStop findLoadStopByLoadIdAndSeq(int loadStopID, int seq);
+	
 	List<LoadStop> findLoadStopByLoadID(int loadID);
 
 	List<LoadStop> findNotCompletedStatusByLoadID(int loadID);

@@ -39,6 +39,12 @@ public class Load {
 	@Column(name = "systemLoadID", nullable = false)
 	private int systemLoadID;	
 	
+	@Column(name = "nostraStatus")
+	private String nostraStatus;
+	
+	@Column(name = "nostraRemark")
+	private String nostraRemark;
+	
 	@Column(name = "alertTypeCode", nullable = false)
 	private String alertTypeCode;
 	

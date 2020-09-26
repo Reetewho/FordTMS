@@ -9,6 +9,8 @@ import co.th.ford.tms.model.LoadStop;
 public interface LoadStopDao {
 
 	LoadStop findLoadStopByID(int loadStopID);
+	
+	LoadStop findLoadStopByLoadIdAndSeq(int loadStopID, int seq);
 
 	void saveLoadStop(LoadStop loadStop);
 	

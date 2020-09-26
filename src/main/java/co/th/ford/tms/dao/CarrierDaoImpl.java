@@ -169,6 +169,7 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
 					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
 					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
+					+ " , l.nostraStatus, l.nostraRemark "
 					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
 					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
@@ -211,8 +212,8 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
 					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
 					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
-					
-
+					report1.setNostraStatus(obj[26]==null?"":obj[26].toString());
+					report1.setNostraRemark(obj[27]==null?"":obj[27].toString());
 					
 					allList.add(report1);
 				}
@@ -227,9 +228,10 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 		public List<Report1> getSystemLoadIDbyLoadID(int LoadstopbyLoadId){
 			Query query = getSession().createSQLQuery(
 					  " select l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
-					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
+					+ " ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
 					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
-					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
+					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID, "
+					+ " ls.actualStartDate, ls.actualEndDate, ls.etaDate "
 					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
 					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
@@ -270,8 +272,9 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
 					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
 					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
-					
-
+					report1.setActualStartDate(obj[26]==null?"":obj[26].toString());
+					report1.setActualEndDate(obj[27]==null?"":obj[27].toString());
+					report1.setEtaDate(obj[28]==null?"":obj[28].toString());
 					
 					allList.add(report1);
 				}

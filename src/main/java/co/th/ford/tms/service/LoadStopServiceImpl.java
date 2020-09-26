@@ -63,6 +63,10 @@ public class LoadStopServiceImpl implements LoadStopService {
 			entity.setErrorMessage(ls.getErrorMessage());
 			entity.setLastUpdateDate(ls.getLastUpdateDate());
 			entity.setLastUpdateUser(ls.getLastUpdateUser());
+			
+			entity.setActualStartDate(ls.getActualStartDate());
+			entity.setActualEndDate(ls.getActualEndDate());
+			entity.setEtaDate(ls.getEtaDate());
 		}
 	}
 
@@ -135,5 +139,10 @@ public class LoadStopServiceImpl implements LoadStopService {
 		int plus543=0;
 		if(environment.getRequiredProperty("local.datetime").equals("th"))plus543=543;
 		return (date.getYear()+plus543)+"/"+date.getMonthOfYear()+"/"+date.getDayOfMonth()+" " + date.getHourOfDay()+":"+ date.getMinuteOfHour()+":"+ date.getMillisOfSecond();
+	}
+
+	@Override
+	public LoadStop findLoadStopByLoadIdAndSeq(int loadStopID, int seq) {		
+		return dao.findLoadStopByLoadIdAndSeq(loadStopID, seq);
 	}
 }

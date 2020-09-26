@@ -110,6 +110,22 @@ public class LoadStop {
 	@Column(name = "lastUpdateUser", nullable = true)
 	private String lastUpdateUser;
 	
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "actualStartDate", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime actualStartDate;	
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "actualEndDate", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime actualEndDate;	
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
+	@Column(name = "etaDate", nullable = true)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private LocalDateTime etaDate;	
+	
 //	@Column(name = "statusFlag", nullable = true)
 //	private int statusFlag;
 	

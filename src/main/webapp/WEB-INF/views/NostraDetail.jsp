@@ -91,38 +91,35 @@
 	               <c:if test = "${not empty lsLoadID}">
 						<c:forEach items="${lsLoadID}" var="report">
 							<tr >
-							<td>${report.systemLoadID}</td>
-							<td>${report.loadDescription}</td>
-							<td>${report.stopShippingLocation}</td>
+							<td>${report.systemLoadID}</td> 
+							<td>${report.loadDescription}</td> 
+							<td>${report.stopShippingLocation}</td> 
 							<td>${report.stopShippingLocationName}</td>
-							<%-- <td>${report.truckNumber}</td> --%>
-							<%-- <td>${report.waybillNumber}</td> --%>
-							<%-- <td>${report.loadstopYardCode}</td> --%>	
-							<td>${report.arriveTime}</td>
-							<c:choose>
+							<td>${report.arriveTime}</td> 
+							<c:choose> 
 								<c:when test="${report.completedFlag=='update'}">
 									<td>${report.arriveTime}</td>
 								</c:when>										 
-									<c:when test="${report.completedFlag=='setStop'}">
-										<td>${report.movementDateTime}</td>
-									</c:when> 									
-											<c:otherwise>
-												<td></td>
-											</c:otherwise>
+								<c:when test="${report.completedFlag=='setStop'}">
+									<td>${report.movementDateTime}</td>
+								</c:when> 									
+								<c:otherwise>
+									<td>${report.actualStartDate}</td>
+								</c:otherwise>
 							</c:choose>													
-							<td>${report.departureTime}</td>							
-							<c:choose>
+							<td>${report.departureTime}</td> 						
+							<c:choose> 
 								<c:when test="${report.completedFlag=='update'}">
 									<td>${report.departureTime}</td>
 								</c:when>										 
-									<c:when test="${report.completedFlag=='setStop'}">
-										<td>${report.estimatedDateTime}</td>
-									</c:when> 									
-											<c:otherwise>
-												<td></td>
-											</c:otherwise>
+								<c:when test="${report.completedFlag=='setStop'}">
+									<td>${report.estimatedDateTime}</td>
+								</c:when> 									
+								<c:otherwise>
+									<td>${report.actualEndDate}</td>
+								</c:otherwise>
 							</c:choose>				
-							<td></td>
+							<td>${report.etaDate}</td>
 							<td></td>							
 							<td>${report.latitude}</td>
 							<td>${report.longitude}</td>		

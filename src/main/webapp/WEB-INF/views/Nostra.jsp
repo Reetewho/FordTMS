@@ -170,6 +170,7 @@
                 <tr>
                 	<th ></th>
                   	<th >Load ID</th>
+                  	<th >Nostra Status</th>
                   	<th >Route No.</th>
                   	<th >Pickup GSDB</th>
                   	<th >Pickup Supplier Name</th>
@@ -207,6 +208,17 @@
 								${report.systemLoadID}
 								</a>
 							</td>
+							<c:choose>
+								<c:when test="${report.nostraStatus=='true'}">
+									<td>${report.nostraStatus}</td>
+								</c:when>										 
+								<c:when test="${report.nostraStatus=='false'}">
+									<td>${report.nostraStatus} : ${report.nostraRemark}</td>
+								</c:when> 									
+								<c:otherwise>
+									<td></td>
+								</c:otherwise>
+							</c:choose>
 							<td>${report.loadDescription}</td>
 							<td>${report.stopShippingLocation}</td>
 							<td>${report.stopShippingLocationName}</td>
@@ -318,7 +330,7 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 		    hideIdentifier: false,
 		    columns: {
 		        identifier: [0, 'ID'],
-		        editable: [[5, 'truckNumber'], [6, 'WaybillNumber'], /* [7, 'Yard','{"1": "","2": "ABC", "3": "APC", "4": "ARC"}'], */ [7, 'DriverName','{"1": "","2": "Driver1", "3": "Driver2", "4": "Driver3"}']]
+		        editable: [[6, 'truckNumber'], [7, 'WaybillNumber'], /* [7, 'Yard','{"1": "","2": "ABC", "3": "APC", "4": "ARC"}'], */ [8, 'DriverName','{"1": "","2": "Driver1", "3": "Driver2", "4": "Driver3"}']]
 		    },
 		    scrollX: true
 		});
@@ -342,12 +354,13 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 	                        var id = item.id;
 	                        
 	                        var dataSystemLoadID = item.cells[1].innerText;
-	                        var dataRouteNo = item.cells[2].innerText;
-	                        var dataTruckNumber = item.cells[5].innerText;
-	                        var dataWaybillNumber = item.cells[6].innerText;
-	                        var dataDriver = item.cells[7].innerText;
-	                        var dataSystemID = item.cells[13].innerText;
-	                        var dataLoadID = item.cells[14].innerText;
+	                       
+	                        var dataRouteNo = item.cells[3].innerText;
+	                        var dataTruckNumber = item.cells[6].innerText;
+	                        var dataWaybillNumber = item.cells[7].innerText;
+	                        var dataDriver = item.cells[8].innerText;
+	                        var dataSystemID = item.cells[14].innerText;
+	                        var dataLoadID = item.cells[15].innerText;
 	                        var itemObjJson = {	                        	
 	                            SystemLoadID: dataSystemLoadID,
 	                            RouteNo: dataRouteNo,
