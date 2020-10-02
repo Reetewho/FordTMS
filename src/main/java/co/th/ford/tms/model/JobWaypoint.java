@@ -13,5 +13,7 @@ public class JobWaypoint {
 	private double shiptoLat;
 	private double shiptoLon;
 	private String waybillNumber;
-
+	
+	private String PlanIncomingDate;
+	private String PlanOutgoingDate;
 }

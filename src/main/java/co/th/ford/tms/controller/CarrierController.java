@@ -20,6 +20,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -93,7 +94,8 @@ public class CarrierController {
 	@Autowired
 	MessageSource messageSource;
 	
-	
+	@Value("${profile}")
+	private String profile;
 	
 	@Autowired
 	Environment environment;
@@ -115,8 +117,14 @@ public class CarrierController {
 	@RequestMapping(value = { "/load-list/{date}" }, method = RequestMethod.GET)
 	public String loadListWithDate(HttpSession session,@PathVariable String date, ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
-//		Carrier carrier = cservice.findCarrierByDate(date);	
-		Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+		Carrier carrier = null;
+		
+		if( profile.equals("dev")) {
+			carrier = cservice.findCarrierByDate(date);
+		}else {
+			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
+		}
+		
 		if(carrier==null) {
 			carrier = new Carrier();
 			carrier.setStatus("N/A");			
@@ -126,8 +134,12 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
+		if( profile.equals("dev")) {
+			carrier = cservice.findCarrierByDate(date);	
+		}else {
 			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
-//			carrier = cservice.findCarrierByDate(date);	
+
+		}
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();

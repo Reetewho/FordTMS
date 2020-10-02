@@ -174,11 +174,7 @@ public class UserController {
 
 		return "user-Reset";
 	}
-	
-	
-	
-	
-	
+
 	@RequestMapping(value = { "/userReset/{editUsername}" }, method = RequestMethod.POST)
 	public String resetEmployee(HttpSession session,@RequestParam String Conpasswordsc,  ModelMap model,	@PathVariable String editUsername) {
 		if (!checkAuthorization(session))return "redirect:/login";
@@ -194,14 +190,7 @@ public class UserController {
 	
 		return "redirect:/userList";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/*---------------------------------------------------------------*/
 
 	
@@ -275,25 +264,17 @@ public class UserController {
 				List<Department> ListDepartment = departmentService.findAllDepartment();
 				model.addAttribute("ListDepartments", ListDepartment);
 
-
 				return "adduser";
-				
-				
+	
 			}
 			
 		}
-		
-				
+					
 		  User  Newuser= new User();
 		  
 		  DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 			String strDateNow = DateTime.now().toString(dtf);
 			
-	        System.out.println("----------> ! Test Date Times  ! <----------" + LocalDateTime.parse(strDateNow, dtf)); 
-
-					  
-		 
-		  		  
 		  Newuser.setUsername(Usernamea); 
 		  Newuser.setPassword(uservice.encryptUserPassword(inputPasswordConfirm));
 		  Newuser.setName(namesa); 
@@ -304,11 +285,7 @@ public class UserController {
 		  Newuser.setDepartment(ListDepartments);
 		  Newuser.setJoiningDate(LocalDateTime.parse(strDateNow, dtf));		  
 		  Newuser.setLogoutDate(LocalDateTime.parse(strDateNow, dtf));
-		 		  
-		  
-		  
-		  
-		  
+  
 		  uservice.saveUser(Newuser);
 		  		 
 

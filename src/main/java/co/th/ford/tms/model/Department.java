@@ -33,9 +33,5 @@ public class Department {
 	
 	@Column(name = "status", nullable = true)	
 	private String status;
-		
 	
-	 
-	
-		
 }

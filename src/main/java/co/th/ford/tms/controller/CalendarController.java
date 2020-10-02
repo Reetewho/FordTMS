@@ -18,6 +18,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,8 @@ public class CalendarController {
 	@Autowired
 	Environment environment;
 	
+	@Value("${profile}")
+	private String profile;
 	
 	/*
 	 * This method will list all existing Carrier.
@@ -62,10 +65,14 @@ public class CalendarController {
 		 String endDate=end.toString("yyyy-MM-dd");
 		 model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		 model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
-		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());	 
-//		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
+	if( profile.equals("dev")) {
+		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		 model.addAttribute("carriers", c);
+	}else {
 		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
 		 model.addAttribute("carriers", c);
+	}
 		 
 		  List<String> monthList = getMonthList();
 		  List<Integer> yearList = getYearList();
@@ -143,9 +150,14 @@ public class CalendarController {
 		 model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		 model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
 		 model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
-//		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+	if( profile.equals("dev")) {
+		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		 model.addAttribute("carriers", c);
+	}else {
 		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate(end));
 		 model.addAttribute("carriers", c);
+
+	}
 		return "calendar";
 	}
 	
@@ -157,9 +169,13 @@ public class CalendarController {
 		model.addAttribute("_date", LocalDate.parse(startDate, dtf).getDayOfMonth());
 		model.addAttribute("_month", LocalDate.parse(startDate, dtf).getMonthOfYear());
 		model.addAttribute("_year", LocalDate.parse(startDate, dtf).getYear());
-//		List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+	if( profile.equals("dev")) {
+		List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
+		model.addAttribute("carriers", c);
+	}else {
 		List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(LocalDate.parse(startDate, dtf)), getThaiDate(LocalDate.parse(endDate, dtf)));
 		model.addAttribute("carriers", c);
+	}
 		
 		  List<String> monthList = getMonthList();
 		  List<Integer> yearList = getYearList();

@@ -103,7 +103,7 @@
          <c:choose>
         <c:when test="${permissionMenu.id_menu=='8'}">
         <li>
-          <a href="<c:url value='/AdminReport' />">
+          <a href="<c:url value='/adminreport' />">
             <i class="fas fa-receipt"></i> &nbsp;<span>Operation Report(Admin)</span>            
           </a>
         </li>
@@ -113,12 +113,22 @@
          <c:choose>
         <c:when test="${permissionMenu.id_menu=='8'}">
         <li>
-          <a href="<c:url value='/Nostra' />">
+          <a href="<c:url value='/nostra' />">
             <i class="fas fa-receipt"></i> &nbsp;<span>Nostra Report(Admin)</span>            
           </a>
         </li>
         </c:when>
          </c:choose>
+         
+         <%-- <c:choose>
+        <c:when test="${permissionMenu.id_menu=='8'}">
+        <li>
+          <a href="<c:url value='/trucklist' />">
+            <i class="fas fa-receipt"></i> &nbsp;<span>Truck Management(Admin)</span>            
+          </a>
+        </li>
+        </c:when>
+         </c:choose> --%>
          
          <%--  <c:choose>
         <c:when test="${permissionMenu.id_menu=='8'}">

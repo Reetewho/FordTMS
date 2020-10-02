@@ -1,6 +1,5 @@
 package co.th.ford.tms.controller;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,109 +35,110 @@ public class SecurityController {
 
 	@Autowired
 	LoadService lservice;
-	
+
 	@Autowired
 	UserService uservice;
-	
+
 	@Autowired
 	PermissionMenuService PermissionMenuService;
-	
+
 	@Autowired
 	MessageSource messageSource;
-	
-		
+
 	/*
 	 * This method will list all existing Carrier.
 	 */
-	@RequestMapping(value = {"/","/login" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
 	public String login(ModelMap model) {
 
-		
 		return "login";
 	}
-	
+
 	/*
 	 * This method will provide the medium to update an existing employee.
 	 */
 	@RequestMapping(value = { "/login" }, method = RequestMethod.POST)
-	public String login(HttpSession session,@RequestParam String username,@RequestParam String password, ModelMap model){
-		String nextPage="login";
-		if(username.trim().equals("") ) {
-			
-		    model.addAttribute("EmptyUsername",  messageSource.getMessage("NotEmpty.user.username", new String[]{username}, Locale.getDefault()));
-		}else if(password.trim().equals("")) {
-			
-		    model.addAttribute("EmptyPassword",  messageSource.getMessage("NotEmpty.user.password", new String[]{password}, Locale.getDefault()));
-		}else {
-			
+	public String login(HttpSession session, @RequestParam String username, @RequestParam String password,
+			ModelMap model) {
+		String nextPage = "login";
+		if (username.trim().equals("")) {
+
+			model.addAttribute("EmptyUsername",
+					messageSource.getMessage("NotEmpty.user.username", new String[] { username }, Locale.getDefault()));
+		} else if (password.trim().equals("")) {
+
+			model.addAttribute("EmptyPassword",
+					messageSource.getMessage("NotEmpty.user.password", new String[] { password }, Locale.getDefault()));
+		} else {
+
 			List<User> user_l = uservice.findAllUsers();
-			
+
 			for (User user_ls : user_l) {
 
-			if(user_ls !=null && user_ls.getUsername().equals(username)) {
-				
-				if(user_ls !=null && uservice.decryptUserPassword(user_ls.getPassword()).equals(password)) {
-				
-				if(user_ls.getStatus()==0) {
-					
-					model.addAttribute("InActive",  messageSource.getMessage("InActive.user.username", new String[]{username}, Locale.getDefault()));
-					
-			}else {
-				User user =uservice.findUserByusername(username);
-				int idroless = user.getRole();
-				List<PermissionMenu> permissionMenu = PermissionMenuService.getPermissionMenu(idroless);	
-				
-				
-					session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>)permissionMenu);			 
-										 
-					if(user.getRole()==1 || user.getRole()==2 ) {
-					session.setAttribute("S_FordUser", user);	
-					
-					LocalDate todaydate = LocalDate.now();	
-					String endDate=todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
-					String startDate=todaydate.withDayOfMonth(1).toString();
-					nextPage="redirect:/calendar/"+startDate+"/"+endDate;
-					
-					}else if(user.getRole()==3) {
-						session.setAttribute("S_FordUser", user);		
+				if (user_ls != null && user_ls.getUsername().equals(username)) {
 
-						List<Load> Loadlistd = lservice.findLoadByusername(username);
-						model.addAttribute("Loadlistd", Loadlistd);
-																			
-						
-						nextPage="load-list-drivers";
+					if (user_ls != null && uservice.decryptUserPassword(user_ls.getPassword()).equals(password)) {
+
+						if (user_ls.getStatus() == 0) {
+
+							model.addAttribute("InActive", messageSource.getMessage("InActive.user.username",
+									new String[] { username }, Locale.getDefault()));
+
+						} else {
+							User user = uservice.findUserByusername(username);
+							int idroless = user.getRole();
+							List<PermissionMenu> permissionMenu = PermissionMenuService.getPermissionMenu(idroless);
+
+							session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>) permissionMenu);
+
+							if (user.getRole() == 1 || user.getRole() == 2) {
+								session.setAttribute("S_FordUser", user);
+
+								LocalDate todaydate = LocalDate.now();
+								String endDate = todaydate.withDayOfMonth(todaydate.dayOfMonth().getMaximumValue()).toString();
+								String startDate = todaydate.withDayOfMonth(1).toString();
+								nextPage = "redirect:/calendar/" + startDate + "/" + endDate;
+
+							} else if (user.getRole() == 3) {
+								session.setAttribute("S_FordUser", user);
+
+								List<Load> Loadlistd = lservice.findLoadByusername(username);
+								model.addAttribute("Loadlistd", Loadlistd);
+
+								nextPage = "load-list-drivers";
+							}
+
+						}
+					} else {
+						model.addAttribute("loginFail", messageSource.getMessage("Invalid.user.username",
+								new String[] { password }, Locale.getDefault()));
 					}
-					
+				} else {
+					model.addAttribute("loginFail", messageSource.getMessage("Invalid.user.username",
+							new String[] { username }, Locale.getDefault()));
 				}
-				}else {
-					model.addAttribute("loginFail",  messageSource.getMessage("Invalid.user.username", new String[]{password}, Locale.getDefault()));
-				}
-			}else {
-				model.addAttribute("loginFail",  messageSource.getMessage("Invalid.user.username", new String[]{username}, Locale.getDefault()));
 			}
+
 		}
-			
-		}	
 		return nextPage;
 	}
-	
-	@RequestMapping(value = { "/logout/" }, method = RequestMethod.GET)		
-		public String logout(HttpSession session ) {
-			
-			User dataUser = (User)session.getAttribute("S_FordUser");
-						
-			DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-			String strDateNow = DateTime.now().toString(dtf);
-			
-	        System.out.println("----------> ! Test Date Times  ! <----------" + LocalDateTime.parse(strDateNow, dtf)); 
 
-			
-				dataUser.setLogoutDate(LocalDateTime.parse(strDateNow, dtf));
-				uservice.updateUser(dataUser);
-				
+	@RequestMapping(value = { "/logout/" }, method = RequestMethod.GET)
+	public String logout(HttpSession session) {
 
-							
-	    session.invalidate();
-	    return "redirect:/login";
+		User dataUser = (User) session.getAttribute("S_FordUser");
+
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		String strDateNow = DateTime.now().toString(dtf);
+
+		System.out.println("----------> ! Test Date Times  ! <----------" + LocalDateTime.parse(strDateNow, dtf));
+
+		if (null != dataUser) {
+			dataUser.setLogoutDate(LocalDateTime.parse(strDateNow, dtf));
+			uservice.updateUser(dataUser);
+		}
+
+		session.invalidate();
+		return "redirect:/login";
 	}
 }

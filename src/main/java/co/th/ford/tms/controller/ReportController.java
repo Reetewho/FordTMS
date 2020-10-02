@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +177,7 @@ public class ReportController {
 	 * -----------------------------------------------------------
 	 */
 
-	@RequestMapping(value = { "/AdminReport" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/adminreport" }, method = RequestMethod.GET)
 	public String logins(HttpSession session, ModelMap model) {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
@@ -190,18 +192,18 @@ public class ReportController {
 		model.addAttribute("report", report);
 		model.addAttribute("startDate", yesterday);
 		model.addAttribute("endDate", today);
-		return "AdminReport";
+		return "adminreport";
 	}
 
 	/*
 	 * This method will provide the medium to update an existing employee.
 	 */
-	@RequestMapping(value = { "/AdminReport" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/adminreport" }, method = RequestMethod.POST)
 	public String logins(HttpSession session, @RequestParam String startDate, @RequestParam String endDate,
 			ModelMap model) {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
-		String nextPage = "AdminReport";
+		String nextPage = "adminreport";
 
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
@@ -251,7 +253,7 @@ public class ReportController {
 	 * -----------------------------------------------------------
 	 */
 
-	@RequestMapping(value = { "/Nostra" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/nostra" }, method = RequestMethod.GET)
 	public String logins1(HttpSession session, ModelMap model) {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
@@ -266,18 +268,18 @@ public class ReportController {
 		model.addAttribute("report", report);
 		model.addAttribute("startDate", yesterday);
 		model.addAttribute("endDate", today);
-		return "Nostra";
+		return "nostra";
 	}
 
 	/*
 	 * This method will provide the medium to update an existing employee.
 	 */
-	@RequestMapping(value = { "/Nostra" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/nostra" }, method = RequestMethod.POST)
 	public String logins1(HttpSession session, @RequestParam String startDate, @RequestParam String endDate,
 			HttpServletRequest requestServer, ModelMap model) {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
-		String nextPage = "Nostra";
+		String nextPage = "nostra";
 
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
@@ -357,7 +359,7 @@ public class ReportController {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 		
-		String nextPage = "Nostra";
+		String nextPage = "nostra";
 
 		String json = getSelectItemData;
 		
@@ -435,20 +437,32 @@ public class ReportController {
 					JobWaypoint jobWaypoint;
 					List<JobWaypoint> lstJobWaypoint = new ArrayList<>();
 					List<LoadStop> loadStops = lsservice.findLoadStopByLoadID(intLoadID);
+					
+					
+					
 
 					for (LoadStop loadStop2 : loadStops) {
 
 						String JobWaypointNames = loadStop2.getStopShippingLocationName();
 						log.debug("Test-Load-ID " + loadStop2);
+						
+						LocalDateTime localDateTime3 = loadStop2.getArriveTime();
+								String dateFormat3 = "yyyy/MM/dd HH:mm:ss";
+								String date3 = localDateTime3.toString(dateFormat3);
+								
+						LocalDateTime localDateTime4 = loadStop2.getDepartureTime();
+								String dateFormat4 = "yyyy/MM/dd HH:mm:ss";
+								String date4 = localDateTime4.toString(dateFormat4);
 
 						loadStop2.setSystemLoads(systemLoadID);
 						loadStop2.setTruckNumber(arr.getJSONObject(i).getString("TruckNumber")); // Truck Number
 						loadStop2.setWaybillNumber(arr.getJSONObject(i).getString("WaybillNumber")); // Job Number
 						// loadStop2.setLoadstopYardCode(arr.getJSONObject(i).getString("Yard"));
 						lsservice.updateLoadStop(loadStop2);
-
 						jobWaypoint = new JobWaypoint();
 						jobWaypoint.setAssignOrder(loadStop2.getStopSequence());
+						jobWaypoint.setPlanIncomingDate(date3);
+						jobWaypoint.setPlanOutgoingDate(date4);
 						jobWaypoint.setJobWaypointCode(loadStop2.getStopShippingLocation());
 						jobWaypoint.setJobWaypointName(JobWaypointNames);
 						jobWaypoint.setDeliveryType("Both");
@@ -483,7 +497,7 @@ public class ReportController {
 					String nostraRemark = jsonResp.getString("message");
 					
 					loadID1.setNostraStatus(nostraStatus);
-//					loadID1.setNostraRemark(nostraRemark);
+					loadID1.setNostraRemark(nostraRemark.length() > 200 ? nostraRemark.substring(0, 200) : nostraRemark);
 					
 					lservice.updateLoad(loadID1);
 					
@@ -553,11 +567,11 @@ public class ReportController {
 		return nextPage;
 	}
 
-	@RequestMapping(value = { "/Nostra-Detail/{loadID}/{systemLoadID}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/nostra-detail/{loadID}/{systemLoadID}" }, method = RequestMethod.GET)
 	public String NostraDetails(HttpSession session, HttpServletRequest requestServer, @PathVariable int loadID,
 			@PathVariable int systemLoadID, ModelMap model) {
 		// if(!checkAuthorization(session))return "redirect:/login";
-		String nextPage = "NostraDetail";
+		String nextPage = "nostradetail";
 
 		List<Report1> ReportbySystemLoadId = cservice.findSystembyLoadId(loadID);
 
@@ -651,5 +665,10 @@ public class ReportController {
 		if (environment.getRequiredProperty("local.datetime").equals("th"))
 			plus543 = 543;
 		return (date.getYear() + plus543) + "-" + date.getMonthOfYear() + "-" + date.getDayOfMonth();
+//		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+//		fmt.withLocale(Locale.US);
+//		
+//		return date.toString(fmt);
+		
 	}
 }
