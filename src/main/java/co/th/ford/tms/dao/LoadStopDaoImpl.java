@@ -70,4 +70,17 @@ public class LoadStopDaoImpl extends AbstractDao<Integer, LoadStop> implements L
 		return (LoadStop) criteria.uniqueResult();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getAllTriggers() {
+        Query query = getSession().createSQLQuery("SELECT TRIGGER_NAME, "
+        		+ " DATE_FORMAT(FROM_UNIXTIME(START_TIME/1000), '%d-%m-%Y %H:%i') AS START_TIME, "
+        		+ " DATE_FORMAT(FROM_UNIXTIME(NEXT_FIRE_TIME/1000), '%d-%m-%Y %H:%i') AS NEXT_FIRE_TIME, "
+        		+ " DATE_FORMAT(FROM_UNIXTIME(PREV_FIRE_TIME/1000), '%d-%m-%Y %H:%i') AS LAST_FIRE_TIME "
+        		+ " FROM QRTZ_TRIGGERS");	
+        //Query query = getSession().createSQLQuery("SELECT * FROM qrtz_CRON_TRIGGERS WHERE TRIGGER_NAME<>:triggerName");	
+        //query.setString("triggerName", triggerName);
+        List<Object[]> list=query.list();
+		return list;		
+	
+	}
 }

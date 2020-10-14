@@ -182,6 +182,13 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
+		<!-- Quartz framework dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+			<version>2.2.3.RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

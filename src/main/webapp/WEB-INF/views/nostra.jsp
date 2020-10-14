@@ -29,29 +29,48 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-     <div class="row">
-      	<div class="col-md-12">
-      		<c:if test="${Warning!=null || Success!=null }">
-              <div class='alert ${Warning!=null?"alert-warning":"alert-success"}  alert-dismissible'>
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa  ${Warning!=null?'fa-ban':'fa-check'}"></i>${Warning!=null?'Warning!':'Success'} </h4>
-                <c:out value="${Warning!=null?Warning:Success} "></c:out>
-              </div>
-            </c:if>              
-      	</div>
-      </div>
-      <h1>
-       Nostra Report
-        <small></small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="#' />">Nostra Report</a></li>                 
-      </ol>
-    </section>
+			<section class="content-header">
+				<div class="row">
+					<div class="col-md-12">
+						<c:if test="${Error!=null}">
+							<div
+								class="alert alert-danger alert-dismissible">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+								<h4>
+									<i class="icon fa fa-ban"></i>Error!
+								</h4>
+								<c:out value="${Error}"></c:out>
+							</div>
+						</c:if>
+					</div>
+				</div>
+			
+				<div class="row">
+					<div class="col-md-12">
+						<c:if test="${Warning!=null || Success!=null }">
+							<div
+								class='alert ${Warning!=null?"alert-warning":"alert-success"}  alert-dismissible'>
+								<button type="button" class="close" data-dismiss="alert"
+									aria-hidden="true">×</button>
+								<h4>
+									<i class="icon fa  ${Warning!=null?'fa-ban':'fa-check'}"></i>${Warning!=null?'Warning!':'Success'}
+								</h4>
+								<c:out value="${Warning!=null?Warning:Success} "></c:out>
+							</div>
+						</c:if>
+					</div>
+				</div>
+				<h1>
+					Nostra Report <small></small>
+				</h1>
+				<ol class="breadcrumb">
+					<li><a href="#"><i class="fas fa-tachometer-alt"></i>
+							&nbsp;&nbsp;Home</a></li>
+					<li><a href="#' />">Nostra Report</a></li>
+				</ol>
+			</section>
 
-    <!-- Main content -->
+			<!-- Main content -->
     <section class="content">  
      	<div class="row" style="margin-bottom:20px"> 
 	     	<form method="POST" action="<c:url value='/nostra' />" data-toggle="validator" role="form" >        
@@ -360,17 +379,25 @@ var d = sd[2]+sd[1]+sd[0]+' - '+ed[2]+ed[1]+ed[0];
 	                        var dataSystemLoadID = item.cells[1].innerText;
 	                       
 	                        var dataRouteNo = item.cells[4].innerText;
+	                        var dataGsdbCode = item.cells[5].innerText;
 	                        var dataTruckNumber = item.cells[7].innerText;
 	                        var dataWaybillNumber = item.cells[8].innerText;
 	                        var dataDriver = item.cells[9].innerText;
+	                        var dataArrivePlan = item.cells[11].innerText;
+	                        var dataDeparturePlan= item.cells[13].innerText;
+	                        var dataDepartureActual = item.cells[14].innerText;
 	                        var dataSystemID = item.cells[15].innerText;
 	                        var dataLoadID = item.cells[16].innerText;
 	                        var itemObjJson = {	                        	
 	                            SystemLoadID: dataSystemLoadID,
 	                            RouteNo: dataRouteNo,
+	                            GsdbCode: dataGsdbCode,
 	                            TruckNumber: dataTruckNumber,
 	                            WaybillNumber: dataWaybillNumber,
 	                            Driverids: dataDriver,
+	                            ArrivePlan: dataArrivePlan,
+	                            DeparturePlan: dataDeparturePlan,
+	                            DepartureActual: dataDepartureActual,
 	                            SystemID: dataSystemID, 
 	                            LoadID: dataLoadID 
 	                        };

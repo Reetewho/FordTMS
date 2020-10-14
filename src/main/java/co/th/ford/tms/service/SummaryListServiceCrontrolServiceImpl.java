@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.th.ford.tms.dao.SummaryListServiceCrontrolDao;
+import co.th.ford.tms.model.Carrier;
 import co.th.ford.tms.model.SummaryListServiceCrontrol;
 
 @Service("summaryListServiceCrontrolService")
@@ -26,6 +27,13 @@ public class SummaryListServiceCrontrolServiceImpl implements SummaryListService
 	public void save(SummaryListServiceCrontrol slServiceCtrl) {
 		
 		dao.save(slServiceCtrl);
+	}
+	
+	public void update(SummaryListServiceCrontrol slServiceCtrl) {
+		SummaryListServiceCrontrol entity = dao.findByLoadID(slServiceCtrl.getLoadID());
+		if(entity!=null){
+			entity.setToken(slServiceCtrl.getToken());
+		}
 	}
 
 	@Override

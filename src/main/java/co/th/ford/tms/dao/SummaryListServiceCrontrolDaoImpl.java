@@ -28,8 +28,8 @@ public class SummaryListServiceCrontrolDaoImpl extends AbstractDao<Integer, Summ
 	public void deleteByID(String loadId) {
 		
 		Query query = getSession().createSQLQuery(
-				  " delete  tb_sl_service_ctrl tb "
-				+ " where tb.loadID = :id ");		
+				  " DELETE  FROM tb_sl_service_ctrl"
+				+ " WHERE loadID = :id ");		
 		query.setString("id", loadId);
 		query.executeUpdate();
 		

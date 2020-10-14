@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -13,6 +14,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 //import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,12 +28,15 @@ import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.PermissionMenu;
 
 import co.th.ford.tms.service.UserService;
+import co.th.ford.tms.service.CheckNostraSummaryServiceImpl;
 import co.th.ford.tms.service.LoadService;
 import co.th.ford.tms.service.PermissionMenuService;
 
 @Controller
 @RequestMapping("/")
 public class SecurityController {
+	
+	private static Logger log = Logger.getLogger(SecurityController.class);
 
 	@Autowired
 	LoadService lservice;
@@ -44,6 +49,9 @@ public class SecurityController {
 
 	@Autowired
 	MessageSource messageSource;
+	
+	@Value("${ford.status.dev}")
+	private String fordPermissionDev;
 
 	/*
 	 * This method will list all existing Carrier.
@@ -88,6 +96,12 @@ public class SecurityController {
 							User user = uservice.findUserByusername(username);
 							int idroless = user.getRole();
 							List<PermissionMenu> permissionMenu = PermissionMenuService.getPermissionMenu(idroless);
+							
+							
+							session.setAttribute("fordPermissionDev", fordPermissionDev);
+							
+							log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Show fordPermissionDev : " + fordPermissionDev);
+							
 
 							session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>) permissionMenu);
 
