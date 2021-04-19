@@ -36,7 +36,7 @@ import co.th.ford.tms.service.PermissionMenuService;
 @RequestMapping("/")
 public class SecurityController {
 	
-	private static Logger log = Logger.getLogger(SecurityController.class);
+	private static Logger log = Logger.getLogger("nostraLogger");
 
 	@Autowired
 	LoadService lservice;
@@ -52,6 +52,9 @@ public class SecurityController {
 	
 	@Value("${ford.status.dev}")
 	private String fordPermissionDev;
+	
+	@Value("${profile}")
+	private String profile;
 
 	/*
 	 * This method will list all existing Carrier.
@@ -69,6 +72,7 @@ public class SecurityController {
 	public String login(HttpSession session, @RequestParam String username, @RequestParam String password,
 			ModelMap model) {
 		String nextPage = "login";
+		log.info(">>>>>>>>>>>>>>>>>>>> Execute login action.");
 		if (username.trim().equals("")) {
 
 			model.addAttribute("EmptyUsername",
@@ -104,6 +108,9 @@ public class SecurityController {
 							
 
 							session.setAttribute("P_FordUser", (ArrayList<PermissionMenu>) permissionMenu);
+							
+							session.setAttribute("S_profile", (String) profile);
+							
 
 							if (user.getRole() == 1 || user.getRole() == 2) {
 								session.setAttribute("S_FordUser", user);
@@ -120,8 +127,17 @@ public class SecurityController {
 								model.addAttribute("Loadlistd", Loadlistd);
 
 								nextPage = "load-list-drivers";
+							}else if(user.getRole() == 4)
+							{
+								session.setAttribute("S_FordUser", user);								
+								return "redirect:/stakeholderlist";
 							}
-
+							else if(user.getRole() == 5)
+							{
+								session.setAttribute("S_FordUser", user);
+								return "redirect:/trucklist";
+							}
+								
 						}
 					} else {
 						model.addAttribute("loginFail", messageSource.getMessage("Invalid.user.username",

@@ -1,19 +1,15 @@
 package co.th.ford.tms.controller;
 
 
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -26,24 +22,16 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-
 //import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
-
 import co.th.ford.tms.model.Carrier;
 import co.th.ford.tms.model.City;
 import co.th.ford.tms.model.Department;
 import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
-import co.th.ford.tms.model.PaymentReport1;
-import co.th.ford.tms.model.PermissionMenu;
-import co.th.ford.tms.model.Report1;
 import co.th.ford.tms.model.Roles;
 import co.th.ford.tms.model.SetStopETA;
 import co.th.ford.tms.model.User;
@@ -97,6 +85,10 @@ public class CarrierController {
 	@Value("${profile}")
 	private String profile;
 	
+	@Value("${ford.truck.replace.regex}")
+	private String truckReplaceRegex;
+	
+	
 	@Autowired
 	Environment environment;
 	
@@ -134,22 +126,25 @@ public class CarrierController {
 //			carrier.setStatusFlag(1);
 			carrier.setLastUpdateDate(LocalDateTime.now());
 			cservice.saveCarrier(carrier);
-		if( profile.equals("dev")) {
-			carrier = cservice.findCarrierByDate(date);	
-		}else {
-			carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
+			if (profile.equals("dev")) {
+				carrier = cservice.findCarrierByDate(date);
+			} else {
+				carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd"))));
 
-		}
+			}
 		}			
 		if(!carrier.getStatus().equalsIgnoreCase("true")) {			
 			FindEntities fin=new FindEntities();
 			List<Load> loadList=fin.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), carrier).getLoadList();
+	
 			if(carrier.getStatus().equalsIgnoreCase("true")) {				
-				for(Load load : loadList){
-					load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
-					load.setLastUpdateDate(LocalDateTime.now());
-					lservice.saveLoad(load);
-				
+				for(Load load : loadList){		
+					Load loadData = lservice.findLoadBySystemLoadID(load.getSystemLoadID());
+					if (loadData == null) {
+						load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+						load.setLastUpdateDate(LocalDateTime.now());
+						lservice.saveLoad(load);	
+					}			
 				}
 				if(loadList.size() >0) {
 					carrier.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
@@ -179,7 +174,7 @@ public class CarrierController {
 	}
 	
 	@RequestMapping(value = { "/loadStop-list/{date}/{systemLoadID}-{loadID}" }, method = RequestMethod.GET)
-	public String loadStopList(HttpSession session,@PathVariable String date,@PathVariable int loadID,ModelMap model) {
+	public String loadStopList(HttpSession session,@PathVariable String date,@PathVariable String systemLoadID, @PathVariable int loadID,ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
 		Load load =lservice.findLoadByID(loadID);
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());	
@@ -192,6 +187,8 @@ public class CarrierController {
 				int roundLoadStop = 1;
 				for(LoadStop loadStop : loadStopList){
 	
+					loadStop.setSystemLoads(Integer.parseInt(systemLoadID));
+					
 					if(loadStop.getStopSequence()==1) {	
 						if(loadStop.getArriveTime()==null) {
 							
@@ -285,6 +282,7 @@ public class CarrierController {
 	    model.addAttribute("loadDate",  today);
 	    systemLoadID = systemLoadID.trim();
 	    
+	    log.info("SaveManualAddLoad by systemLoadID : " + systemLoadID);
 	    
 	    Carrier carrier = cservice.findCarrierByDate(getThaiDate(LocalDate.parse(loadDate, DateTimeFormat.forPattern("yyyy-MM-dd"))));	
 	    
@@ -313,11 +311,15 @@ public class CarrierController {
 				if(load.getStatus().equalsIgnoreCase("N/A")) {			
 					ProcessLoadRetrieve loadRetrieve=new ProcessLoadRetrieve(); 
 					List<LoadStop> loadStopList=loadRetrieve.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), load).getLoadStopList();
+					
+					log.info("SaveManualAddLoad by systemLoadID : " + systemLoadID + " | get loadStops data : " + loadStopList);
+					
 					if(load.getStatus().equalsIgnoreCase("true")) {
 						int numLoadStop = loadStopList.size();
 						int roundLoadStop = 1;
 						for(LoadStop loadStop : loadStopList){
-			
+							
+							loadStop.setSystemLoads(Integer.parseInt(systemLoadID));
 							if(loadStop.getStopSequence()==1) {	
 								if(loadStop.getArriveTime()==null) {
 									
@@ -349,7 +351,7 @@ public class CarrierController {
 						}
 						load.setStatus("Load");								
 						load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
-//						load.setStatusFlag(2);
+						//load.setStatusFlag(2);
 						load.setLastUpdateDate(LocalDateTime.now());
 					    load.setLoadAction(null);
 						lservice.updateLoad(load);
@@ -440,13 +442,14 @@ public class CarrierController {
 			ModelMap model, @PathVariable int loadStopID ) {
 		
         log.info("Test Session role of user : " + setStopETA.getMovementDateTime()); 
-
+      
+        
 		if(!checkAuthorization(session))return "redirect:/login";				
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());
 		User sessionUser = (User)session.getAttribute("S_FordUser");
-		
+	
 		if(sessionUser.getRole() == 2 || sessionUser.getRole() == 1 ) {
 			
 			//setStopETA.setMovementDateTime(loadStop.getArriveTime());
@@ -487,12 +490,16 @@ public class CarrierController {
 //						load.setStatusFlag(4);
 						load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 						load.setLastUpdateDate(LocalDateTime.now());
+						load.setNostraStatus("manual");
+						load.setNostraRemark("Manual update load stop.");
 						lservice.updateLoad(load);
 					}else if(!load.getStatus().equalsIgnoreCase("setStop")) {
 						load.setStatus("setStop");
 //						load.setStatusFlag(3);
 						load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 						load.setLastUpdateDate(LocalDateTime.now());
+						load.setNostraStatus("manual");
+						load.setNostraRemark("Manual update load stop.");
 						lservice.updateLoad(load);
 					}			
 					
@@ -550,11 +557,15 @@ public class CarrierController {
 				load.setStatus("Completed");
 				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 				load.setLastUpdateDate(LocalDateTime.now());
+				load.setNostraStatus("manual");
+				load.setNostraRemark("Manual update load stop.");
 				lservice.updateLoad(load);
 			}else if(!load.getStatus().equalsIgnoreCase("setStop")) {
 				load.setStatus("setStop");
 				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
 				load.setLastUpdateDate(LocalDateTime.now());
+				load.setNostraStatus("manual");
+				load.setNostraRemark("Manual update load stop.");
 				lservice.updateLoad(load);
 			}	
 			
@@ -622,124 +633,161 @@ public class CarrierController {
 	@RequestMapping(value = { "/loadStatusUpdate/{date}/{systemLoadID}-{shippingLocation}-{loadStopID}" }, method = RequestMethod.POST)	
 	public String processLoadStatusUpdate(HttpSession session,@PathVariable String date,@Valid LoadStop loadStop1, BindingResult result,
 			ModelMap model, @PathVariable int loadStopID) {
+		
 		if(!checkAuthorization(session))return "redirect:/login";
+		
 		LoadStop loadStop=lsservice.findLoadStopByID(loadStopID);		
 		Load load =lservice.findLoadByID(loadStop.getLoadID());
 		Carrier carrier = cservice.findCarrierByID(load.getCarrierID());
 		User sessionUser = (User)session.getAttribute("S_FordUser");
 		
-		if(sessionUser.getRole() == 2 || sessionUser.getRole() == 1 ) {
-			
-		load.setCarrier(carrier);		
-		loadStop.setLoad(load);
-		
-		loadStop.setStatusLoad("Inactive");
-		loadStop.setTruckNumber(loadStop1.getTruckNumber());
-		loadStop.setArriveTime(loadStop1.getArriveTime());
-		loadStop.setDepartureTime(loadStop1.getDepartureTime());
-		//----------------------------------------------------------
-		loadStop.setLatitude(loadStop1.getLatitude());
-		loadStop.setLongitude(loadStop1.getLongitude());
-		loadStop.setShipingOrder(loadStop1.getShipingOrder());
-		loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
-		loadStop.setManifest(loadStop1.getManifest());
-		loadStop.setLoadstopremark(loadStop1.getLoadstopremark());
-		//----------------------------------------------------------
-		loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
-		loadStop.setLastUpdateDate(LocalDateTime.now());
-		
-		//ปิดเพื่อไม่ให้อัพเดท
-		ProcessLoadStatusUpdate pLoadStatusUpdate=new ProcessLoadStatusUpdate();
-		pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"), environment.getRequiredProperty("webservice.SOAPAction"), loadStop);
-		
-		//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
-		//loadStop.setStatus("true");
-				
-		
-		if(loadStop.getStatus().equals("true")) {
-			loadStop.setErrorMessage("");
-			loadStop.setStatus("update");
-//			loadStop.setStatusFlag(3);
-			lsservice.updateLoadStop(loadStop);			
-			List<LoadStop> ls=lsservice.findNotCompletedStatusByLoadID(load.getLoadID());
-			
-			if(ls !=null && ls.size() ==0) {
-				load.setStatus("Completed");
-//				load.setStatusFlag(4);
-				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
-				load.setLastUpdateDate(LocalDateTime.now());
-				lservice.updateLoad(load);
-			}else if(!load.getStatus().equalsIgnoreCase("In transit")) {
-				load.setStatus("In transit");
-//				load.setStatusFlag(3);
-				load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
-				load.setLastUpdateDate(LocalDateTime.now());
-				lservice.updateLoad(load);
-			}			
-			model.addAttribute("Success", "Load Status Update of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+"  processed successfully");
-			
-		}else {
-			model.addAttribute("Error", "Process Load Status Update of  Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+loadStop.getErrorMessage());
-			
-		}
-			model.addAttribute("loadDate", date);
-			model.addAttribute("load", load);	
-			model.addAttribute("loadStop", loadStop);
-			return "load-status-update";
-	
-		}else {
-			
-			load.setCarrier(carrier);		
+		if(sessionUser.getRole() == 2 || sessionUser.getRole() == 1){
+
+			load.setCarrier(carrier);
 			loadStop.setLoad(load);
-			
+
 			loadStop.setStatusLoad("Inactive");
 			loadStop.setTruckNumber(loadStop1.getTruckNumber());
 			loadStop.setArriveTime(loadStop1.getArriveTime());
 			loadStop.setDepartureTime(loadStop1.getDepartureTime());
-			//----------------------------------------------------------
+			// ----------------------------------------------------------
+			loadStop.setLatitude(loadStop1.getLatitude());
+			loadStop.setLongitude(loadStop1.getLongitude());
 			loadStop.setShipingOrder(loadStop1.getShipingOrder());
-			//loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
+			loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
+			loadStop.setManifest(loadStop1.getManifest());
+			loadStop.setLoadstopremark(loadStop1.getLoadstopremark());
+			// ----------------------------------------------------------
+			loadStop.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
+			loadStop.setLastUpdateDate(LocalDateTime.now());
+
+			
+			
+			String strTruckNumber = loadStop.getTruckNumber();
+			Pattern p = Pattern.compile(truckReplaceRegex);		
+			Matcher matcherTruckNumber = p.matcher(strTruckNumber);
+			//strTruckNumber = matcherTruckNumber.replaceAll(replaceTruckNumber);
+			int countMatch = 0;
+
+			while(matcherTruckNumber.find()){
+				countMatch++;
+			}
+			
+			if (countMatch > 0) {
+				strTruckNumber = strTruckNumber.substring((int) strTruckNumber.indexOf("-") + 1);
+				log.info("Send Trucknumber No[TH] : " + strTruckNumber + " by SystemLoadID : " + loadStop.getLoad().getSystemLoadID());
+			}else {
+				log.info("Send Trucknumber No[ENG] : " + strTruckNumber + " by SystemLoadID : " + loadStop.getLoad().getSystemLoadID());
+			}
+			
+			
+			
+			// ปิดเพื่อไม่ให้อัพเดท
+			ProcessLoadStatusUpdate pLoadStatusUpdate = new ProcessLoadStatusUpdate();
+			pLoadStatusUpdate.submit(environment.getRequiredProperty("webservice.Authorization"),
+					environment.getRequiredProperty("webservice.SOAPAction"), loadStop, strTruckNumber);
+
+			// การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
+			// loadStop.setStatus("true");
+
+			if (loadStop.getStatus().equals("true")) {
+				loadStop.setErrorMessage("");
+				loadStop.setStatus("update");
+//			loadStop.setStatusFlag(3);
+				lsservice.updateLoadStop(loadStop);
+				List<LoadStop> ls = lsservice.findNotCompletedStatusByLoadID(load.getLoadID());
+
+				if (ls != null && ls.size() == 0) {
+					load.setStatus("Completed");
+//				load.setStatusFlag(4);
+					load.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateDate(LocalDateTime.now());
+					load.setNostraStatus("manual");
+					load.setNostraRemark("Manual update load stop.");
+					lservice.updateLoad(load);
+				} else if (!load.getStatus().equalsIgnoreCase("In transit")) {
+					load.setStatus("In transit");
+//				load.setStatusFlag(3);
+					load.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateDate(LocalDateTime.now());
+					load.setNostraStatus("manual");
+					load.setNostraRemark("Manual update load stop.");
+					lservice.updateLoad(load);
+				}
+				model.addAttribute("Success", "Load Status Update of Load ID : " + load.getSystemLoadID()
+						+ " ,  Shipping Location :" + loadStop.getStopShippingLocation() + "  processed successfully");
+
+			} else {
+				model.addAttribute("Error",
+						"Process Load Status Update of  Load ID : " + load.getSystemLoadID() + " ,  Shipping Location :"
+								+ loadStop.getStopShippingLocation() + " Error :" + loadStop.getErrorMessage());
+
+			}
+			model.addAttribute("loadDate", date);
+			model.addAttribute("load", load);
+			model.addAttribute("loadStop", loadStop);
+			return "load-status-update";
+
+		}else {
+
+			load.setCarrier(carrier);
+			loadStop.setLoad(load);
+
+			loadStop.setStatusLoad("Inactive");
+			loadStop.setTruckNumber(loadStop1.getTruckNumber());
+			loadStop.setArriveTime(loadStop1.getArriveTime());
+			loadStop.setDepartureTime(loadStop1.getDepartureTime());
+			// ----------------------------------------------------------
+			loadStop.setShipingOrder(loadStop1.getShipingOrder());
+			// loadStop.setWaybillNumber(loadStop1.getWaybillNumber());
 			loadStop.setManifest(loadStop1.getManifest());
 			loadStop.setLoadstopremark(loadStop1.getLoadstopremark());
 			loadStop.setLatitude(loadStop1.getLatitude());
 			loadStop.setLongitude(loadStop1.getLongitude());
-			//----------------------------------------------------------
-			loadStop.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+			// ----------------------------------------------------------
+			loadStop.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
 			loadStop.setLastUpdateDate(LocalDateTime.now());
-			
-			//การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
+
+			// การปิดเพื่อนให้ ProcessLoadStatusUpdate ส่งไปไม่ได้เพื่อเป็นการทดสอบระบบ
 			loadStop.setStatus("true");
-								
-			if(loadStop.getStatus().equals("true")) {
+
+			if (loadStop.getStatus().equals("true")) {
 				loadStop.setErrorMessage("");
 				loadStop.setStatus("update");
 //				loadStop.setStatusFlag(3);
-				lsservice.updateLoadStop(loadStop);			
-				List<LoadStop> ls=lsservice.findNotCompletedStatusByLoadID(load.getLoadID());
-				
-				if(ls !=null && ls.size() ==0) {
+				lsservice.updateLoadStop(loadStop);
+				List<LoadStop> ls = lsservice.findNotCompletedStatusByLoadID(load.getLoadID());
+
+				if (ls != null && ls.size() == 0) {
 					load.setStatus("Checked-in");
 //					load.setStatusFlag(4);
-					load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
 					load.setLastUpdateDate(LocalDateTime.now());
+					load.setNostraStatus("manual");
+					load.setNostraRemark("Manual update load stop.");
 					lservice.updateLoad(load);
-				}else if(!load.getStatus().equalsIgnoreCase("In transit")) {
+				} else if (!load.getStatus().equalsIgnoreCase("In transit")) {
 					load.setStatus("In transit");
 //					load.setStatusFlag(3);
-					load.setLastUpdateUser(((User)session.getAttribute("S_FordUser")).getUsername());
+					load.setLastUpdateUser(((User) session.getAttribute("S_FordUser")).getUsername());
 					load.setLastUpdateDate(LocalDateTime.now());
+					load.setNostraStatus("manual");
+					load.setNostraRemark("Manual update load stop.");
 					lservice.updateLoad(load);
-				}			
-				model.addAttribute("Success", "Load Status Update of Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+"  processed successfully");
-				
-			}else {
-				model.addAttribute("Error", "Process Load Status Update of  Load ID : "+load.getSystemLoadID()+" ,  Shipping Location :"+loadStop.getStopShippingLocation()+" Error :"+loadStop.getErrorMessage());
-				
+				}
+				model.addAttribute("Success", "Load Status Update of Load ID : " + load.getSystemLoadID()
+						+ " ,  Shipping Location :" + loadStop.getStopShippingLocation() + "  processed successfully");
+
+			} else {
+				model.addAttribute("Error",
+						"Process Load Status Update of  Load ID : " + load.getSystemLoadID() + " ,  Shipping Location :"
+								+ loadStop.getStopShippingLocation() + " Error :" + loadStop.getErrorMessage());
+
 			}
-				model.addAttribute("loadDate", date);
-				model.addAttribute("load", load);	
-				model.addAttribute("loadStop", loadStop);
-				return "load-status-update";
+			model.addAttribute("loadDate", date);
+			model.addAttribute("load", load);
+			model.addAttribute("loadStop", loadStop);
+			return "load-status-update";
 		}
 	}
 	

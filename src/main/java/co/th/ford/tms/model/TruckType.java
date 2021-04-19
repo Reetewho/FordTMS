@@ -23,17 +23,17 @@ public class TruckType {
 	
 	
 	@Id	
-	@Column(name = "id", nullable = false)	
+	@Column(name = "TYPE_ID", nullable = false)	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int TRUCKTYPE_id;	
 	
 	
-	@Column(name = "TYPE", nullable = true)
+	@Column(name = "TYPE_TYPE", nullable = true)
 	private String TRUCKTYPE_TYPE;	
 	
 
 	
-	@Column(name = "STATUS", nullable = true)
+	@Column(name = "TYPE_STATUS", nullable = true)
 	private String TRUCKTYPE_STATUS;	
 	
 	

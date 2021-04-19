@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AP Transport Center | Nostra Detail </title>
+  <title>AP Transport Center | Job Monitor Detail </title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
 </head>
 <style>
@@ -42,12 +42,12 @@
       	</div>
       </div>
       <h1>
-       Nostra Detail
+       Job Monitor Detail
         <small></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fas fa-tachometer-alt"></i> &nbsp;&nbsp;Home</a></li>
-        <li><a href="#' />">Nostra Detail</a></li>                 
+        <li><a href="#' />">Job Monitor Detail</a></li>                 
       </ol>
     </section>
 
@@ -75,15 +75,17 @@
                   	<th >Arrive Actual</th>	
 					<th >Departure Plan</th>
 					<th >Departure Actual</th>
-					<th >ETA</th>
-					<th >Color</th>
+					<!--th >ETA</th -->
+					<!--th >Color</th -->
                   	<!-- <th >Driver Name</th> -->
                   	<!-- <th >Last Update</th> -->                 	
-					<th >Latitude</th>
-					<th >Longitude</th>
+					<!--th >Latitude</th -->
+					<!--th >Longitude</th -->
 				
 					<th style="display:none;"></th>
 					<th style="display:none;"></th>
+					<th></th>
+					<th></th> 
 					        	       
                 </tr>
                 </thead>
@@ -91,40 +93,90 @@
 	               <c:if test = "${not empty lsLoadID}">
 						<c:forEach items="${lsLoadID}" var="report">
 							<tr >
-							<td>${report.systemLoadID}</td> 
-							<td>${report.loadDescription}</td> 
-							<td>${report.stopShippingLocation}</td> 
-							<td>${report.stopShippingLocationName}</td>
-							<td>${report.arriveTime}</td> 
-							<c:choose> 
-								<c:when test="${report.completedFlag=='update'}">
-									<td>${report.arriveTime}</td>
-								</c:when>										 
-								<c:when test="${report.completedFlag=='setStop'}">
-									<td>${report.movementDateTime}</td>
-								</c:when> 									
-								<c:otherwise>
-									<td>${report.actualStartDate}</td>
-								</c:otherwise>
-							</c:choose>													
-							<td>${report.departureTime}</td> 						
-							<c:choose> 
-								<c:when test="${report.completedFlag=='update'}">
-									<td>${report.departureTime}</td>
-								</c:when>										 
-								<c:when test="${report.completedFlag=='setStop'}">
-									<td>${report.estimatedDateTime}</td>
-								</c:when> 									
-								<c:otherwise>
-									<td>${report.actualEndDate}</td>
-								</c:otherwise>
-							</c:choose>				
-							<td>${report.etaDate}</td>
-							<td></td>							
-							<td>${report.latitude}</td>
-							<td>${report.longitude}</td>		
-							<td style="display:none;">${report.id}</td>
-							<td style="display:none;">${report.loadID}</td>
+								<td>${report.systemLoadID}</td> 
+								<td>${report.loadDescription}</td> 
+								<td>${report.stopShippingLocation}</td> 
+								<td>${report.stopShippingLocationName}</td>
+								<td>${report.arriveTime}</td> 
+								<c:choose>
+									<c:when test="${report.nostraStatus=='manual'}">
+										<c:choose>
+											<c:when test="${report.completedFlag=='update'}">
+												<td>${report.departureTime}</td>
+											</c:when>										 
+											<c:when test="${report.completedFlag=='setStop'}">
+												<td>${report.estimatedDateTime}</td>
+											</c:when> 									
+											<c:otherwise>
+												<td></td>
+											</c:otherwise>
+										</c:choose>		
+									</c:when>									
+									<c:otherwise>	
+										<td>${report.actualStartDate}</td>	
+									</c:otherwise>
+								</c:choose>											
+								<td>${report.departureTime}</td>
+								<c:choose>
+									<c:when test="${report.nostraStatus=='manual'}">
+										<c:choose>
+											<c:when test="${report.completedFlag=='update'}">
+												<td>${report.departureTime}</td>
+											</c:when>										 
+											<c:when test="${report.completedFlag=='setStop'}">
+												<td>${report.estimatedDateTime}</td>
+											</c:when> 									
+											<c:otherwise>
+												<td></td>
+											</c:otherwise>
+										</c:choose>	
+									</c:when>									
+									<c:otherwise>	
+										<td>${report.actualEndDate}</td>	
+									</c:otherwise>
+								</c:choose>	
+								<!-- td>${report.etaDate}</td -->
+								<!-- td></td -->							
+								<!-- td>${report.latitude}</td -->
+								<!-- td>${report.longitude}</td -->		
+								<td style="display:none;">${report.id}</td>
+								<td style="display:none;">${report.loadID}</td>
+								
+								<c:choose>
+									<c:when test="${report.nostraStatus=='true'}">
+										<td></td>
+									</c:when>									
+									<c:otherwise>
+										<td>
+											<a href="<c:url value='/loadStatusUpdate/${report.loadDate}/${report.systemLoadID}-${report.stopShippingLocation}-${report.id}' />">
+											On Times
+											</a>
+										</td>
+									</c:otherwise>
+								</c:choose>	
+								
+			
+							 	<c:choose>
+									<c:when test="${report.nostraStatus=='true'}">
+										<td></td>
+									</c:when>									
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${report.completedFlag=='update'}">
+												<td></td>
+											</c:when>
+											<c:otherwise>
+												<td>
+													<a href="<c:url value='/setStopETA/${report.loadDate}/${report.systemLoadID}-${report.stopShippingLocation}-${report.id}' />">
+													Delay
+													</a>
+												</td>
+											</c:otherwise>
+										</c:choose>	
+									</c:otherwise>
+								</c:choose>	
+								
+						
 							</tr>
 						</c:forEach>
 					</c:if> 

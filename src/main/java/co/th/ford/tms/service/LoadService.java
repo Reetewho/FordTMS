@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import co.th.ford.tms.model.Load;
+import co.th.ford.tms.model.ReportSystemLoadData;
 
 
 
@@ -31,6 +32,9 @@ public interface LoadService {
 	
 	Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID);
 
+	Load findLoadBySystemLoadID(int systemLoadID);
+	
+	List<ReportSystemLoadData> findLoadGroupBySystemLoad(int systemLoadID);
 	
 	
 }

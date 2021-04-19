@@ -21,8 +21,12 @@ public interface LoadStopService {
 	LoadStop findLoadStopByLoadIdAndSeq(int loadStopID, int seq);
 	
 	List<LoadStop> findLoadStopByLoadID(int loadID);
+	
+	List<LoadStop> findLoadStopByLoadIDAndNullDptArv(int loadID);
 
 	List<LoadStop> findNotCompletedStatusByLoadID(int loadID);
 	
 	long datetimecount(String datetimecounts);
+	
+	void deleteLoadStopByLoadID(int loadID);
 }

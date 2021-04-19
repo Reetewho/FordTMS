@@ -20,11 +20,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import co.th.ford.tms.model.Employee;
-
 public class testAPI_Nostra {
 
-    private static final String LOGIN_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/user/login";
+    private static final String LOGIN_NOSTRA_URL = "https://l2apitracking.nostralogistics.com/api/user/login";
     private static final String CREATE_NOSTRA_URL = "https://l2stguatapitracking.nostralogistics.com/api/shipment/Create";
     private static RestTemplate restTemplate = new RestTemplate();
     
@@ -33,7 +31,7 @@ public class testAPI_Nostra {
     	testAPI_Nostra springRestClient = new testAPI_Nostra();
 
     	springRestClient.postLoginNostra();
-    	springRestClient.postCreateNostra();
+    	//springRestClient.postCreateNostra();
 	}
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -43,8 +41,8 @@ public class testAPI_Nostra {
 	private void postLoginNostra() {
 
 		Map map = new HashMap<String, String>();
-		map.put("username", "marcotest");
-		map.put("password", "nostra1234");
+		map.put("username", "marcotechnology");
+		map.put("password", "Z)2opyqj");
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> resp = restTemplate.postForEntity(LOGIN_NOSTRA_URL, map, String.class);
@@ -56,6 +54,7 @@ public class testAPI_Nostra {
 		try {
 			root = objectMapper.readTree(resp.getBody());
 			System.out.println("Show body [companyId] : " + root.path("companyId").asText());
+			System.out.println("Show body [token] : " + root.path("token").asText());
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

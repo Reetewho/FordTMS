@@ -4,16 +4,16 @@ package co.th.ford.tms.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.soap.SOAPBody;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
-
 import co.th.ford.tms.model.Load;
 import co.th.ford.tms.model.LoadStop;
-import co.th.ford.tms.webservice.Base;
 
 public class ProcessLoadRetrieve extends Base{
+	
+	private static Logger log = Logger.getLogger(ProcessLoadRetrieve.class);
 		
 	private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";
 	//private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
@@ -70,7 +70,8 @@ public class ProcessLoadRetrieve extends Base{
 			}
 					
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error("Error[Exception] : " + e.getMessage() + " by SystemLoadID : " + loadModel.getSystemLoadID());
 		}
 		return loadModel;
 	}

@@ -3,6 +3,7 @@ package co.th.ford.tms.dao;
 import java.util.List;
 
 import co.th.ford.tms.model.Truck;
+import co.th.ford.tms.model.TruckEdit;
 
 public interface TruckDao {
 
@@ -15,4 +16,7 @@ public interface TruckDao {
 	List<Truck> findBytype(int trucktype);
 	
 	List<Truck> findAllTruckNumber();
+	
+	List<TruckEdit> getTruckEdit(String TruckEdit);
+
 }

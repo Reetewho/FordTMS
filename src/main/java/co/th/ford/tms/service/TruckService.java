@@ -3,6 +3,7 @@ package co.th.ford.tms.service;
 import java.util.List;
 
 import co.th.ford.tms.model.Truck;
+import co.th.ford.tms.model.TruckEdit;
 
 
 public interface TruckService {	
@@ -19,5 +20,6 @@ public interface TruckService {
 	
 	Truck findByTrucknumber(String trucknumber);
 
+	List<TruckEdit> getTruckEdit(String TruckEdit);
 
 }

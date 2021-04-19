@@ -83,30 +83,30 @@
 	                <c:forEach items="${GSDB}" var="GSDB">
 						<tr >
 						<td>${i=i+1}</td>
-						<td>${GSDB.GSDBCODE}</td>
-						<td>${GSDB.GSDBNAME}</td>
-						<td>${GSDB.GSDBRADIUS}</td>						
-						<td>${GSDB.GSDBLATITUDE}</td>
-						<td>${GSDB.GSDBLONGITUDE}</td>
+						<td>${GSDB.gsdbCode}</td>
+						<td>${GSDB.gsdbName}</td>
+						<td>${GSDB.gsdbRadius}</td>						
+						<td><fmt:formatNumber type="number" pattern="###.######" value="${GSDB.gsdbLatitude}" /></td>
+						<td><fmt:formatNumber type="number" pattern="###.######" value="${GSDB.gsdbLongtitude}" /></td>
 						<%-- <td>${GSDB.GSDBDELIVERYTYPE}</td> --%>
-						<td>${GSDB.GSDBUPDATEDATE}</td>
-						<td>${GSDB.GSDBUPDATEBY}</td>
+						<td>${GSDB.gsdbUpdateDate}</td>
+						<td>${GSDB.gsdbUpdateBy}</td>
 						<c:choose>
-							<c:when test="${GSDB.GSDBSTARUS=='1'}">
+							<c:when test="${GSDB.gsdbStatus=='1'}">
 								<td>Activate</td>
 							</c:when>
 							<c:otherwise>
 								<td>Deactivate</td>
 							</c:otherwise>
 						</c:choose>				
-						<td align="center"><a href="<c:url value='/edit-gsdb/${GSDB.GSDBCODE}' />"><img  src="<c:url value='/assets/dist/img/edit.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a></td>					
+						<td align="center"><a href="<c:url value='/edit-gsdb/${GSDB.gsdbCode}' />"><img  src="<c:url value='/assets/dist/img/edit.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a></td>					
 						<td align="center" >
 						<c:choose>
-							<c:when test="${GSDB.GSDBSTARUS=='0'}">
-						<a href="<c:url value='/GSDBcode/${GSDB.GSDBCODE}' />"><img  src="<c:url value='/assets/dist/img/True.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>																				
+							<c:when test="${GSDB.gsdbStatus=='0'}">
+						<a href="<c:url value='/GSDBcode/${GSDB.gsdbCode}' />"><img  src="<c:url value='/assets/dist/img/True.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>																				
 						</c:when>
 						<c:otherwise>
-						<a href="<c:url value='/GSDBcode/${GSDB.GSDBCODE}' />"><img src="<c:url value='/assets/dist/img/false.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px"></a> 
+						<a href="<c:url value='/GSDBcode/${GSDB.gsdbCode}' />"><img src="<c:url value='/assets/dist/img/false.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px"></a> 
 						</c:otherwise>
 							</c:choose>
 						</td>				

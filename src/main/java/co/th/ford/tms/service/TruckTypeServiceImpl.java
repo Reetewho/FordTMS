@@ -19,4 +19,12 @@ public class TruckTypeServiceImpl implements TruckTypeService {
 	public List<TruckType> findAllTruckType() {
 		return dao.findAllTruckType();
 	}
+	
+	public TruckType findByTruckType(String TruckType) {
+		return dao.findByTruckType(TruckType);
+	}
+	
+	public void saveTruckType(TruckType TruckType) {
+		dao.saveTruckType(TruckType);
+	}
 }

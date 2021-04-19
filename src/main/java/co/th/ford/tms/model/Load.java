@@ -9,13 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -103,9 +99,16 @@ public class Load {
 	@Column(name = "lastUpdateUser", nullable = true)
 	private String lastUpdateUser;
 	
-	
 	@Column(name = "loadAction", nullable = true)
-	 private String loadAction;
+	private String loadAction;
+	
+	@Column(name = "etaColor", nullable = true)
+	private String etaColor;
+	
+	@Column(name = "shipmentStatusId", nullable = true)
+	private String shipmentStatusId;
+	
+	
 	
 //	@Column(name = "statusFlag", nullable = true)
 //	private int statusFlag;

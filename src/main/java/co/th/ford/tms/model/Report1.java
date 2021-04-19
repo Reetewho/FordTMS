@@ -37,5 +37,10 @@ public class Report1 {
 	private String actualStartDate;
 	private String actualEndDate;
 	private String etaDate;
+	private String etaColor;
+	private String loadDate;
+	private String shipmentStatusId;
+	private String shipmentStatusDesc;
+	private String loadCompletedFlag;
 	
 }

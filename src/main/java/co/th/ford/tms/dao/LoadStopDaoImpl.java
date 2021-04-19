@@ -6,7 +6,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import co.th.ford.tms.model.LoadStop;
 
 
@@ -33,6 +32,16 @@ public class LoadStopDaoImpl extends AbstractDao<Integer, LoadStop> implements L
 	}
 	
 	
+	public void deleteLoadStopByLoadID(int loadID) {
+		Query query = getSession().createSQLQuery(
+				  " Delete "
+				+ " FROM tb_loadstop "
+				+ " WHERE loadID = :loadID ");
+		query.setInteger("loadID", loadID);
+		query.executeUpdate();	
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<LoadStop> findAllLoadStops() {
 		Criteria criteria = createEntityCriteria();
@@ -43,6 +52,17 @@ public class LoadStopDaoImpl extends AbstractDao<Integer, LoadStop> implements L
 	public List<LoadStop> findLoadStopByLoadID(int loadID) {
 		Criteria criteria = createEntityCriteria();
 		criteria.add(Restrictions.eq("loadID", loadID));
+		return (List<LoadStop>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoadStop> findLoadStopByLoadIDAndNullDptArv(int loadID) {
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("loadID", loadID));
+		criteria.add(Restrictions.or(
+				   Restrictions.isNull("departureTime"),
+				   Restrictions.isNull("arriveTime"))
+				);
 		return (List<LoadStop>) criteria.list();
 	}
 

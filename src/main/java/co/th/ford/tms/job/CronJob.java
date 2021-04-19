@@ -27,17 +27,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
 import co.th.ford.tms.model.SummaryListServiceCrontrol;
-import co.th.ford.tms.schedule.ScheduledJob;
 import co.th.ford.tms.service.CheckNostraSummaryService;
 import co.th.ford.tms.service.JobService;
 import co.th.ford.tms.service.SummaryListServiceCrontrolService;
 
 public class CronJob extends QuartzJobBean implements InterruptableJob{
 	
+	private static Logger log = Logger.getLogger("nostraLogger");
 	
-	private static Logger log = Logger.getLogger(ScheduledJob.class);
+	//private static Logger log = Logger.getLogger(ScheduledJob.class);
 	
 	@Autowired
 	private SummaryListServiceCrontrolService slServiceControl;
@@ -73,17 +72,21 @@ public class CronJob extends QuartzJobBean implements InterruptableJob{
 		JobKey key = jobExecutionContext.getJobDetail().getKey();
 		System.out.println(DateTime.now().toString(dtf) + " SYSTEM-OUT " + CronJob.class.getName() + " ----->Cron Job started with key :" + key.getName() + ", Group :"+key.getGroup() + " , Thread Name :"+Thread.currentThread().getName() + " ,Time now :"+new Date());
 
-		String strLoadID = "";
+		String strLoadID = "", strSystemLoadID="";
 		JobDataMap jobDataMap = new JobDataMap();
 		jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
 		strLoadID = (String) jobDataMap.get("loadID");
+		//strSystemLoadID = (String) jobDataMap.get("systemLoadID");
 		
 
 		
 		log.debug("Execute >>>>>>>>>>>>>>>>>>> Thread : Run LoadID : "+ strLoadID);
+		//log.debug("Execute >>>>>>>>>>>>>>>>>>> Thread : Run SystemLoadID : "+ strSystemLoadID);
 		
 		log.debug("Execute >>>>>>>>>>>>>>>>>>> checkSummaryListJob begin");
 		//System.out.println(">>>>>>>>>>>>>>>>>>>> checkSummaryListJob begin");
+		
+		
 		
 		try {
 			
@@ -163,16 +166,17 @@ public class CronJob extends QuartzJobBean implements InterruptableJob{
 
 			//jobService.deleteJob(key.getName());
 			
-			log.debug("checkSummaryListJob end");
+			log.info("checkSummaryListJob end");
 
 		} catch (final Exception e) {
-			log.error("checkSummaryListJob error ", e);
+			log.error("checkSummaryListJob error " + e.getMessage());
 		}
+		
 	}
 
 	@Override
 	public void interrupt() throws UnableToInterruptJobException {
-		System.out.println("Stopping thread... ");
+		log.error("Stopping thread, because : UnableToInterruptJobException.");
 		toStopFlag = false;
 	}
 

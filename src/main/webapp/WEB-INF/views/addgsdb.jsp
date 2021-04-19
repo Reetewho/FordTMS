@@ -64,37 +64,61 @@
                  <div class="form-group">
                   <label  class="col-sm-4 control-label">GSDB Code :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="GSDBCode" name="GSDBCode" class="form-control" placeholder="Insert Your GSDB Code" data-minlength="2" data-error="Minimum of 3 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
+	                   <input  id="GSDBCode" name="GSDBCode" class="form-control" placeholder="Insert Your GSDB Code" data-minlength="2" data-error="Minimum of 3 characters" maxlength="200" data-error="Maximum of 30 characters" required="required" />                    
 	                  </div>
                 </div>
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">GSDB Name :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="GSDBName" name="GSDBName" class="form-control" placeholder="Insert Your GSDB Name" data-minlength="2" data-error="Minimum of 3 characters" maxlength="120" data-error="Maximum of 120 characters" required="required" />                    
+	                   <input  id="GSDBName" name="GSDBName" class="form-control" placeholder="Insert Your GSDB Name" data-minlength="2" data-error="Minimum of 200 characters" maxlength="200" data-error="Maximum of 200 characters" required="required" />                    
 	                  </div>
                 </div>
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Radius :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="Radius" name="Radius" class="form-control" placeholder="Insert Your Radius" data-minlength="2" data-error="Minimum of 2 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
+	                   <input  id="Radius" name="Radius" class="form-control" placeholder="Insert Your Radius"  data-error="Minimum of 2 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
 	                  </div>
                 </div>
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Latitude :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="Latitude" name="Latitude" class="form-control" placeholder="Insert Your Latitude" data-minlength="2" data-error="Minimum of 6 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
+	                   <input  id="Latitude" name="Latitude" class="form-control" placeholder="Insert Your Latitude"  data-error="Minimum of 6 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
 	                  </div>
                 </div> 
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">Longitude :</label>
 	                  <div class="col-sm-7">
-	                   <input  id="Longitude" name="Longitude" class="form-control" placeholder="Insert Your Longitude" data-minlength="2" data-error="Minimum of 6 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
+	                   <input  id="Longitude" name="Longitude" class="form-control" placeholder="Insert Your Longitude" data-error="Minimum of 6 characters" maxlength="20" data-error="Maximum of 20 characters" required="required" />                    
 	                  </div>
-                </div>                   
+                </div>    
+                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">จังหวัด :</label>
+	                  <div class="col-sm-7">	                   
+	                    <select id="provinceId" name="provinceId" class="form-control selectpicker" data-live-search="true">
+				          <c:if test = "${not empty provinces}">
+				          <c:forEach items="${provinces}" var="findProvince">
+				           <option value="${findProvince.id}">
+				            ${findProvince.nameTh}
+				           </option>
+				          </c:forEach>
+				          </c:if>  
+				       </select>   
+	                   
+	                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">Area Zone :</label>
+	                  <div class="col-sm-7">
+	                   <input  id="areaZone" name="areaZone" class="form-control" data-error="Maximum of 30 characters" placeholder="Insert Your areaZone" required="required" />                    
+	                  </div>
+                </div>
+                               
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-                <a href="<c:url value='/gsdb-list/' />"><button type="button" class="btn btn-default">Cancel</button></a>
+                <a href="<c:url value='/gsdblist/' />"><button type="button" class="btn btn-default">Cancel</button></a>
                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
               </div>
               <!-- /.box-footer -->
@@ -193,7 +217,7 @@ function myFunction()
 		} */
 	}
 	
-	
+	}
 	
 	
 	

@@ -8,8 +8,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AP Transport Center | Truck Management</title>
   <%@ include file="/WEB-INF/include/cssInclude.jsp" %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" id="allBody">
 <div class="wrapper">
 
   <%@ include file="/WEB-INF/include/header.jsp" %>
@@ -20,13 +23,10 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       Truck management
-        <small></small>
-        
-<%-- 		<a href="<c:url value='/adduser' />"><img  src="<c:url value='/assets/dist/img/add.png' />" class="img-circle" alt="User Image" style="background-color:white" width= "20px" height="20px" ></a>
- --%>        
+       Truck Management
+        <small></small>     
  			<a href="<c:url value='/addtruck' />"><button type="button" class="btn btn-default">Add</button></a>
-        
+ 			<a ><button onclick="clickimport()" type="button" class="btn btn-default">Import</button></a>
       </h1>
 								
       <ol class="breadcrumb">
@@ -52,28 +52,35 @@
             </c:if>           
       	</div>
       </div>
+      <form method="POST" enctype="multipart/form-data" id="frm-payment" action="<c:url value='/UpdateTruckExcel' />" >
+		    <input style="display:none;" id="upload" type=file  name="files[]">		    
+		</form>
+
             <!-- /.box-header -->
             <div class="box-body ">
               <table id="TruckTable"  class="table table-bordered table-striped" style="width : 100% ">
                  <thead>
-                <tr>
+                <tr>              		
                 	<th >No.</th>
-					<th >TruckNumber</th>
+					<th >Truck Number</th>
+					<th >Head Or Tail</th>
 					<th >Truck Type</th>
-					<th >Gps Truck</th>
+					<th >GPS Truck</th>
 					<th >Create Date</th>
 					<th >Create By</th>
 					<th >Update Date</th>
 					<th >Update By</th>
 					<th >Status</th>
 					<th ></th>
+					<th ></th>
                 </tr>
                 </thead>
-               <tbody>
+                <tbody>
 	                <c:forEach items="${trucks}" var="truck">
 						<tr >
 						<td>${i=i+1}</td>
 						<td>${truck.TRUCK_NUMBER}</td>
+						<td>${truck.PLATE_TYPE}</td>
 						<td>
 						 <c:forEach items="${ListType}" var="ListType">
 							 <c:if test="${truck.TRUCK_TYPE eq ListType.TRUCKTYPE_id}">
@@ -115,11 +122,10 @@
 						</c:choose>
 					</td>					
 						</tr>
-					</c:forEach>
-                            
-                </tbody>            
-              </table>
-              
+					</c:forEach> 
+					<div id="result"></div>                
+                </tbody>             
+              </table>              
             </div>
             <!-- /.box-body -->
           </div>
@@ -138,15 +144,80 @@
   
 </div>
 <!-- ./wrapper -->
-
 <%@ include file="/WEB-INF/include/jsInclude.jsp" %>
+
 
 <!-- page script -->
 <script>
-  $(function () {
-	  	$("#TruckTable").DataTable({	        scrollX: true	            }); 
-	   
-  });
+$("#TruckTable").DataTable({	        scrollX: true	            }); 
+
+
+
+function clickimport() {   document.getElementById("upload").click();	}
+
+ var ExcelToJSON = function() {
+
+    this.parseExcel = function(file) {
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+          type: 'binary'
+        });
+        workbook.SheetNames.forEach(function(sheetName) {
+          // Here is your object
+          var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);        
+          //var json_object = JSON.stringify(XL_row_object);        
+          var jsonGroupStr = '{"theGroupData":[]}';
+          var objGroupdata = JSON.parse(jsonGroupStr);
+
+          //console.log(JSON.parse(json_object));
+          objGroupdata['theGroupData'].push(XL_row_object);
+     	 var myJSON = JSON.stringify(objGroupdata);
+
+
+          $.ajax({
+      		type : "POST",
+      		contentType : "application/json",
+      		url : "UpdateTruckExcel",
+      		data : myJSON,
+      		dataType : 'json',				
+      		success : function(data) {
+      			 alert('Code to display the response.');
+      			// Code to display the response.
+      		},
+      		error: function(jqXHR, textStatus, errorThrown) {
+                //alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');  
+                 $('#allBody').html(jqXHR.responseText);
+               
+               setTimeout(function() { window.location.reload();},10000);
+                
+            }
+      	}); 
+          
+          
+        })
+      };
+
+      reader.onerror = function(ex) {
+        console.log(ex);
+      };
+
+      reader.readAsBinaryString(file);
+    };
+};
+
+function handleFileSelect(evt) {
+  
+  var files = evt.target.files; // FileList object
+  var xl2json = new ExcelToJSON();
+  xl2json.parseExcel(files[0]);
+}
+document.getElementById('upload').addEventListener('change', handleFileSelect, false); 
+
+
+  
 </script>
 </body>
 </html>

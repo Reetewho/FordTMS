@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.quartz.JobDataMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import co.th.ford.tms.job.CronJob;
+import co.th.ford.tms.job.CronJobDTC;
+import co.th.ford.tms.job.CronjobNostra;
 import co.th.ford.tms.model.TaskJob;
 import co.th.ford.tms.service.JobService;
 
@@ -58,19 +61,22 @@ public class TaskSchedulerController {
 	
 	@RequestMapping(value = {"/create-cron-job" }, method = RequestMethod.POST)
 	@ResponseBody
-	public String saveCreateJob(HttpSession session, @RequestParam("dataCronJobName") String dataCronJobName, @RequestParam("dataCronJobTime") String dataCronJobTime) {	
-		log.info(">>>>>>>>>>>>>>>>>>>> Get value from dataCronJobName : " + dataCronJobName + " | dataCronJobTime" + dataCronJobTime);
+	public String saveCreateJob(HttpSession session, @RequestParam("dataCronJobName") String dataCronJobName, 
+			@RequestParam("dataLoadID") String dataLoadID, @RequestParam("dataSystemLoadID") String dataSystemLoadID,
+			@RequestParam("dataCronJobTime") String dataCronJobTime) {	
+		log.info(">>>>>>>>>>>>>>>>>>>> Get value from dataCronJobName : " + dataCronJobName + " | dataCronJobTime " + dataCronJobTime);
 		
 		
 		//jobService.deleteJob("MARCOR6");
 		
-		
+		LocalDateTime dateTime = LocalDateTime.now();
+		log.info(">>>>>>>>>>>>>>>>>>> Show dateTime : " + dateTime);
 		
 		// Test Quartz
 		//String cronExpression = "0 0/5 * * * ?";
 		@SuppressWarnings("unused")
 		String strSecond, strMinute, strHour;
-		strSecond = "0/15";
+		strSecond = "0/30";
 		strMinute = "*";
 		strHour = "*";
 		
@@ -78,7 +84,8 @@ public class TaskSchedulerController {
 		
 		//set job data map
         JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put("loadID", "1548087");
+        jobDataMap.put("loadID", dataLoadID);
+        jobDataMap.put("systemLoadID", dataSystemLoadID);
 		
 		//String cronExpression = "0 55 20 15 * ?";
 		//String cronExpression = strSecond + " " + strMinute + " " + strHour + " * * ?";
@@ -91,6 +98,7 @@ public class TaskSchedulerController {
 		
 		return "Success - POST Create Ajax.";
 	}
+	
 	
 	
 	@RequestMapping(value = {"/stop-cron-job" }, method = RequestMethod.POST)
@@ -106,6 +114,52 @@ public class TaskSchedulerController {
 		
 		return "Success - POST Stop Ajax.";
 	}
+	
+	@RequestMapping(value = {"/create-cron-job-v2" }, method = RequestMethod.POST)
+	@ResponseBody
+	public String saveCreateJobV2(HttpSession session, @RequestParam("dataCronJobName") String dataCronJobName, 
+			@RequestParam("dataCronJobType") String dataCronJobType) {	
+		log.info(">>>>>>>>>>>>>>>>>>>> Get value from dataCronJobName : " + dataCronJobName + " | dataCronJobTime " + dataCronJobType);
+		
+		
+		//jobService.deleteJob("MARCOR6");
+		
+		LocalDateTime dateTime = LocalDateTime.now();
+		log.info(">>>>>>>>>>>>>>>>>>> Show dateTime : " + dateTime);
+		
+		// Test Quartz
+		//String cronExpression = "0 0/5 * * * ?";
+		@SuppressWarnings("unused")
+		String strSecond, strMinute, strHour;
+		strSecond = "0/10";
+		strMinute = "*";
+		strHour = "*";
+		
+		
+		
+		//set job data map
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("JobName", dataCronJobName);
+        jobDataMap.put("JobType", dataCronJobType);
+		
+		//String cronExpression = "0 55 20 15 * ?";
+		String cronExpression = strSecond + " " + strMinute + " " + strHour + " * * ?";
+		//String cronExpression = dataCronJobTime;
+		//jobService.scheduleCronJob("MARCOR6", CronJob.class, new Date(), cronExpression);
+		//jobService.scheduleCronJob(dataCronJobName, CronJob.class, new Date(), cronExpression);
+		
+		if(dataCronJobType.equals("DTC")) {
+			jobService.scheduleCronJobByJobDataMap(dataCronJobName, CronJobDTC.class, new Date(), cronExpression, jobDataMap);	
+		}else {
+			jobService.scheduleCronJobByJobDataMap(dataCronJobName, CronjobNostra.class, new Date(), cronExpression, jobDataMap);	
+		}
+		
+			
+		
+		
+		return "Success - POST Create Ajax.";
+	}
+	
 	
 	
 	@RequestMapping(value = {"/show-all-job" }, method = RequestMethod.GET)

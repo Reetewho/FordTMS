@@ -18,7 +18,8 @@
   @Data
   @AllArgsConstructor  
   @Entity  
-  @Table(name="tb_gsdb_code") public class Gsdb {
+  @Table(name="tb_gsdb_code") 
+  public class Gsdb {
   
   public Gsdb(){}
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,46 +27,53 @@
 	private int id;
 	
 	@Id
-	@Size(min=2, max=20)
-	@Column(name = "GSDB_CODE", nullable = false)
+	//@Size(min=2, max=30)
+	@Column(name = "GSDB_CODE", nullable = true)
 	private String GSDBCODE;	
 
-	@Column(name = "GSDB_NAME", nullable = false)
+	@Column(name = "GSDB_NAME", nullable = true)
 	private String GSDBNAME;
 		
-	@Column(name = "Latitude", nullable = false)
-	private double GSDBLATITUDE;
+	@Column(name = "Latitude", nullable = true)
+	private Double GSDBLATITUDE;
 		
-	@Column(name = "Longitude", nullable = false)
-	private double GSDBLONGITUDE;
+	@Column(name = "Longitude", nullable = true)
+	private Double GSDBLONGITUDE;
 	
-	@Column(name = "RADIUS", nullable = false)
-	private double GSDBRADIUS;
+	@Column(name = "RADIUS", nullable = true)
+	private Double GSDBRADIUS;
 	
-	@Column(name = "DELIVERY_TYPE", nullable = false)
-	private int GSDBDELIVERYTYPE;
+	@Column(name = "DELIVERY_TYPE", nullable = true)
+	private Integer GSDBDELIVERYTYPE;
 	
-	@Column(name = "STATUS", nullable = false)
+	@Column(name = "STATUS", nullable = true)
 	private String GSDBSTARUS;
 
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "CREATE_DATE", nullable = false)
+	@Column(name = "CREATE_DATE", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime GSDBCREATERDATE;
 	
-	@Column(name = "CREATE_BY", nullable = false)
+	@Column(name = "CREATE_BY", nullable = true)
 	private String GSDBCREATEBY;
 	
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "UPDATE_DATE", nullable = false)
+	@Column(name = "UPDATE_DATE", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime GSDBUPDATEDATE;
 	
-	@Column(name = "UPDATE_BY", nullable = false)
+	@Column(name = "UPDATE_BY", nullable = true)
 	private String GSDBUPDATEBY;
+
+	@Column(name = "GSDB_PROVINCE_ID", nullable = false)
+	private Integer provinceId;
 	
+	@Column(name = "GSDB_AREA_ZONE", nullable = false)
+	private String areaZone;
+	
+
 	@Override
 	public int hashCode() {		
 		return GSDBCODE.hashCode();

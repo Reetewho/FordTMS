@@ -50,9 +50,10 @@
 		          <a href="<c:url value='/searchby-loadid' />">
 		            <i class="fas fa-search"></i> &nbsp;&nbsp;<span>Search by Load ID</span>            
 		          </a>
-		        </li>
+		        </li>     
 	        </c:when>
 	        </c:choose>
+	        
 	        <c:choose>
 	        <c:when test="${permissionMenu.id_menu=='4'}">
 		        <li>
@@ -111,36 +112,79 @@
          </c:choose>
          
          <c:choose>
-         <c:when test="${permissionMenu.id_menu=='8'}">
+         <c:when test="${permissionMenu.id_menu=='9'}">
 	         <li>
 	          <a href="<c:url value='/nostra' />">
-	            <i class="fas fa-receipt"></i> &nbsp;<span>Nostra Report(Admin)</span>            
+	            <i class="fas fa-receipt"></i> &nbsp;<span>Job Monitor</span>            
 	          </a>
 	         </li>
          </c:when>
          </c:choose>
          
         <c:choose>
-        <c:when test="${permissionMenu.id_menu=='8'}">
-        <li>
-          <a href="<c:url value='/trucklist' />">
-            <i class="fas fa-receipt"></i> &nbsp;<span>Truck Management(Admin)</span>            
-          </a>
-        </li>
-        </c:when>
-        </c:choose>
-         
-        <c:choose>
-        <c:when test="${permissionMenu.id_menu=='8'}">
-	        <li>
-	          <a href="<c:url value='/gsdblist' />">
-	            <i class="fas fa-receipt"></i> &nbsp;<span>GSDB Management(Admin)</span>            
-	          </a>
-	        </li>
-        </c:when>
+			<c:when test="${permissionMenu.id_menu=='8'}">
+		        <li>
+		          <a href="<c:url value='/gsdblist' />">
+		            <i class="fas fa-receipt"></i> &nbsp;<span>GSDB Management(Admin)</span>            
+		          </a>
+		        </li>
+			</c:when>
         </c:choose>
         
+		      
+        <c:choose>
+	        <c:when test="${permissionMenu.id_menu=='11'}">
+	        <li>
+	          <a href="<c:url value='/trucklist' />">
+	            <i class="fas fa-receipt"></i> &nbsp;<span>Truck Management(Admin)</span>            
+	          </a>
+	        </li>
+	        </c:when>
+        </c:choose>
+        
+        <c:choose>
+	        <c:when test="${permissionMenu.id_menu=='12'}">
+		        <li>
+		          <a href="<c:url value='/stakeholderlist' />">
+		            <i class="fas fa-receipt"></i> &nbsp;<span>StakeHolder Management(Admin)</span>            
+		          </a>
+		        </li>
+	        </c:when>
+        </c:choose>
        
+         
+         <c:choose>
+	        <c:when test="${permissionMenu.id_menu=='13'}">
+		    	<li>
+		          <a href="<c:url value='/check-dup-systemload' />">
+		            <i class="fas fa-search"></i> &nbsp;&nbsp;<span>Recheck Load</span>            
+		          </a>
+		        </li>    
+	        </c:when>
+	    </c:choose>
+        
+        <c:choose>
+			<c:when test="${permissionMenu.id_menu=='10'}">
+				<c:choose>
+	        	<c:when test="${fordPermissionDev=='On'}">
+					<li>
+				    	<a href="<c:url value='/create-cron-job' />">
+				    		<i class="fas fa-receipt"></i> &nbsp;&nbsp;<span>Create-CronJob(Admin)</span>            
+				    	</a>
+					</li>
+				</c:when>
+         		</c:choose>
+				<li>
+			    	<a href="<c:url value='/show-all-job' />">
+			    		<i class="fas fa-receipt"></i> &nbsp;&nbsp;<span>Task Scheduler(Admin)</span>            
+			    	</a>
+		        </li>
+			</c:when>
+        </c:choose>
+        
+        
+        
+
          <%--  <c:choose>
         <c:when test="${permissionMenu.id_menu=='8'}">
         <li>
@@ -153,6 +197,7 @@
          
         </c:forEach>
         
+         <%-- 
          <c:choose>
 	        <c:when test="${fordPermissionDev=='On'}">
 	         	<li>
@@ -167,6 +212,7 @@
 		        </li>
 		     </c:when>
          </c:choose>
+        --%>
         
         <!-- 
          <li>

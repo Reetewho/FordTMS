@@ -3,6 +3,10 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="<c:url value='/assets/bootstrap/css/bootstrap.min.css' />">
+  
+   <!-- Bootstrap-select 1.12.1 -->
+  <link rel="stylesheet" href="<c:url value='/assets/bootstrap-select/css/bootstrap-select.css' />">
+  
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<c:url value='/assets/fontawesome/css/all.css' />">
   

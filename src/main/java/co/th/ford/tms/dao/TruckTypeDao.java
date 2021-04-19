@@ -10,4 +10,7 @@ public interface TruckTypeDao {
 
 	List<TruckType> findAllTruckType();
 	
+	TruckType findByTruckType(String TruckType);
+	
+	void saveTruckType(TruckType TruckType);
 }

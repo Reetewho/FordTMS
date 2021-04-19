@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -95,20 +96,20 @@ public class PaymentReportController {
 	/*
 	 * Method : Search by Load ID.
 	 */
-	@RequestMapping(value = { "/searchby-loadid" }, method = RequestMethod.GET)
+	@RequestMapping(value = {"/searchby-loadid"}, method = RequestMethod.GET)
 	public String searchbyloadid(HttpSession session,ModelMap model) {
 		if(!checkAuthorization(session))return "redirect:/login";
 //	    model.addAttribute("LoadID",  "test");
 		return "search-by-loadid";
 	}
 	
-	@RequestMapping(value = { "/searchby-loadid" }, method = RequestMethod.POST)
+	@RequestMapping(value = {"/searchby-loadid"}, method = RequestMethod.POST)
 	public String searchbyloadid(HttpSession session,@RequestParam String loadid, ModelMap model){
 		if(!checkAuthorization(session))return "redirect:/login";
 		String nextPage="search-by-loadid";
 		model.addAttribute("loadid", loadid);
 		if(loadid.trim().equals("") ) {			
-		    model.addAttribute("errorMsg",  messageSource.getMessage("NotEmpty.searchby-loadid.LoadID", new String[]{loadid}, Locale.getDefault()));
+		    model.addAttribute("errorMsg",  messageSource.getMessage("not.empty.by.systemload", new Object[]{""}, Locale.getDefault()));
 		}else {
 			if(model.get("errorMsg") ==null) {
 				try {								        
@@ -117,7 +118,31 @@ public class PaymentReportController {
 					model.addAttribute("dataloadlistreport", loadlistreport);
 				}catch(Exception e) {
 					e.printStackTrace();
-					model.addAttribute("errorMsg",  messageSource.getMessage("Fail, Syntax Error SQL Query.", new String[]{loadid}, Locale.getDefault()));
+					model.addAttribute("errorMsg",  messageSource.getMessage("fail.syntax.error.query.by.systemload", new Object[]{loadid}, Locale.getDefault()));
+				}
+			}
+		}
+			
+		return nextPage;
+	}
+	
+	
+	@RequestMapping(value = {"/searchby-systemloadid/{systemLoadID}"}, method = RequestMethod.GET)
+	public String searchBySystemLoadId(HttpSession session,@PathVariable("systemLoadID") String systemLoadID, ModelMap model){
+		if(!checkAuthorization(session))return "redirect:/login";
+		String nextPage="search-by-loadid";
+		model.addAttribute("loadid", systemLoadID);
+		if(systemLoadID.trim().equals("") ) {			
+		    model.addAttribute("errorMsg",  messageSource.getMessage("not.empty.by.systemload", new Object[]{systemLoadID}, Locale.getDefault()));
+		}else {
+			if(model.get("errorMsg") ==null) {
+				try {								        
+					List<LoadListReport> loadlistreport = cservice.findbySystemsLoadID(systemLoadID);
+					System.out.println("----------> ! Start Data Output Item List ! <---------- ||" + loadlistreport); 
+					model.addAttribute("dataloadlistreport", loadlistreport);
+				}catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("errorMsg",  messageSource.getMessage("fail.syntax.error.query.by.systemload", new Object[]{systemLoadID}, Locale.getDefault()));
 				}
 			}
 		}

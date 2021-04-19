@@ -1,18 +1,12 @@
 package co.th.ford.tms.service;
 
 import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import co.th.ford.tms.controller.GsdbController;
 import co.th.ford.tms.dao.GsdbDao;
 import co.th.ford.tms.model.Gsdb;
-
-import co.th.ford.tms.aesencrypt.AESCrypt;
+import co.th.ford.tms.model.ReportGSDB;
 
 /*import co.th.ford.tms.aesencrypt.EncryptDecryptPass;*/
 
@@ -49,11 +43,17 @@ public class GsdbServiceImpl implements GsdbService {
 			entity.setGSDBCREATEBY(t.getGSDBCREATEBY());
 			entity.setGSDBUPDATEDATE(t.getGSDBUPDATEDATE());
 			entity.setGSDBUPDATEBY(t.getGSDBUPDATEBY());
+			entity.setProvinceId(t.getProvinceId());
+			entity.setAreaZone(t.getAreaZone());
 		}
 	}
 
 	public List<Gsdb> findAllGsdb() {
 		return dao.findAllGsdb();
+	}
+	
+	public List<ReportGSDB> querySQLAllGsdb() {
+		return dao.querySQLAllGsdb();
 	}
 	
 	public List<Gsdb> findByGsdbName(int gsdbname) {

@@ -116,7 +116,7 @@ public class JobServiceImpl implements JobService{
 
 		System.out.println("creating trigger for key :"+jobKey + " at date :"+date);
 		Trigger cronTriggerBean = JobUtil.createCronTrigger(triggerKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-
+		
 		try {
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
 			Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);

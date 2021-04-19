@@ -9,9 +9,9 @@ public class JobWaypoint {
 	private String jobWaypointCode;
 	private String jobWaypointName;
 	private String deliveryType;
-	private int radius;
-	private double shiptoLat;
-	private double shiptoLon;
+	private Integer radius;
+	private Double shiptoLat;
+	private Double shiptoLon;
 	private String waybillNumber;
 	
 	private String PlanIncomingDate;

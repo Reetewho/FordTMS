@@ -3,6 +3,11 @@
 <script src="<c:url value='/assets/plugins/jQuery/jQuery-2.2.0.min.js' />"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<c:url value='/assets/bootstrap/js/bootstrap.min.js' />"></script>
+
+<!-- Bootstrap-select 1.12.1 -->
+<script src="<c:url value='/assets/bootstrap-select/js/bootstrap-select.js' />"></script>
+
+
 <!-- DataTables bootstrap -->
 <script src="<c:url value='/assets/plugins/datatables/jquery.dataTables.min.js' />"></script>
 

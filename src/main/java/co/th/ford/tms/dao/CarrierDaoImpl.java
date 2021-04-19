@@ -3,6 +3,7 @@ package co.th.ford.tms.dao;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -12,11 +13,13 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import co.th.ford.tms.model.Carrier;
 import co.th.ford.tms.model.LoadListReport;
 import co.th.ford.tms.model.Report1;
+import co.th.ford.tms.model.ShipmentStatus;
 import co.th.ford.tms.model.PaymentReport1;
 
 
@@ -26,6 +29,10 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 	/*public User findByUsername(String user) {
 		return getByKey(user);
 	}*/
+	
+	
+	@Value("${nostra.summary.list.shipment.status}")
+    private String nostraShipmentStatusList;
 
 	public void saveCarrier(Carrier carrier) {
 		persist(carrier);
@@ -162,62 +169,102 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 			return allList;
 		}
 	 
-	 @SuppressWarnings("unchecked")
-		public List<Report1> getReportByLoad(String startDate,String endDate){
-			Query query = getSession().createSQLQuery(
-					  " select l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
-					+"  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
+		@SuppressWarnings("unchecked")
+		public List<Report1> getReportByLoad(String startDate, String endDate) {
+			String strShipmentStatus = nostraShipmentStatusList;
+			
+			String[] partShipmentStatus = strShipmentStatus.split(",");
+			
+			List<String> listShipmentStatus = Arrays.asList(partShipmentStatus);
+			List<ShipmentStatus> shipmentStatusData = new ArrayList<>();
+			int noShipmentStatus = 0;
+
+			for (int i = 0; i < listShipmentStatus.size(); i++) {
+
+				noShipmentStatus = i + 1;
+				ShipmentStatus shipmentStatus = new ShipmentStatus();
+				shipmentStatus.setShipmentStatusNo(noShipmentStatus);
+				shipmentStatus.setShipmentStatusDesc(listShipmentStatus.get(i));
+
+				shipmentStatusData.add(shipmentStatus);
+			}
+		        
+					
+			Query query = getSession().createSQLQuery(" SELECT l.systemLoadID,l.alertTypeCode,l.loadDescription,  "
+					+ "  ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
 					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
 					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID "
-					+ " , l.nostraStatus, l.nostraRemark "
-					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
-					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
-					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
-					+ " left join tb_user us on l.driverId=us.username   "
-					+ " where date(l.loadStartDateTime) >= :startDate and date(l.LoadEndDateTime) <= :endtDate "
-					+ " group by ls.loadID"
-					+ " order by c.carrierID ");		
-						
+					+ " , l.nostraStatus, l.nostraRemark, l.etaColor, l.shipmentStatusId, l.completedFlag AS loadCompletedFlag "
+					+ " FROM tb_carrier c join tb_load l ON c.carrierID=l.carrierID "
+					+ " LEFT join tb_loadstop ls ON l.loadID=ls.loadID "
+					+ " LEFT join tb_setstopeta ss ON ls.id=ss.loadStopID   "
+					+ " LEFT join tb_user us ON l.driverId=us.username   "
+					+ " WHERE date(l.loadStartDateTime) >= :startDate AND date(l.LoadEndDateTime) <= :endtDate "
+					+ " GROUP BY ls.loadID" + " ORDER BY l.loadStartDateTime ");
+
 			query.setString("startDate", startDate);
 			query.setString("endtDate", endDate);
-			System.out.println("###### "+startDate+" "+endDate);
+			System.out.println("###### " + startDate + " " + endDate);
 			List<Report1> allList = new ArrayList<Report1>();
-			List<Object[]> list=query.list();
-			if(list!=null && list.size() >0)
+			List<Object[]> list = query.list();
+			ShipmentStatus findShipmentStatus = new ShipmentStatus();
+			if (list != null && list.size() > 0)
 				for (Object[] obj : list) {
-					Report1 report1=new Report1();
+					
+					findShipmentStatus = new ShipmentStatus();
+					Report1 report1 = new Report1();
 					report1.setSystemLoadID(obj[0].toString());
 					report1.setAlertTypeCode(obj[1].toString());
-					report1.setLoadDescription(obj[2]==null?"":obj[2].toString());
-					report1.setId(obj[3]==null?3:((Integer)obj[3]).intValue());
-					report1.setStopSequence(obj[4]==null?"":obj[4].toString());
-					report1.setStopShippingLocation(obj[5]==null?"":obj[5].toString());
-					report1.setStopShippingLocationName(obj[6]==null?"":obj[6].toString());
-					report1.setTruckNumber(obj[7]==null?"":obj[7].toString());
-					report1.setWaybillNumber(obj[8]==null?"":obj[8].toString());					
-					report1.setLastUpdateUser(obj[9]==null?"":obj[9].toString());					
-					report1.setDepartureTime(obj[10]==null?"":obj[10].toString());
-					report1.setArriveTime(obj[11]==null?"":obj[11].toString());				
-					report1.setCompletedFlag(obj[12]==null?"":obj[12].toString());
-					report1.setLatitude(obj[13]==null?"":obj[13].toString());
-					report1.setLongitude(obj[14]==null?"":obj[14].toString());
-					report1.setMovementDateTime(obj[15]==null?"":obj[15].toString());
-					report1.setEstimatedDateTime(obj[16]==null?"":obj[16].toString());
-					report1.setLoadStartDateTime(obj[17]==null?"":obj[17].toString());
-					report1.setLoadEndDateTime(obj[18]==null?"":obj[18].toString());
-					report1.setDriverId(obj[19]==null?"":obj[19].toString());
-					report1.setAssignname(obj[20]==null?"":obj[2].toString());
-					report1.setLoadstopremark(obj[21]==null?"":obj[21].toString());
-					report1.setContactnumber(obj[22]==null?"":obj[22].toString());
-					report1.setLastUpdateDate(obj[23]==null?"":obj[23].toString());
-					report1.setLoadstopYardCode(obj[24]==null?"":obj[24].toString());	
-					report1.setLoadID(obj[25]==null?25:((Integer)obj[25]).intValue());
-					report1.setNostraStatus(obj[26]==null?"":obj[26].toString());
-					report1.setNostraRemark(obj[27]==null?"":obj[27].toString());
+					report1.setLoadDescription(obj[2] == null ? "" : obj[2].toString());
+					report1.setId(obj[3] == null ? 3 : ((Integer) obj[3]).intValue());
+					report1.setStopSequence(obj[4] == null ? "" : obj[4].toString());
+					report1.setStopShippingLocation(obj[5] == null ? "" : obj[5].toString());
+					report1.setStopShippingLocationName(obj[6] == null ? "" : obj[6].toString());
+					report1.setTruckNumber(obj[7] == null ? "" : obj[7].toString());
+					report1.setWaybillNumber(obj[8] == null ? "" : obj[8].toString());
+					report1.setLastUpdateUser(obj[9] == null ? "" : obj[9].toString());
+					report1.setDepartureTime(obj[10] == null ? "" : obj[10].toString());
+					report1.setArriveTime(obj[11] == null ? "" : obj[11].toString());
+					report1.setCompletedFlag(obj[12] == null ? "" : obj[12].toString());
+					report1.setLatitude(obj[13] == null ? "" : obj[13].toString());
+					report1.setLongitude(obj[14] == null ? "" : obj[14].toString());
+					report1.setMovementDateTime(obj[15] == null ? "" : obj[15].toString());
+					report1.setEstimatedDateTime(obj[16] == null ? "" : obj[16].toString());
+					report1.setLoadStartDateTime(obj[17] == null ? "" : obj[17].toString());
+					report1.setLoadEndDateTime(obj[18] == null ? "" : obj[18].toString());
+					report1.setDriverId(obj[19] == null ? "" : obj[19].toString());
+					report1.setAssignname(obj[20] == null ? "" : obj[2].toString());
+					report1.setLoadstopremark(obj[21] == null ? "" : obj[21].toString());
+					report1.setContactnumber(obj[22] == null ? "" : obj[22].toString());
+					report1.setLastUpdateDate(obj[23] == null ? "" : obj[23].toString());
+					report1.setLoadstopYardCode(obj[24] == null ? "" : obj[24].toString());
+					report1.setLoadID(obj[25] == null ? 25 : ((Integer) obj[25]).intValue());
+					report1.setNostraStatus(obj[26] == null ? "" : obj[26].toString());
+					report1.setNostraRemark(obj[27] == null ? "" : obj[27].toString());
+					report1.setEtaColor(obj[28] == null ? "" : obj[28].toString());
+					report1.setShipmentStatusId(obj[29] == null ? "" : obj[29].toString());
+					
+					
+
+					
+					if (obj[29] != null) {
+						findShipmentStatus = shipmentStatusData.stream()
+								 			 .filter(s -> s.getShipmentStatusNo() == Integer.valueOf(obj[29].toString()))
+								 			 .findFirst().orElse(null);	
+					}
+					
+					if(findShipmentStatus != null) {
+						report1.setShipmentStatusDesc(findShipmentStatus.getShipmentStatusDesc());
+			        }else {
+			        	report1.setShipmentStatusDesc("");
+			        }
+					
+					report1.setLoadCompletedFlag(obj[30] == null ? "" : obj[30].toString());
+					
 					
 					allList.add(report1);
 				}
-			
+
 			return allList;
 		}
 	 
@@ -231,7 +278,7 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					+ " ls.id,ls.stopSequence,ls.stopShippingLocation,ls.stopShippingLocationName,ls.truckNumber,ls.waybillNumber,ls.lastUpdateUser,  "
 					+ " ls.departureTime,ls.arriveTime,ls.completedFlag,ls.latitude,ls.longitude,ss.movementDateTime,ss.estimatedDateTime,"
 					+ " l.loadStartDateTime,l.loadEndDateTime,l.driverId,l.assignname,ls.loadstopremark,us.contactnumber,ls.lastUpdateDate,ls.loadstopYardCode,ls.loadID, "
-					+ " ls.actualStartDate, ls.actualEndDate, ls.etaDate "
+					+ " ls.actualStartDate, ls.actualEndDate, ls.etaDate, c.loadDate, l.nostraStatus "
 					+ " from tb_carrier c join tb_load l on c.carrierID=l.carrierID "
 					+ " left join tb_loadstop ls on l.loadID=ls.loadID "
 					+ " left join tb_setstopeta ss on ls.id=ss.loadStopID   "
@@ -243,6 +290,9 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 			System.out.println("######" +LoadstopbyLoadId);
 			List<Report1> allList = new ArrayList<Report1>();
 			List<Object[]> list=query.list();
+			LocalDateTime localDT;
+			String strLocalDT = "";
+			
 			if(list!=null && list.size() >0)
 				for (Object[] obj : list) {
 					Report1 report1=new Report1();
@@ -275,6 +325,18 @@ public class CarrierDaoImpl extends AbstractDao<Integer, Carrier> implements Car
 					report1.setActualStartDate(obj[26]==null?"":obj[26].toString());
 					report1.setActualEndDate(obj[27]==null?"":obj[27].toString());
 					report1.setEtaDate(obj[28]==null?"":obj[28].toString());
+					
+					if(obj[29]==null) {
+						strLocalDT = "";
+					}else {
+						localDT = sqlTimestampToJodaLocalDateTime((java.sql.Timestamp)obj[29]);
+						strLocalDT = localDT.toString(DateTimeFormat.forPattern("yyyy-MM-dd"));
+					}
+
+					
+					report1.setLoadDate(strLocalDT);
+					
+					report1.setNostraStatus(obj[30]==null?"":obj[30].toString());
 					
 					allList.add(report1);
 				}

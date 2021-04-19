@@ -2,17 +2,28 @@ package co.th.ford.tms.webservice;
 
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.xml.soap.SOAPBody;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+
 import co.th.ford.tms.model.LoadStop;
-import co.th.ford.tms.webservice.Base;
+
 
 
 public class ProcessLoadStatusUpdate extends Base{
-		
+	
+	private static Logger log = Logger.getLogger(ProcessLoadStatusUpdate.class);
+	
 	private  final String wsEndpoint = "https://fordswsprd.jdadelivers.com/webservices/services/TransportationManager2";	
+
 	//private  final String wsEndpoint = "https://fordswsqa.jdadelivers.com/webservices/services/TransportationManager2";
 
+	
+	
 	private  final String inputXML = 
 			        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cis=\"http://www.i2.com/cis\"> \r\n" +					 
 					"   <soapenv:Header/>\r\n" + 
@@ -40,10 +51,22 @@ public class ProcessLoadStatusUpdate extends Base{
 					"   </soapenv:Body>\r\n" + 
 					"</soapenv:Envelope>";
 	
-	public LoadStop submit(String Authenticationm,String SOAPAction,LoadStop lsModel){		
+	public LoadStop submit(String Authenticationm,String SOAPAction,LoadStop lsModel, String strTruckNumber){		
+		
+		log.info("lsModel Data -> SystemLoadID : " + lsModel.getLoad().getSystemLoadID()
+				+ " getTruckNumber : " + lsModel.getTruckNumber()
+				+ " getTruckNumber_CheckUnicode : " + strTruckNumber
+				+ " getStopShippingLocation : " + lsModel.getStopShippingLocation()
+				+ " getArriveTime : " + lsModel.getArriveTime()
+				+ " getDepartureTime : " + lsModel.getDepartureTime()
+				+ " getLatitude : " + lsModel.getLatitude()
+				+ " getLongitude : " + lsModel.getLongitude()
+				);
+		
+		
 		try{			
 			SOAPBody sb = getResponse(sendRequest(wsEndpoint, Authenticationm, SOAPAction,
-					String.format(inputXML, "" + lsModel.getLoad().getSystemLoadID(), lsModel.getTruckNumber(),
+					String.format(inputXML, "" + lsModel.getLoad().getSystemLoadID(), strTruckNumber,
 							lsModel.getStopShippingLocation(), lsModel.getArriveTime(),							
 							lsModel.getDepartureTime(),
 							lsModel.getLatitude(), lsModel.getLongitude())));
@@ -53,7 +76,8 @@ public class ProcessLoadStatusUpdate extends Base{
 			}
 					
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error("Error[Exception] : " + e.getMessage());
 		}
 		return lsModel;
 	}

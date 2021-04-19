@@ -9,4 +9,8 @@ public interface GpsTypeDao {
 	
 	List<GpsType> findAllGps();
 	
+	GpsType findByGpsType(String GpsType);
+	
+	void saveGpsType(GpsType GpsType);
+	
 }

@@ -1,19 +1,15 @@
 package co.th.ford.tms.controller;
 
 
-
-
-
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
 import javax.servlet.http.HttpSession;
-
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -23,11 +19,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import co.th.ford.tms.model.Carrier;
 import co.th.ford.tms.service.CarrierService;
 
@@ -36,9 +30,7 @@ import co.th.ford.tms.service.CarrierService;
 @RequestMapping("/")
 public class CalendarController {
 
-	
-	
-	
+	private static Logger log = Logger.getLogger(CalendarController.class);
 	
 	@Autowired
 	MessageSource messageSource;
@@ -51,6 +43,8 @@ public class CalendarController {
 	
 	@Value("${profile}")
 	private String profile;
+	
+	DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 	
 	/*
 	 * This method will list all existing Carrier.
@@ -70,10 +64,12 @@ public class CalendarController {
 		 List<Carrier> c= cservice.findListCarriersByDate(startDate, endDate);
 		 model.addAttribute("carriers", c);
 	}else {
-		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate( end));
+		 List<Carrier> c= cservice.findListCarriersByDate(getThaiDate(start),getThaiDate(end));
 		 model.addAttribute("carriers", c);
 	}
 		 
+	
+		  
 		  List<String> monthList = getMonthList();
 		  List<Integer> yearList = getYearList();
 		  model.addAttribute("monthLst", monthList);
@@ -109,7 +105,7 @@ public class CalendarController {
 		 
 		 private List<Integer> getYearList() {
 		  Date getDate;
-		  Calendar calendar = Calendar.getInstance();  
+		  Calendar calendar = Calendar.getInstance(Locale.US);  
 		     getDate = calendar.getTime(); 
 		     DateFormat sdf_Year_Calendar = new SimpleDateFormat("yyyy");
 		     Integer intCurrentYear= Integer.valueOf(sdf_Year_Calendar.format(getDate));
@@ -118,7 +114,10 @@ public class CalendarController {
 		  
 		  int plus543=0;
 		  int numYearsEng = 0;
+		  
+		  
 		  if(environment.getRequiredProperty("local.datetime").equals("th"))plus543=543;	
+		  log.info("Check Locale[local.datetime] : " + environment.getRequiredProperty("local.datetime") + " | plus543 : " + plus543);
 		  numYearsEng = intCurrentYear - plus543;
 		  
 		  yearList.add(numYearsEng);
@@ -161,7 +160,7 @@ public class CalendarController {
 		return "calendar";
 	}
 	
-	DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+	
 	
 	@RequestMapping(value = { "/calendar/{startDate}/{endDate}" }, method = RequestMethod.GET)
 	public String calendar(HttpSession session,@PathVariable String startDate,@PathVariable String endDate,ModelMap model) {

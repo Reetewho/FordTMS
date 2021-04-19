@@ -20,6 +20,20 @@
 	  <div class="content-wrapper">
 	    <!-- Content Header (Page header) -->
 	    <section class="content-header">
+			<div class="row">
+				<div class="col-md-12">
+					<c:if test="${errorMsg!=null}">
+						<div class="alert alert-danger alert-dismissible">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+								<h4>
+									<i class="icon fa fa-ban"></i>Error!
+								</h4>
+							<c:out value="${errorMsg}"></c:out>
+						</div>
+					</c:if>
+				</div>
+			</div>
+			
 	      <h1>
 	       Search by Load ID
 	        <small></small>
@@ -132,38 +146,33 @@
 		                <c:set var="completed" value="${0}"/>
 			            <c:if test = "${not empty dataloadlistreport}">
 							<c:forEach items="${dataloadlistreport}" var="dataloadlistreport">
-								<tr >
-								
-								<c:choose>
-									<%-- <c:when test="${dataloadlistreport.driverid == S_FordUser.username or dataloadlistreport.assignname == S_FordUser.username}"> --%>
-									<c:when test="${dataloadlistreport.driverid == S_FordUser.username or  S_FordUser.role == 1 or  S_FordUser.role == 2}">
-										<td>
-											<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${dataloadlistreport.loadDate}/${dataloadlistreport.systemLoadID}-${dataloadlistreport.loadID}' />">
-											${dataloadlistreport.systemLoadID}
-											</a>
-										</td>
-									</c:when>
-											<c:otherwise>
-												<td>
-													<a class="ClickLoadListStop">${dataloadlistreport.systemLoadID}</a>
-												</td>
-											</c:otherwise>
-								</c:choose>
-								<!--
-								<td>${dataloadlistreport.systemLoadID}</td>
-								-->
-								<td>${dataloadlistreport.loadDate}</td>
-								<td>${dataloadlistreport.loadDescription}</td>
-								<td>${dataloadlistreport.truckNumber}</td>
-								<td>${dataloadlistreport.loadStartDateTime}</td>				
-								<td>${dataloadlistreport.loadEndDateTime}</td>
-								<td>${dataloadlistreport.gatein}</td>
-								<td>${dataloadlistreport.gateout}</td>
-								<td>${dataloadlistreport.completedFlag}</td>
-								<c:if test = "${dataloadlistreport.completedFlag=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
-								<c:if test = "${dataloadlistreport.completedFlag=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
-								<c:if test = "${dataloadlistreport.completedFlag=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
-								<c:if test = "${dataloadlistreport.completedFlag=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
+								<tr>
+									<c:choose>
+										<c:when test="${dataloadlistreport.driverid == S_FordUser.username or  S_FordUser.role == 1 or  S_FordUser.role == 2}">
+											<td>
+												<a class="ClickLoadListStop" href="<c:url value='/loadStop-list/${dataloadlistreport.loadDate}/${dataloadlistreport.systemLoadID}-${dataloadlistreport.loadID}' />">
+												${dataloadlistreport.systemLoadID}
+												</a>
+											</td>
+										</c:when>
+										<c:otherwise>
+											<td>
+												<a class="ClickLoadListStop">${dataloadlistreport.systemLoadID}</a>
+											</td>
+										</c:otherwise>
+									</c:choose>
+									<td>${dataloadlistreport.loadDate}</td>
+									<td>${dataloadlistreport.loadDescription}</td>
+									<td>${dataloadlistreport.truckNumber}</td>
+									<td>${dataloadlistreport.loadStartDateTime}</td>				
+									<td>${dataloadlistreport.loadEndDateTime}</td>
+									<td>${dataloadlistreport.gatein}</td>
+									<td>${dataloadlistreport.gateout}</td>
+									<td>${dataloadlistreport.completedFlag}</td>
+									<c:if test = "${dataloadlistreport.completedFlag=='N/A'}"> <c:set var="naStatus" value="${naStatus+1}"/>  </c:if>
+									<c:if test = "${dataloadlistreport.completedFlag=='Load'}"> <c:set var="loadStatus" value="${loadStatus+1}"/>  </c:if>
+									<c:if test = "${dataloadlistreport.completedFlag=='In transit'}"> <c:set var="inTransit" value="${inTransit+1}"/>  </c:if>
+									<c:if test = "${dataloadlistreport.completedFlag=='Completed'}"> <c:set var="completed" value="${completed+1}"/>  </c:if>
 								</tr>
 							</c:forEach>
 						</c:if>    

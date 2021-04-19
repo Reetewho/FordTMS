@@ -63,13 +63,13 @@
                  <div class="form-group">
                   <label  class="col-sm-4 control-label">GSDB Code :</label>
 	                  <div class="col-sm-8">
-	                   <form:input path="GSDBCODE" id="GSDBCODE" name="GSDBCODE" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your GSDB Code" required="required" />                    
+	                   <form:input path="GSDBCODE" id="GSDBCODE" name="GSDBCODE" class="form-control" maxlength="200" data-error="Maximum of 30 characters" placeholder="Insert Your GSDB Code" required="required" />                    
 	                  </div>
                 </div>   
                 <div class="form-group">
                   <label  class="col-sm-4 control-label">GSDB Name :</label>
 	                  <div class="col-sm-8">
-	                   <form:input path="GSDBNAME" id="GSDBNAME" name="GSDBNAME" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your GSDB Name" required="required" />                    
+	                   <form:input path="GSDBNAME" id="GSDBNAME" name="GSDBNAME" class="form-control" maxlength="200" data-error="Maximum of 200 characters" placeholder="Insert Your GSDB Name" required="required" />                    
 	                  </div>
                 </div>
                 <div class="form-group">
@@ -90,6 +90,30 @@
 	                   <form:input path="GSDBLONGITUDE" id="GSDBLONGITUDE" name="GSDBLONGITUDE" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your Longitude" required="required" />                    
 	                  </div>
                 </div>    
+                
+				<div class="form-group">
+                  <label  class="col-sm-4 control-label">จังหวัด :</label>
+	                  <div class="col-sm-8">	                   
+	                    <select id="provinceId" name="provinceId" class="form-control selectpicker" data-live-search="true">
+				          <c:if test = "${not empty provinces}">
+				          <c:forEach items="${provinces}" var="findProvince">
+				           <option value="${findProvince.id}"  ${findProvince.id==GSDB.provinceId?'selected':''} >
+				            ${findProvince.nameTh}
+				           </option>
+				          </c:forEach>
+				          </c:if>  
+				       </select>   
+	                   
+	                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label  class="col-sm-4 control-label">Area Zone :</label>
+	                  <div class="col-sm-8">
+	                   <form:input path="areaZone" id="areaZone" name="areaZone" class="form-control" maxlength="30" data-error="Maximum of 30 characters" placeholder="Insert Your areaZone" required="required" />                    
+	                  </div>
+                </div>
+                
                <%--  <div class="form-group">
                   <label  class="col-sm-4 control-label">Truck Type :</label>
 		          <div class="col-sm-8">  
@@ -118,6 +142,7 @@
 		         </select>               
 		        </div>
                  </div> --%>   
+                 <form:input type="hidden" path="GSDBCODE" id="GSDBCODE"/>
                 <form:input type="hidden" path="GSDBDELIVERYTYPE" id="GSDBDELIVERYTYPE"/>   
                 <form:input type="hidden" path="GSDBCREATEBY" id="GSDBCREATEBY"/>
                 <form:input type="hidden" path="GSDBCREATERDATE" id="GSDBCREATERDATE"/>
@@ -125,7 +150,7 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-                <a href="<c:url value='/trucklist/' />"><button type="button" class="btn btn-default">Cancel</button></a>
+                <a href="<c:url value='/gsdblist/' />"><button type="button" class="btn btn-default">Cancel</button></a>
                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
               </div>
               <!-- /.box-footer -->
@@ -151,7 +176,7 @@
 
 <!-- page script -->
 <script type="text/javascript">
-			  document.getElementById("TRUCKNUMBER").disabled = true;		  
+			  document.getElementById("GSDBCODE").disabled = true;		  
 
 			  </script>
 

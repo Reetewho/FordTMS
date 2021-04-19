@@ -34,19 +34,19 @@ public class User {
 	
 	@Id
 	@Size(min=8, max=20)
-	@Column(name = "username", nullable = false)
+	@Column(name = "username", nullable = true)
 	private String username;	
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//private int id;
 	
 	@Size(min=8, max=30)
-	@Column(name = "password", nullable = false)
+	@Column(name = "password", nullable = true)
 	private String password;
 		
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = true)
 	private String name;
 	
-	@Column(name = "lastname", nullable = false)
+	@Column(name = "lastname", nullable = true)
 	private String lastname;
 
 	@NotNull
@@ -56,25 +56,26 @@ public class User {
 	private LocalDateTime joiningDate;
 
 	
-	@Column(name = "role", nullable = false)
-	private int role;	
+	@Column(name = "role", nullable = true)
+	private Integer role;	
 	
-	@Column(name = "department", nullable = false)
-	private int department;
+	@Column(name = "department", nullable = true)
+	private Integer department;
 	
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", nullable = true)
 	private String email;
 	
-	@Column(name = "contactnumber", nullable = false)
+	@Column(name = "contactnumber", nullable = true)
 	private String contactnumber;
 	
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") 
-	@Column(name = "lastLogin", nullable = false)
+	//@Column(name = "last_login_date", nullable = true)
+	@Column(name = "lastLogin", nullable = true)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private LocalDateTime logoutDate;
 	
-	@Column(name = "status", nullable = false)
+	@Column(name = "status", nullable = true)
 	private int status;
 	
 	

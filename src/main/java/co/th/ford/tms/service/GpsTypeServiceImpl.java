@@ -19,5 +19,13 @@ public class GpsTypeServiceImpl implements GpsTypeService {
 	public List<GpsType> findAllGps() {
 		return dao.findAllGps();
 	}
+	
+	public GpsType findByGpsType(String GpsType) {
+		return dao.findByGpsType(GpsType);
+	}
+	
+	public void saveGpsType(GpsType GpsType) {
+		dao.saveGpsType(GpsType);
+	}
 
 }

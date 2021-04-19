@@ -6,10 +6,21 @@
     <c:choose>
     <c:when test="${S_FordUser.role=='1'}">
     <a href="<c:url value='/calendar' />" class="logo">   
-      <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>AP</b></span>
-      <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>AP</b>  Transport Center</span>
+		
+      	<c:choose>
+		<c:when test="${S_profile=='prod'}">
+			<!-- mini logo for sidebar mini 50x50 pixels -->
+      		<span class="logo-mini"><b>AP</b></span>
+      		<!-- logo for regular state and mobile devices -->
+      		<span class="logo-lg"><b>AP</b>Transport Center</span>
+		</c:when> 									
+		<c:otherwise>
+			<!-- mini logo for sidebar mini 50x50 pixels -->
+      		<span class="logo-mini"><b>AP-<c:out value="${S_profile}"></c:out></b></span>
+      		<!-- logo for regular state and mobile devices -->
+      		<span class="logo-lg"><b>AP</b>Transport-<c:out value="${S_profile}"></c:out></span>
+		</c:otherwise>
+		</c:choose>			
     </a>
      </c:when>
      		 <c:when test="${S_FordUser.role=='2'}">

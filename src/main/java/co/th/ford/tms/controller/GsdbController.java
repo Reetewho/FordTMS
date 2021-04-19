@@ -1,20 +1,16 @@
 package co.th.ford.tms.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 //import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 //import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,20 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import co.th.ford.tms.model.Roles;
-import co.th.ford.tms.model.Truck;
-import co.th.ford.tms.model.TruckType;
-import co.th.ford.tms.model.Department;
-import co.th.ford.tms.model.GpsType;
 import co.th.ford.tms.model.Gsdb;
-import co.th.ford.tms.model.Load;
-import co.th.ford.tms.model.LoadStop;
+import co.th.ford.tms.model.Province;
+import co.th.ford.tms.model.ReportGSDB;
+import co.th.ford.tms.model.Roles;
 import co.th.ford.tms.model.User;
 import co.th.ford.tms.service.UserService;
 import co.th.ford.tms.service.RolesService;
@@ -55,6 +41,7 @@ import co.th.ford.tms.service.GpsTypeService;
 import co.th.ford.tms.service.GsdbService;
 //import co.th.ford.tms.aesencrypt.AESCrypt;
 /*import co.th.ford.tms.aesencrypt.EncryptDecryptPass;*/
+import co.th.ford.tms.service.ProvinceService;
 
 
 
@@ -62,6 +49,9 @@ import co.th.ford.tms.service.GsdbService;
 @RequestMapping("/")
 public class GsdbController {
 	org.joda.time.format.DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+	
+	private static Logger log = Logger.getLogger(GsdbController.class);
+	
 
 	@Autowired
 	UserService uservice;
@@ -86,6 +76,9 @@ public class GsdbController {
 
 	@Autowired
 	DepartmentService departmentService;
+	
+	@Autowired
+	ProvinceService provinceService;
 
 	public boolean checkAuthorization(HttpSession session) {
 		if (session.getAttribute("S_FordUser") == null) {
@@ -100,7 +93,23 @@ public class GsdbController {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 
+		List<ReportGSDB> FindGsdbCode = gsservice.querySQLAllGsdb();
+		
+		/*
+		for (ReportGSDB reportGsdb : FindGsdbCode) {
+			log.debug("GSDBCODE : " + reportGsdb.getGsdbCode() + " | UPDATE_DATE : " + reportGsdb.getGsdbUpdateDate());
+		}
+		*/
+		/*
 		List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+
+		for (Gsdb gsdb : FindGsdbCode) {
+			log.debug("GSDBCODE : " + gsdb.getGSDBCODE() + " | UPDATE_DATE : " + gsdb.getGSDBUPDATEDATE());
+		}
+		*/
+		
+		
+		
 		model.addAttribute("GSDB", FindGsdbCode);
 		return "gsdb-list";
 	}
@@ -110,39 +119,73 @@ public class GsdbController {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 
-		List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+		//List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+		
+		
+		List<ReportGSDB> FindGsdbCode = gsservice.querySQLAllGsdb();
+		List<Province> provinces = provinceService.findAll();
+		
 		model.addAttribute("GSDB", FindGsdbCode);
+		model.addAttribute("provinces", provinces);
 		
 		return "addgsdb";
 	}
 
 	@RequestMapping(value = { "/addgsdb" }, method = RequestMethod.POST)
 	public String addgsdb(HttpSession session, @RequestParam String GSDBCode,
-			@RequestParam String GSDBName,@RequestParam double Radius,
-			@RequestParam double Latitude,@RequestParam double Longitude,
+			@RequestParam String GSDBName, @RequestParam Double Radius,
+			@RequestParam Double Latitude, @RequestParam Double Longitude,
+			@RequestParam("provinceId") Integer provinceId, @RequestParam("areaZone") String areaZone,
 			ModelMap model) {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 		
+		log.info("addgsdb =====> Longitude" + Latitude +  " | " + Longitude);
+		
+		/*
 		List<Gsdb> gsdb = gsservice.findAllGsdb();
 		for(Gsdb findgsdb : gsdb){
 			
 			if(findgsdb.getGSDBCODE().equalsIgnoreCase(GSDBCode)) {
 				model.addAttribute("Error", "Duplicate name : " + GSDBCode + " Please Try Again.");
 				
-				List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+				
+				
+				//List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+				List<ReportGSDB> FindGsdbCode = gsservice.querySQLAllGsdb();
+				List<Province> provinces = provinceService.findAll();
 				model.addAttribute("GSDB", FindGsdbCode);
-
+				model.addAttribute("provinces", provinces);
 				
 				return "addgsdb";
 		
 			}
 			
-		}			
+		}		
+		*/
+		
+		Gsdb gsdb = null;
+		gsdb = gsservice.findByGsdbCode(GSDBCode);
+		
+		log.info("Get verify gsdb : " + gsdb);
+		
+		if (gsdb != null) {
+			log.info("Duplicate GSDBCode " + GSDBCode);
+			model.addAttribute("Error", "Duplicate GSDBCode : " + GSDBCode + ", Please Try Again.");
+			List<ReportGSDB> FindGsdbCode = gsservice.querySQLAllGsdb();
+			List<Province> provinces = provinceService.findAll();
+			model.addAttribute("GSDB", FindGsdbCode);
+			model.addAttribute("provinces", provinces);
+			return "addgsdb";
+		}else {
+			log.info("No Duplicate GSDBCode " + GSDBCode);
+		}
+		
+		
 		Gsdb  Newgsdb= new Gsdb();
 		  
-		  DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-			String strDateNow = DateTime.now().toString(dtf);
+			//DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+			//String strDateNow = DateTime.now().toString(dtf);
 			
 			Newgsdb.setGSDBCODE(GSDBCode); 
 			Newgsdb.setGSDBNAME(GSDBName);
@@ -154,18 +197,22 @@ public class GsdbController {
 			/* wait for delivery service */
 			Newgsdb.setGSDBDELIVERYTYPE(1);
 			/* wait for delivery service */
+			Newgsdb.setProvinceId(provinceId);
+			Newgsdb.setAreaZone(areaZone);
 			
 			Newgsdb.setGSDBUPDATEBY(((User)session.getAttribute("S_FordUser")).getUsername());
-			Newgsdb.setGSDBUPDATEDATE(LocalDateTime.now());		  
+			Newgsdb.setGSDBUPDATEDATE(LocalDateTime.now());		
+			
 		  if(Newgsdb.getGSDBCREATEBY() == null || Newgsdb.getGSDBCREATERDATE() == null) {
 			  Newgsdb.setGSDBCREATEBY(((User)session.getAttribute("S_FordUser")).getUsername());
 			  Newgsdb.setGSDBCREATERDATE(LocalDateTime.now());  
-	        }
+	      }
 
 		  gsservice.saveGsdbCode(Newgsdb);
 		  
-		  List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
-			model.addAttribute("GSDB", FindGsdbCode);
+		  //List<Gsdb> FindGsdbCode = gsservice.findAllGsdb();
+		  List<ReportGSDB> FindGsdbCode = gsservice.querySQLAllGsdb();
+		  model.addAttribute("GSDB", FindGsdbCode);
 
 		  return "gsdb-list";
 	}
@@ -196,8 +243,11 @@ public class GsdbController {
 		if (!checkAuthorization(session))
 			return "redirect:/login";
 
+		List<Province> provinces = provinceService.findAll();
+		
 		Gsdb FindGsdbCode = gsservice.findByGsdbCode(GSDBCODE);
 		model.addAttribute("GSDB", FindGsdbCode);
+		model.addAttribute("provinces", provinces);
 		model.addAttribute("edit", true);
 		
 		return "edit-gsdb";
@@ -233,8 +283,8 @@ public class GsdbController {
 
 		for (int i = 0; i < arr.length(); i++) {
 			
-			float intGsdbCode = 0;
-			intGsdbCode = Float.parseFloat(arr.getJSONObject(i).getString("RADIUS"));
+			Double intGsdbCode = 0.00;
+			intGsdbCode = Double.parseDouble(arr.getJSONObject(i).getString("RADIUS"));
 		
 				Gsdb GsdbSave = new Gsdb();
 			

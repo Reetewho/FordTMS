@@ -1,17 +1,13 @@
 package co.th.ford.tms.service;
 
 import java.util.List;
-
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import co.th.ford.tms.dao.LoadDao;
 import co.th.ford.tms.model.Load;
-import co.th.ford.tms.model.PaymentReport1;
+import co.th.ford.tms.model.ReportSystemLoadData;
 
 
 @Service("loadService")
@@ -55,6 +51,8 @@ public class LoadServiceImpl implements LoadService {
 			entity.setLoadAction(l.getLoadAction());
 			entity.setNostraStatus(l.getNostraStatus());
 			entity.setNostraRemark(l.getNostraRemark());
+			entity.setEtaColor(l.getEtaColor());
+			entity.setShipmentStatusId(l.getShipmentStatusId());
 		}
 	}
 
@@ -90,4 +88,14 @@ public class LoadServiceImpl implements LoadService {
 	public Load findLoadByCarrierID_SystemLoadID(int carrierID, int systemLoadID) {
 		  return dao.findLoadByCarrierID_SystemLoadID(carrierID, systemLoadID);
 	}
+	
+	public Load findLoadBySystemLoadID(int systemLoadID) {
+		  return dao.findLoadBySystemLoadID(systemLoadID);
+	}
+	
+	
+	public List<ReportSystemLoadData> findLoadGroupBySystemLoad(int systemLoadID) {
+		  return dao.findLoadGroupBySystemLoad(systemLoadID);
+	}
+	
 }

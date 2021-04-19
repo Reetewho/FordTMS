@@ -82,6 +82,10 @@ public class LoadStopServiceImpl implements LoadStopService {
 		return dao.findLoadStopByLoadID(loadID);
 	}
 	
+	public List<LoadStop> findLoadStopByLoadIDAndNullDptArv(int loadID) {
+		return dao.findLoadStopByLoadIDAndNullDptArv(loadID);
+	}
+	
 	public LoadStop findLoadStopByID(int loadStopID) {
 		return dao.findLoadStopByID(loadStopID);
 	}
@@ -144,5 +148,10 @@ public class LoadStopServiceImpl implements LoadStopService {
 	@Override
 	public LoadStop findLoadStopByLoadIdAndSeq(int loadStopID, int seq) {		
 		return dao.findLoadStopByLoadIdAndSeq(loadStopID, seq);
+	}
+	
+	
+	public void deleteLoadStopByLoadID(int loadID) {
+		dao.deleteLoadStopByLoadID(loadID);
 	}
 }
